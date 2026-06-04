@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mortgage Solution Proposal - 9 Locksley Ct</title>
+  
+  <!-- Direct Web Favicon Implementation -->
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              purple: '#4f46e5', 
+              purpleDark: '#312e81',
+              crimson: '#dc2626', 
+              crimsonDark: '#7f1d1d',
+              emerald: '#10b981', 
+              bgDark: '#0b0f19', 
+              cardBg: '#111827'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #f3f4f6;
+      overflow-x: hidden;
+    }
+    .gradient-text-purple {
+      background: linear-gradient(135deg, #a78bfa 0%, #6366f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gradient-border {
+      position: relative;
+    }
+    .gradient-border::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 0.75rem;
+      padding: 1.5px;
+      background: linear-gradient(to right, #4f46e5, #dc2626);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* Screen Row Emphasis Transition Rules */
+    tbody tr {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    tbody tr:hover {
+      background-color: rgba(79, 70, 229, 0.12) !important;
+    }
+    tbody tr:hover td {
+      color: #ffffff !important;
+    }
+    tbody tr:hover td.text-brand-emerald {
+      color: #34d399 !important;
+    }
+
+    @media print {
+      /* Setup the page size, remove system margin overrides */
+      @page {
+        size: letter portrait;
+        margin: 0.4in 0.4in 0.4in 0.4in;
+      }
+      
+      /* Force dark mode and preserve precise colors, backgrounds, and shadows in PDF export */
+      html, body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        background-color: #0b0f19 !important;
+        color: #f3f4f6 !important;
+      }
+      
+      /* Clean-up web interactions and panels */
+      .no-print {
+        display: none !important;
+      }
+
+      /* Fix the mask/photo cover overlap bug by stripping pseudo-elements in print mode */
+      .gradient-border::before {
+        display: none !important;
+        content: none !important;
+      }
+      .gradient-border {
+        border: 1px solid #1e293b !important;
+        border-radius: 0.75rem !important;
+        background-color: #111827 !important;
+        transform: none !important;
+        box-shadow: none !important;
+        transition: none !important;
+      }
+      
+      /* Page Breaking Flow Control to avoid overlaps entirely */
+      .print-page-1 {
+        page-break-after: always !important;
+        break-after: page !important;
+        margin-bottom: 20px !important;
+      }
+      .print-page-2 {
+        page-break-after: always !important;
+        break-after: page !important;
+        margin-top: 0 !important;
+        margin-bottom: 20px !important;
+      }
+      .print-page-3 {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+        margin-top: 0 !important;
+      }
+      
+      /* Standard table displays to prevent cell collapsing */
+      table {
+        display: table !important;
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-size: 11px !important; /* Shrink table slightly to fit Page 1 perfectly */
+        line-height: 1.2 !important;
+      }
+      thead {
+        display: table-header-group !important;
+      }
+      tbody {
+        display: table-row-group !important;
+      }
+      tr {
+        display: table-row !important;
+        page-break-inside: avoid !important;
+        transform: none !important;
+        background-color: transparent !important;
+      }
+      td, th {
+        display: table-cell !important;
+        text-align: center !important;
+        padding: 6px 4px !important; /* Extremely tight padding to lock on one page */
+      }
+      
+      /* Stack charts vertically on print pages */
+      .print-stacked-charts {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 30px !important;
+      }
+      
+      /* Grid Adapters for print columns */
+      .print-grid-3 {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+      }
+      .print-grid-4 {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+      }
+      .print-grid-2-col {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 16px !important;
+      }
+      
+      /* Custom Paddings and Heights for Print view compatibility */
+      .print-p-tight {
+        padding: 0.75rem !important;
+      }
+      .print-m-tight {
+        margin-top: 1rem !important;
+        margin-bottom: 1rem !important;
+      }
+      .chart-container-print {
+        height: 240px !important;
+        width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body class="font-sans antialiased relative">
+
+  <!-- Interactive Futuristic Background Canvas -->
+  <canvas id="gridCanvas" class="fixed inset-0 w-full h-full -z-10 no-print" style="pointer-events: none;"></canvas>
+
+  <!-- MAIN WRAPPER CONTAINER -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 print:py-0 relative z-10">
+
+    <!-- PAGE 1 CONTENT WRAPPER -->
+    <div class="print-page-1">
+      <header class="flex flex-col md:flex-row justify-between items-center pb-8 border-b border-gray-800 gap-6 print:pb-4">
+        <div class="flex items-center gap-4">
+          <!-- Official Brand Logo -->
+          <div class="flex items-center">
+            <img src="https://i.postimg.cc/9zn5PrgX/TCHB-LOGO.png" alt="Total Cash Home Buyers Logo" class="h-16 md:h-20 w-auto object-contain">
+          </div>
+        </div>
+        <div class="text-right flex flex-col items-center md:items-end">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-brand-crimson/10 text-red-400 border border-brand-crimson/20 mb-2">
+            EXCLUSIVE BROKER PORTFOLIO OPPORTUNITY
+          </span>
+          <h2 class="text-xl font-bold tracking-tight text-white print:text-lg">9 Locksley Ct, Bedford, IN 47421</h2>
+          <p class="text-xs text-gray-400 font-mono tracking-widest mt-1">MTG COMPARISON DATA EXCLUSIVE</p>
+        </div>
+      </header>
+
+      <div class="mt-6 flex justify-center text-center print:mt-4 print:mb-2">
+        <div class="inline-flex flex-wrap justify-center items-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-indigo-950/60 to-purple-950/60 text-indigo-200 border border-indigo-500/30 shadow-[0_4px_20px_rgba(99,102,241,0.15)]">
+          <span class="text-white font-black">$40,000 Entry Fee</span>
+          <span class="text-indigo-400/40">|</span>
+          <span>Including a 3% Realtor Commission</span>
+          <span class="text-indigo-400/40">[</span><span class="text-brand-emerald font-black">Buyer Pays All Closing Costs</span><span class="text-indigo-400/40">]</span>
+        </div>
+      </div>
+
+      <!-- core layout kpis -->
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6 print-grid-3 print:mt-2 print:mb-2">
+        
+        <!-- Metric 1: Total Interest Saved -->
+        <div class="gradient-border bg-gray-900/50 p-6 rounded-xl flex flex-col justify-between print-p-tight transform hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_20px_40px_rgba(99,102,241,0.15)] transition-all duration-300 ease-out cursor-pointer group">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-xs uppercase font-semibold text-gray-400 tracking-wider group-hover:text-indigo-400 transition-colors">Total Lifetime Savings</p>
+              <h3 class="text-4xl font-extrabold text-brand-emerald mt-1 print:text-2xl">$195,525.56</h3>
+            </div>
+            <div class="w-10 h-10 rounded-full border border-gray-800 overflow-hidden bg-gray-950 flex items-center justify-center flex-shrink-0 group-hover:border-indigo-500/50 transition-colors">
+              <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
+            </div>
+          </div>
+          <p class="text-xs text-gray-300 mt-4 print:mt-2 leading-relaxed">
+            Saved entirely in interest payments over the life of the loan compared to standard FHA rates.
+          </p>
+        </div>
+
+        <!-- Metric 2: Cash Flow Advantage -->
+        <div class="gradient-border bg-gray-900/50 p-6 rounded-xl flex flex-col justify-between print-p-tight transform hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_20px_40px_rgba(99,102,241,0.15)] transition-all duration-300 ease-out cursor-pointer group">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-xs uppercase font-semibold text-gray-400 tracking-wider group-hover:text-indigo-400 transition-colors">Monthly Cash Flow Advantage</p>
+              <h3 class="text-4xl font-extrabold text-indigo-400 mt-1 print:text-2xl">$404.16 / mo</h3>
+            </div>
+            <div class="w-10 h-10 rounded-full border border-gray-800 overflow-hidden bg-gray-950 flex items-center justify-center flex-shrink-0 group-hover:border-indigo-500/50 transition-colors">
+              <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
+            </div>
+          </div>
+          <p class="text-xs text-gray-300 mt-4 print:mt-2 leading-relaxed">
+            Instantly boost capitalization rates and net immediate yield by slashing debt-servicing expenses.
+          </p>
+        </div>
+
+        <!-- Metric 3: Maturity Velocity -->
+        <div class="gradient-border bg-gray-900/50 p-6 rounded-xl flex flex-col justify-between print-p-tight transform hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_20px_40px_rgba(99,102,241,0.15)] transition-all duration-300 ease-out cursor-pointer group">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-xs uppercase font-semibold text-gray-400 tracking-wider group-hover:text-red-400 transition-colors">Maturity Timeline Advantage</p>
+              <h3 class="text-4xl font-extrabold text-red-400 mt-1 print:text-2xl">5 Years Shaved</h3>
+            </div>
+            <div class="w-10 h-10 rounded-full border border-gray-800 overflow-hidden bg-gray-950 flex items-center justify-center flex-shrink-0 group-hover:border-indigo-500/50 transition-colors">
+              <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
+            </div>
+          </div>
+          <p class="text-xs text-gray-300 mt-4 print:mt-2 leading-relaxed">
+            The Sub2 FHA loan matures in <span class="text-white font-bold">2051</span> vs <span class="text-white font-bold">2056</span> for today's current market mortgages.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="mt-8 bg-gray-900/40 rounded-2xl border border-gray-800 overflow-hidden print-m-tight">
+        <div class="p-6 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 print:p-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full border border-gray-700 overflow-hidden bg-gray-950 flex items-center justify-center">
+              <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-white print:text-base">Deal Architecture Breakdown</h3>
+              <p class="text-xs text-gray-400">Comparing direct data points from "9 Locksley Ct, Bedford, IN 47421 - Mtg Comparison"</p>
+            </div>
+          </div>
+          <button onclick="window.print()" class="no-print inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 transition px-5 py-2.5 rounded-lg text-sm font-semibold text-white shadow-lg hover:shadow-indigo-600/35 active:scale-95 duration-150">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            Export Proposal (PDF)
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-center text-sm text-gray-300">
+            <thead class="bg-gray-950/60 text-xs text-gray-400 uppercase tracking-wider">
+              <tr>
+                <th scope="col" class="px-6 py-4 print:py-3 print:px-4 text-center">Metric / Dimension</th>
+                <th scope="col" class="px-6 py-4 print:py-3 print:px-4 text-center text-indigo-400 bg-indigo-950/20 font-bold">🔥 Proposed Sub2 Deal</th>
+                <th scope="col" class="px-6 py-4 print:py-3 print:px-4 text-center">Standard FHA in Today's Market</th>
+                <th scope="col" class="px-6 py-4 print:py-3 print:px-4 text-center text-brand-emerald">Net Advantage</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-800">
+              <tr>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-semibold text-gray-200 text-center">Type of Loan</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-medium text-white bg-indigo-950/10 text-center">FHA</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center">FHA</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-gray-400">—</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-semibold text-gray-200 text-center">Loan Amount (Principal)</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 bg-indigo-950/10 text-white font-medium text-center">$230,611.18</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center">$230,611.18</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-gray-400">—</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-semibold text-gray-200 text-center">Interest %</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-bold text-brand-emerald bg-indigo-950/10 text-lg print:text-base text-center">3.250%</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-red-400 text-lg print:text-base font-medium text-center">7.125%</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-brand-emerald font-bold text-base print:text-sm">3.875% Better Rate</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-semibold text-gray-200 text-center">30-Year Maturity Date</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 bg-indigo-950/10 text-center">2051</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center">2056</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-brand-emerald font-semibold">5 Years Shorter Term</td>
+              </tr>
+              <tr class="bg-gray-950/20">
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-semibold text-gray-200 text-center">Principal & Interest (P&I)</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-bold text-white bg-indigo-950/10 text-center">$1,149.50</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center">$1,553.67</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-brand-emerald font-semibold">+$404.17 / mo Saved</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-semibold text-gray-200 text-center">Escrow & Taxes Per Month</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 bg-indigo-950/10 text-center">$517.73</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center">$517.73</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-gray-400">Identical ($0.00 Diff)</td>
+              </tr>
+              <tr class="bg-brand-purple/15">
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-bold text-white text-center">Total PITI Payment</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-extrabold text-indigo-300 bg-indigo-950/30 text-base print:text-sm text-center">$1,667.24</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-gray-300 text-center">$2,071.40</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-brand-emerald font-extrabold text-base print:text-sm">+$404.16 / mo Cash Flow</td>
+              </tr>
+              <tr class="bg-brand-emerald/10">
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-bold text-white text-center">Interest Paid Over Life of Loan</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 font-bold text-brand-emerald bg-indigo-950/10 text-center">$133,184.55</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-red-400 text-center">$328,710.11</td>
+                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-brand-emerald font-extrabold">+$195,525.56 Net Savings</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 2 CONTENT WRAPPER -->
+    <div class="print-page-2 mt-12 md:mt-16 print:mt-0">
+      <div class="bg-gradient-to-br from-indigo-950/30 to-brand-crimsonDark/10 p-8 rounded-2xl border border-gray-800 print:p-5 print-m-tight text-center flex flex-col items-center">
+        <div class="max-w-6xl mx-auto flex flex-col items-center">
+          <div class="text-center mb-8 print:mb-4">
+            <span class="text-brand-emerald font-bold uppercase text-xs tracking-wider block text-center">Holding Horizon Projection</span>
+            <h3 class="text-2xl font-black text-white mt-1 text-center print:text-lg">Projected Wealth Accumulation Milestones</h3>
+            <p class="text-sm text-gray-300 mt-2 text-center print:text-xs">
+              Cumulative financial advantage breakdown comparing the Sub2 deal metrics for 9 Locksley Ct over standard options.
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 print-grid-4 w-full justify-center">
+            
+            <!-- Year 5 -->
+            <div class="bg-gray-900/80 p-5 rounded-xl border border-gray-800 hover:border-gray-700 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 print-p-tight text-center flex flex-col justify-between">
+              <span class="text-xs font-bold text-indigo-400 tracking-wider uppercase block text-center">Year 5 Milestone</span>
+              <div class="mt-3">
+                <p class="text-[10px] text-gray-400 text-center">Cumulative Cash Flow Saved</p>
+                <p class="text-xl font-bold text-white text-center print:text-base">$24,249.60</p>
+              </div>
+              <div class="mt-2 pt-2 border-t border-gray-800">
+                <p class="text-[10px] text-gray-400 text-center">Cumulative Interest Saved</p>
+                <p class="text-lg font-bold text-brand-emerald text-center print:text-sm">$32,587.50</p>
+              </div>
+              <div class="mt-3 text-center bg-indigo-950/50 rounded py-1">
+                <p class="text-[10px] text-gray-400 text-center">Combined Yield Boost</p>
+                <p class="text-sm font-bold text-white text-center print:text-xs">$56,837.10</p>
+              </div>
+            </div>
+
+            <!-- Year 10 -->
+            <div class="bg-gray-900/80 p-5 rounded-xl border border-gray-800 hover:border-gray-700 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 print-p-tight text-center flex flex-col justify-between">
+              <span class="text-xs font-bold text-indigo-400 tracking-wider uppercase block text-center">Year 10 Milestone</span>
+              <div class="mt-3">
+                <p class="text-[10px] text-gray-400 text-center">Cumulative Cash Flow Saved</p>
+                <p class="text-xl font-bold text-white text-center print:text-base">$48,499.20</p>
+              </div>
+              <div class="mt-2 pt-2 border-t border-gray-800">
+                <p class="text-[10px] text-gray-400 text-center">Cumulative Interest Saved</p>
+                <p class="text-lg font-bold text-brand-emerald text-center print:text-sm">$65,175.00</p>
+              </div>
+              <div class="mt-3 text-center bg-indigo-950/50 rounded py-1">
+                <p class="text-[10px] text-gray-400 text-center">Combined Yield Boost</p>
+                <p class="text-sm font-bold text-white text-center print:text-xs">$113,674.20</p>
+              </div>
+            </div>
+
+            <!-- Year 15 -->
+            <div class="bg-gray-900/80 p-5 rounded-xl border border-gray-800 hover:border-gray-700 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 print-p-tight text-center flex flex-col justify-between">
+              <span class="text-xs font-bold text-indigo-400 tracking-wider uppercase block text-center">Year 15 Milestone</span>
+              <div class="mt-3">
+                <p class="text-[10px] text-gray-400 text-center">Cumulative Cash Flow Saved</p>
+                <p class="text-xl font-bold text-white text-center print:text-base">$72,748.80</p>
+              </div>
+              <div class="mt-2 pt-2 border-t border-gray-800">
+                <p class="text-[10px] text-gray-400 text-center">Cumulative Interest Saved</p>
+                <p class="text-lg font-bold text-brand-emerald text-center print:text-sm">$97,762.50</p>
+              </div>
+              <div class="mt-3 text-center bg-indigo-950/50 rounded py-1">
+                <p class="text-[10px] text-gray-400 text-center">Combined Yield Boost</p>
+                <p class="text-sm font-bold text-white text-center print:text-xs">$170,511.30</p>
+              </div>
+            </div>
+
+            <!-- Year 30 (Full Maturity) -->
+            <div class="bg-gradient-to-b from-indigo-950/60 to-gray-900/80 p-5 rounded-xl border border-indigo-500/30 hover:border-indigo-400/50 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-[0_15px_30px_rgba(99,102,241,0.2)] transition-all duration-300 print-p-tight text-center flex flex-col justify-between">
+              <span class="text-xs font-bold text-yellow-400 tracking-wider uppercase block text-center">Full Maturity (30 Yr)</span>
+              <div class="mt-3">
+                <p class="text-[10px] text-gray-400 text-center">Cumulative Cash Flow Saved</p>
+                <p class="text-xl font-bold text-white text-center print:text-base">$121,248.00</p>
+              </div>
+              <div class="mt-2 pt-2 border-t border-gray-800">
+                <p class="text-[10px] text-gray-400 text-center">Total Interest Saved</p>
+                <p class="text-lg font-bold text-brand-emerald text-center print:text-sm">$195,525.56</p>
+              </div>
+              <div class="mt-3 text-center bg-brand-purple/20 rounded py-1">
+                <p class="text-[10px] text-gray-300 text-center">Lifetime Advantage</p>
+                <p class="text-sm font-black text-white text-center print:text-xs">$316,773.56</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 print-grid-2-col print-m-tight">
+        <div class="bg-gray-900/20 p-6 rounded-xl border border-gray-800 flex gap-4 print:p-4 text-left hover:border-gray-700 hover:shadow-lg transition-all duration-300">
+          <div class="flex-shrink-0">
+            <div class="w-10 h-10 rounded-full border border-gray-700 overflow-hidden bg-gray-950 flex items-center justify-center">
+              <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
+            </div>
+          </div>
+          <div>
+            <h4 class="text-base font-extrabold text-white flex items-center gap-2 print:text-sm">
+              The Subject-To Execution Advantage
+            </h4>
+            <p class="text-xs text-gray-400 mt-2 leading-relaxed print:text-[11px] print:mt-1">
+              In a macroeconomic regime where standard financing rates linger above 7%, acquiring this asset subject to its existing <span class="text-white font-semibold">3.25% locked FHA note</span> represents immediate capital arbitrage. Your buyer completely bypasses severe interest inflation, scaling their initial cash yield without altering structural risk metrics.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-gray-900/20 p-6 rounded-xl border border-gray-800 flex gap-4 print:p-4 text-left hover:border-gray-700 hover:shadow-lg transition-all duration-300">
+          <div class="flex-shrink-0">
+            <div class="w-10 h-10 rounded-full border border-gray-700 overflow-hidden bg-gray-950 flex items-center justify-center">
+              <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
+            </div>
+          </div>
+          <div>
+            <h4 class="text-base font-extrabold text-white flex items-center gap-2 print:text-sm">
+              Broker Capital Velocity Focus
+            </h4>
+            <p class="text-xs text-gray-400 mt-2 leading-relaxed print:text-[11px] print:mt-1">
+              Because debt-servicing demands are lowered by <span class="text-white font-semibold">$404.16 monthly</span>, this asset operates at a highly competitive Debt Service Coverage Ratio (DSCR). This leaves your buyer with surplus credit flexibility and raw liquidity to scale into their next acquisition effortlessly.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 3 CONTENT WRAPPER -->
+    <div class="print-page-3 mt-12 print:mt-0">
+      <div class="text-center mb-6 no-print md:block">
+        <span class="text-indigo-400 font-bold uppercase text-xs tracking-wider">Visual Performance Analytics</span>
+        <h3 class="text-2xl font-black text-white mt-1">Direct Comparative Visualizations</h3>
+      </div>
+
+      <!-- Charts Wrapper: Stacked cleanly in 1 Column for Print engine, beautiful layout grid on web -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 print-stacked-charts print-m-tight">
+        
+        <!-- Chart A: Payment Structuring Comparison -->
+        <div class="bg-gray-900/40 p-6 rounded-2xl border border-gray-800 print:p-4 hover:border-indigo-500/30 transition-all duration-300 shadow-md">
+          <h3 class="text-base font-bold text-white mb-1 print:text-sm">PITI Payment Breakdown</h3>
+          <p class="text-xs text-gray-400 mb-6 print:mb-2">Visualizing direct monthly overhead demands</p>
+          <div class="relative h-64 w-full chart-container-print" style="height: 200px;">
+            <canvas id="paymentChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart B: Interest Over Time Accumulation -->
+        <div class="bg-gray-900/40 p-6 rounded-2xl border border-gray-800 print:p-4 hover:border-indigo-500/30 transition-all duration-300 shadow-md">
+          <h3 class="text-base font-bold text-white mb-1 print:text-sm">Interest Accumulation Contrast</h3>
+          <p class="text-xs text-gray-400 mb-6 print:mb-2">Total interest paid over the life of the loan</p>
+          <div class="relative h-64 w-full chart-container-print" style="height: 200px;">
+            <canvas id="interestChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FOOTER SEAL (Strictly displayed at the base of Page 3 in Print outputs) -->
+      <footer class="mt-12 pt-6 border-t border-gray-800 text-center text-xs text-gray-500 flex flex-col items-center gap-2 print:mt-10 print:pt-4">
+        <div class="flex items-center gap-2 justify-center">
+          <div class="w-6 h-6 rounded-full border border-gray-800 overflow-hidden bg-gray-950 flex items-center justify-center flex-shrink-0">
+            <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
+          </div>
+          <span class="font-bold text-gray-400">TOTAL CASH HOME BUYERS</span>
+          <span>•</span>
+          <span>Transaction Underwriting Division</span>
+        </div>
+
+        <!-- Executive Contact Info Section -->
+        <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs text-gray-400 mt-1 mb-1">
+          <a href="mailto:Carlos@totalchb.com" class="hover:text-indigo-400 transition-colors flex items-center gap-1.5 font-medium">
+            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            Carlos@totalchb.com
+          </a>
+          <span class="text-gray-700 hidden sm:inline">|</span>
+          <a href="tel:+17035854331" class="hover:text-indigo-400 transition-colors flex items-center gap-1.5 font-medium">
+            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+            </svg>
+            +1 (703) 585-4331
+          </a>
+        </div>
+
+        <p class="max-w-md text-[10px] print:max-w-lg mx-auto">
+          This analysis is constructed for informational real estate portfolio modeling purposes based on verified servicing metrics for the property at 9 Locksley Ct.
+        </p>
+      </footer>
+    </div>
+
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gridCanvas');
+    const ctx = canvas.getContext('2d');
+    let gridSize = 55;
+    let mouse = { x: -1000, y: -1000, active: false };
+    let sparks = [];
+    let fadingLines = []; // Persistent lit grid lines as energy moves away
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    /* Tracks hover movement across grid coordinate boundaries */
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      mouse.active = true;
+    });
+
+    window.addEventListener('mouseleave', () => {
+      mouse.active = false;
+    });
+
+    /* Initiate structured grid pulse sequence strictly when clicking outside info modules */
+    window.addEventListener('click', (e) => {
+      const isInteractive = e.target.closest('button, a, input, select, textarea, canvas, .gradient-border, .bg-gray-900\\/50, .bg-gray-900\\/40, .bg-gray-900\\/20, table, tr, td, header, img');
+      if (!isInteractive) {
+        triggerUniformPulse(e.clientX, e.clientY);
+      }
+    });
+
+    function triggerUniformPulse(clickX, clickY) {
+      // Find the absolute closest grid intersection node
+      const gridX = Math.round(clickX / gridSize) * gridSize;
+      const gridY = Math.round(clickY / gridSize) * gridSize;
+
+      // Spawn electrical branches traversing cleanly along the 4 grid axes
+      const directions = [
+        { x: 1, y: 0 },
+        { x: -1, y: 0 },
+        { x: 0, y: 1 },
+        { x: 0, y: -1 }
+      ];
+
+      directions.forEach(dir => {
+        sparks.push({
+          startX: gridX,
+          startY: gridY,
+          targetX: gridX + dir.x * gridSize,
+          targetY: gridY + dir.y * gridSize,
+          dirX: dir.x,
+          dirY: dir.y,
+          progress: 0,
+          speed: 0.012, // Slower uniform motion per frame (approx. 1.5 seconds per grid square segment)
+          life: 1.0,
+          decay: 0.09
+        });
+      });
+    }
+
+    /* Animation Frame Rendering Loop */
+    function animateGrid() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 1. Render STATIC Digital Grid Matrix - Highly Seen & Visible
+      ctx.strokeStyle = 'rgba(79, 70, 229, 0.16)'; // More seen, crisp opacity
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let x = 0; x < canvas.width; x += gridSize) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+      }
+      for (let y = 0; y < canvas.height; y += gridSize) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+      }
+      ctx.stroke();
+
+      // 2. Render Mouse Position Radial Grid Halo
+      if (mouse.active) {
+        let haloGradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 180);
+        haloGradient.addColorStop(0, 'rgba(79, 70, 229, 0.15)'); // Indigo accent
+        haloGradient.addColorStop(0.5, 'rgba(220, 38, 38, 0.04)'); // Crimson horizon tint
+        haloGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        
+        ctx.fillStyle = haloGradient;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 180, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 3. Render Lit Fading Grid segments (Lights up the grid as the pulse moves away)
+      for (let i = fadingLines.length - 1; i >= 0; i--) {
+        let line = fadingLines[i];
+        
+        ctx.beginPath();
+        ctx.moveTo(line.x1, line.y1);
+        ctx.lineTo(line.x2, line.y2);
+
+        // Wide background neon discharge glow
+        ctx.strokeStyle = `rgba(139, 92, 246, ${line.alpha * 0.45})`; 
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        // Focused bright core line
+        ctx.strokeStyle = `rgba(167, 139, 250, ${line.alpha})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Slow clean fade out
+        line.alpha -= line.decay;
+        if (line.alpha <= 0) {
+          fadingLines.splice(i, 1);
+        }
+      }
+
+      // 4. Update and Render Active Sparks moving uniformly
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        let spark = sparks[i];
+        spark.progress += spark.speed;
+
+        // Calculate exact intermediate coordinates
+        let currentX = spark.startX + (spark.targetX - spark.startX) * spark.progress;
+        let currentY = spark.startY + (spark.targetY - spark.startY) * spark.progress;
+
+        // Draw temporary connection line for seamless transition
+        ctx.beginPath();
+        ctx.moveTo(spark.startX, spark.startY);
+        ctx.lineTo(currentX, currentY);
+        ctx.strokeStyle = `rgba(167, 139, 250, 0.95)`;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Glowing spark node head
+        ctx.beginPath();
+        ctx.arc(currentX, currentY, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = '#8b5cf6';
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0; // Reset shadow
+
+        // Check if segment is completed
+        if (spark.progress >= 1.0) {
+          // Push to persistent fading lit list (leaves trail lighting the grid behind it)
+          fadingLines.push({
+            x1: spark.startX,
+            y1: spark.startY,
+            x2: spark.targetX,
+            y2: spark.targetY,
+            alpha: 1.0,
+            decay: 0.007 // Extremely slow fadeout to allow grid to stay beautifully illuminated
+          });
+
+          spark.life -= spark.decay;
+
+          if (spark.life > 0) {
+            // Reposition start intersection to the current node
+            spark.startX = spark.targetX;
+            spark.startY = spark.targetY;
+            spark.progress = 0;
+
+            // Optional branching: split path uniformly at intersection nodes
+            if (Math.random() < 0.32 && sparks.length < 32) {
+              let isHorizontal = spark.dirX !== 0;
+              let branchDirX = isHorizontal ? 0 : (Math.random() > 0.5 ? 1 : -1);
+              let branchDirY = isHorizontal ? (Math.random() > 0.5 ? 1 : -1) : 0;
+
+              sparks.push({
+                startX: spark.startX,
+                startY: spark.startY,
+                targetX: spark.startX + branchDirX * gridSize,
+                targetY: spark.startY + branchDirY * gridSize,
+                dirX: branchDirX,
+                dirY: branchDirY,
+                progress: 0,
+                speed: spark.speed,
+                life: spark.life * 0.75,
+                decay: spark.decay
+              });
+            }
+
+            // Continue current pulse along the grid axes
+            spark.targetX = spark.startX + spark.dirX * gridSize;
+            spark.targetY = spark.startY + spark.dirY * gridSize;
+          } else {
+            sparks.splice(i, 1);
+          }
+        }
+      }
+
+      requestAnimationFrame(animateGrid);
+    }
+    animateGrid();
+  </script>
+
+  <script>
+    const sub2Data = {
+      label: 'Proposed Sub2 Deal',
+      pi: 1149.50,
+      escrow: 517.73,
+      piti: 1667.24,
+      interestTotal: 133184.55
+    };
+
+    const marketData = {
+      label: "Standard FHA in Today's Market",
+      pi: 1553.67,
+      escrow: 517.73,
+      piti: 2071.40,
+      interestTotal: 328710.11
+    };
+
+    window.onload = function () {
+      const ctxPayment = document.getElementById('paymentChart').getContext('2d');
+      new Chart(ctxPayment, {
+        type: 'bar',
+        data: {
+          labels: ['Sub2 Deal (FHA)', "Standard FHA (Today's Market)"],
+          datasets: [
+            {
+              label: 'Principal & Interest (P&I)',
+              data: [sub2Data.pi, marketData.pi],
+              backgroundColor: '#4f46e5',
+              borderColor: '#6366f1',
+              borderWidth: 1
+            },
+            {
+              label: 'Escrow & Taxes',
+              data: [sub2Data.escrow, marketData.escrow],
+              backgroundColor: '#10b981',
+              borderColor: '#34d399',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } },
+              position: 'bottom'
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              grid: { color: '#1f2937' },
+              ticks: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } }
+            },
+            y: {
+              stacked: true,
+              grid: { color: '#1f2937' },
+              ticks: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } }
+            }
+          }
+        }
+      });
+
+      const ctxInterest = document.getElementById('interestChart').getContext('2d');
+      const labelsYear = ['Year 1', 'Year 5', 'Year 10', 'Year 15', 'Year 20', 'Year 25', 'Year 30'];
+      const sub2Curve = [5000, 32587, 65175, 97762, 115000, 126000, 133184.55];
+      const marketCurve = [20000, 85000, 160000, 220000, 265000, 300000, 328710.11];
+
+      new Chart(ctxInterest, {
+        type: 'line',
+        data: {
+          labels: labelsYear,
+          datasets: [
+            {
+              label: "Standard FHA (7.125% Rate)",
+              data: marketCurve,
+              borderColor: '#dc2626',
+              backgroundColor: 'rgba(220, 38, 38, 0.1)',
+              fill: true,
+              tension: 0.3
+            },
+            {
+              label: 'Sub2 Deal (3.250% Rate)',
+              data: sub2Curve,
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              fill: true,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } },
+              position: 'bottom'
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: '#1f2937' },
+              ticks: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } }
+            },
+            y: {
+              grid: { color: '#1f2937' },
+              ticks: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } }
+            }
+          }
+        }
+      });
+    };
+  </script>
+</body>
+</html>
