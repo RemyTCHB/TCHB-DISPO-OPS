@@ -1,872 +1,1313 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mortgage Solution Proposal - 9 Locksley Ct</title>
-  
-  <!-- Direct Web Favicon Implementation -->
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png">
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              purple: '#4f46e5', 
-              purpleDark: '#312e81',
-              crimson: '#dc2626', 
-              crimsonDark: '#7f1d1d',
-              emerald: '#10b981', 
-              bgDark: '#0b0f19', 
-              cardBg: '#111827'
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCHB DISPO SOP</title>
+    
+    <!-- Favicon Integration using your TCHB Icon -->
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- ChartJS for interactive statistics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tchbPurple: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            500: '#5a4fbd',
+                            600: '#483F8A',
+                            700: '#3c3475',
+                            900: '#26204c',
+                        },
+                        tchbRed: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            500: '#e12b3c',
+                            600: '#D12335',
+                            700: '#b01c2a',
+                            950: '#450a0a',
+                        },
+                        tchbGreen: {
+                            50: '#f0fdf4',
+                            500: '#00A859',
+                            600: '#00904c',
+                        },
+                        darkSlate: '#0a0d1a',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  </script>
-  
-  <style>
-    body {
-      background-color: #0b0f19;
-      color: #f3f4f6;
-      overflow-x: hidden;
-    }
-    .gradient-text-purple {
-      background: linear-gradient(135deg, #a78bfa 0%, #6366f1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .gradient-border {
-      position: relative;
-    }
-    .gradient-border::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 0.75rem;
-      padding: 1.5px;
-      background: linear-gradient(to right, #4f46e5, #dc2626);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #05070f;
+            color: #f1f5f9;
+            overflow-x: hidden;
+        }
 
-    /* Screen Row Emphasis Transition Rules */
-    tbody tr {
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    tbody tr:hover {
-      background-color: rgba(79, 70, 229, 0.12) !important;
-    }
-    tbody tr:hover td {
-      color: #ffffff !important;
-    }
-    tbody tr:hover td.text-brand-emerald {
-      color: #34d399 !important;
-    }
+        /* Ambient proposals backdrop blur glowing spots */
+        .glow-sphere-purple {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(72,63,138,0.18) 0%, rgba(72,63,138,0) 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            animation: driftPurple 25s infinite alternate ease-in-out;
+        }
 
-    @media print {
-      /* Setup the page size, remove system margin overrides */
-      @page {
-        size: letter portrait;
-        margin: 0.4in 0.4in 0.4in 0.4in;
-      }
-      
-      /* Force dark mode and preserve precise colors, backgrounds, and shadows in PDF export */
-      html, body {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        background-color: #0b0f19 !important;
-        color: #f3f4f6 !important;
-      }
-      
-      /* Clean-up web interactions and panels */
-      .no-print {
-        display: none !important;
-      }
+        .glow-sphere-red {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(209,35,53,0.15) 0%, rgba(209,35,53,0) 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            animation: driftRed 20s infinite alternate ease-in-out;
+        }
 
-      /* Fix the mask/photo cover overlap bug by stripping pseudo-elements in print mode */
-      .gradient-border::before {
-        display: none !important;
-        content: none !important;
-      }
-      .gradient-border {
-        border: 1px solid #1e293b !important;
-        border-radius: 0.75rem !important;
-        background-color: #111827 !important;
-        transform: none !important;
-        box-shadow: none !important;
-        transition: none !important;
-      }
-      
-      /* Page Breaking Flow Control to avoid overlaps entirely */
-      .print-page-1 {
-        page-break-after: always !important;
-        break-after: page !important;
-        margin-bottom: 20px !important;
-      }
-      .print-page-2 {
-        page-break-after: always !important;
-        break-after: page !important;
-        margin-top: 0 !important;
-        margin-bottom: 20px !important;
-      }
-      .print-page-3 {
-        page-break-after: avoid !important;
-        break-after: avoid !important;
-        margin-top: 0 !important;
-      }
-      
-      /* Standard table displays to prevent cell collapsing */
-      table {
-        display: table !important;
-        width: 100% !important;
-        border-collapse: collapse !important;
-        font-size: 11px !important; /* Shrink table slightly to fit Page 1 perfectly */
-        line-height: 1.2 !important;
-      }
-      thead {
-        display: table-header-group !important;
-      }
-      tbody {
-        display: table-row-group !important;
-      }
-      tr {
-        display: table-row !important;
-        page-break-inside: avoid !important;
-        transform: none !important;
-        background-color: transparent !important;
-      }
-      td, th {
-        display: table-cell !important;
-        text-align: center !important;
-        padding: 6px 4px !important; /* Extremely tight padding to lock on one page */
-      }
-      
-      /* Stack charts vertically on print pages */
-      .print-stacked-charts {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 30px !important;
-      }
-      
-      /* Grid Adapters for print columns */
-      .print-grid-3 {
-        display: grid !important;
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-        gap: 12px !important;
-      }
-      .print-grid-4 {
-        display: grid !important;
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-        gap: 10px !important;
-      }
-      .print-grid-2-col {
-        display: grid !important;
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 16px !important;
-      }
-      
-      /* Custom Paddings and Heights for Print view compatibility */
-      .print-p-tight {
-        padding: 0.75rem !important;
-      }
-      .print-m-tight {
-        margin-top: 1rem !important;
-        margin-bottom: 1rem !important;
-      }
-      .chart-container-print {
-        height: 240px !important;
-        width: 100% !important;
-      }
-    }
-  </style>
+        @keyframes driftPurple {
+            0% { transform: translate(-10%, -20%) scale(1); }
+            100% { transform: translate(30%, 20%) scale(1.2); }
+        }
+
+        @keyframes driftRed {
+            0% { transform: translate(20%, 40%) scale(1.1); }
+            100% { transform: translate(-20%, -10%) scale(0.9); }
+        }
+
+        /* Glassmorphic border design */
+        .glass-card {
+            background: rgba(13, 17, 34, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        .glass-card-interactive {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card-interactive:hover {
+            border-color: rgba(72, 63, 138, 0.4);
+            box-shadow: 0 0 25px rgba(72, 63, 138, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .glass-card-red {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card-red:hover {
+            border-color: rgba(209, 35, 53, 0.45);
+            box-shadow: 0 0 25px rgba(209, 35, 53, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #05070f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1b1f38;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2b3154;
+        }
+    </style>
 </head>
-<body class="font-sans antialiased relative">
+<body class="min-h-screen flex flex-col selection:bg-tchbRed-600 selection:text-white relative antialiased">
 
-  <!-- Interactive Futuristic Background Canvas -->
-  <canvas id="gridCanvas" class="fixed inset-0 w-full h-full -z-10 no-print" style="pointer-events: none;"></canvas>
+    <!-- Interactive Grid Canvas (Matches Proposal Project Physics) -->
+    <canvas id="gridCanvas" class="fixed inset-0 w-full h-full -z-10" style="pointer-events: none;"></canvas>
 
-  <!-- MAIN WRAPPER CONTAINER -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 print:py-0 relative z-10">
-
-    <!-- PAGE 1 CONTENT WRAPPER -->
-    <div class="print-page-1">
-      <header class="flex flex-col md:flex-row justify-between items-center pb-8 border-b border-gray-800 gap-6 print:pb-4">
-        <div class="flex items-center gap-4">
-          <!-- Official Brand Logo -->
-          <div class="flex items-center">
-            <img src="https://i.postimg.cc/9zn5PrgX/TCHB-LOGO.png" alt="Total Cash Home Buyers Logo" class="h-16 md:h-20 w-auto object-contain">
-          </div>
-        </div>
-        <div class="text-right flex flex-col items-center md:items-end">
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-brand-crimson/10 text-red-400 border border-brand-crimson/20 mb-2">
-            EXCLUSIVE BROKER PORTFOLIO OPPORTUNITY
-          </span>
-          <h2 class="text-xl font-bold tracking-tight text-white print:text-lg">9 Locksley Ct, Bedford, IN 47421</h2>
-          <p class="text-xs text-gray-400 font-mono tracking-widest mt-1">MTG COMPARISON DATA EXCLUSIVE</p>
-        </div>
-      </header>
-
-      <div class="mt-6 flex justify-center text-center print:mt-4 print:mb-2">
-        <div class="inline-flex flex-wrap justify-center items-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-indigo-950/60 to-purple-950/60 text-indigo-200 border border-indigo-500/30 shadow-[0_4px_20px_rgba(99,102,241,0.15)]">
-          <span class="text-white font-black">$40,000 Entry Fee</span>
-          <span class="text-indigo-400/40">|</span>
-          <span>Including a 3% Realtor Commission</span>
-          <span class="text-indigo-400/40">[</span><span class="text-brand-emerald font-black">Buyer Pays All Closing Costs</span><span class="text-indigo-400/40">]</span>
-        </div>
-      </div>
-
-      <!-- core layout kpis -->
-      <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6 print-grid-3 print:mt-2 print:mb-2">
-        
-        <!-- Metric 1: Total Interest Saved -->
-        <div class="gradient-border bg-gray-900/50 p-6 rounded-xl flex flex-col justify-between print-p-tight transform hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_20px_40px_rgba(99,102,241,0.15)] transition-all duration-300 ease-out cursor-pointer group">
-          <div class="flex justify-between items-start">
-            <div>
-              <p class="text-xs uppercase font-semibold text-gray-400 tracking-wider group-hover:text-indigo-400 transition-colors">Total Lifetime Savings</p>
-              <h3 class="text-4xl font-extrabold text-brand-emerald mt-1 print:text-2xl">$195,525.56</h3>
-            </div>
-            <div class="w-10 h-10 rounded-full border border-gray-800 overflow-hidden bg-gray-950 flex items-center justify-center flex-shrink-0 group-hover:border-indigo-500/50 transition-colors">
-              <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
-            </div>
-          </div>
-          <p class="text-xs text-gray-300 mt-4 print:mt-2 leading-relaxed">
-            Saved entirely in interest payments over the life of the loan compared to standard FHA rates.
-          </p>
-        </div>
-
-        <!-- Metric 2: Cash Flow Advantage -->
-        <div class="gradient-border bg-gray-900/50 p-6 rounded-xl flex flex-col justify-between print-p-tight transform hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_20px_40px_rgba(99,102,241,0.15)] transition-all duration-300 ease-out cursor-pointer group">
-          <div class="flex justify-between items-start">
-            <div>
-              <p class="text-xs uppercase font-semibold text-gray-400 tracking-wider group-hover:text-indigo-400 transition-colors">Monthly Cash Flow Advantage</p>
-              <h3 class="text-4xl font-extrabold text-indigo-400 mt-1 print:text-2xl">$404.16 / mo</h3>
-            </div>
-            <div class="w-10 h-10 rounded-full border border-gray-800 overflow-hidden bg-gray-950 flex items-center justify-center flex-shrink-0 group-hover:border-indigo-500/50 transition-colors">
-              <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
-            </div>
-          </div>
-          <p class="text-xs text-gray-300 mt-4 print:mt-2 leading-relaxed">
-            Instantly boost capitalization rates and net immediate yield by slashing debt-servicing expenses.
-          </p>
-        </div>
-
-        <!-- Metric 3: Maturity Velocity -->
-        <div class="gradient-border bg-gray-900/50 p-6 rounded-xl flex flex-col justify-between print-p-tight transform hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_20px_40px_rgba(99,102,241,0.15)] transition-all duration-300 ease-out cursor-pointer group">
-          <div class="flex justify-between items-start">
-            <div>
-              <p class="text-xs uppercase font-semibold text-gray-400 tracking-wider group-hover:text-red-400 transition-colors">Maturity Timeline Advantage</p>
-              <h3 class="text-4xl font-extrabold text-red-400 mt-1 print:text-2xl">5 Years Shaved</h3>
-            </div>
-            <div class="w-10 h-10 rounded-full border border-gray-800 overflow-hidden bg-gray-950 flex items-center justify-center flex-shrink-0 group-hover:border-indigo-500/50 transition-colors">
-              <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
-            </div>
-          </div>
-          <p class="text-xs text-gray-300 mt-4 print:mt-2 leading-relaxed">
-            The Sub2 FHA loan matures in <span class="text-white font-bold">2051</span> vs <span class="text-white font-bold">2056</span> for today's current market mortgages.
-          </p>
-        </div>
-
-      </div>
-
-      <div class="mt-8 bg-gray-900/40 rounded-2xl border border-gray-800 overflow-hidden print-m-tight">
-        <div class="p-6 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 print:p-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full border border-gray-700 overflow-hidden bg-gray-950 flex items-center justify-center">
-              <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
-            </div>
-            <div>
-              <h3 class="text-lg font-bold text-white print:text-base">Deal Architecture Breakdown</h3>
-              <p class="text-xs text-gray-400">Comparing direct data points from "9 Locksley Ct, Bedford, IN 47421 - Mtg Comparison"</p>
-            </div>
-          </div>
-          <button onclick="window.print()" class="no-print inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 transition px-5 py-2.5 rounded-lg text-sm font-semibold text-white shadow-lg hover:shadow-indigo-600/35 active:scale-95 duration-150">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-            Export Proposal (PDF)
-          </button>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-center text-sm text-gray-300">
-            <thead class="bg-gray-950/60 text-xs text-gray-400 uppercase tracking-wider">
-              <tr>
-                <th scope="col" class="px-6 py-4 print:py-3 print:px-4 text-center">Metric / Dimension</th>
-                <th scope="col" class="px-6 py-4 print:py-3 print:px-4 text-center text-indigo-400 bg-indigo-950/20 font-bold">🔥 Proposed Sub2 Deal</th>
-                <th scope="col" class="px-6 py-4 print:py-3 print:px-4 text-center">Standard FHA in Today's Market</th>
-                <th scope="col" class="px-6 py-4 print:py-3 print:px-4 text-center text-brand-emerald">Net Advantage</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-800">
-              <tr>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-semibold text-gray-200 text-center">Type of Loan</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-medium text-white bg-indigo-950/10 text-center">FHA</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center">FHA</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-gray-400">—</td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-semibold text-gray-200 text-center">Loan Amount (Principal)</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 bg-indigo-950/10 text-white font-medium text-center">$230,611.18</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center">$230,611.18</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-gray-400">—</td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-semibold text-gray-200 text-center">Interest %</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-bold text-brand-emerald bg-indigo-950/10 text-lg print:text-base text-center">3.250%</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-red-400 text-lg print:text-base font-medium text-center">7.125%</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-brand-emerald font-bold text-base print:text-sm">3.875% Better Rate</td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-semibold text-gray-200 text-center">30-Year Maturity Date</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 bg-indigo-950/10 text-center">2051</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center">2056</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-brand-emerald font-semibold">5 Years Shorter Term</td>
-              </tr>
-              <tr class="bg-gray-950/20">
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-semibold text-gray-200 text-center">Principal & Interest (P&I)</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-bold text-white bg-indigo-950/10 text-center">$1,149.50</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center">$1,553.67</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-brand-emerald font-semibold">+$404.17 / mo Saved</td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-semibold text-gray-200 text-center">Escrow & Taxes Per Month</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 bg-indigo-950/10 text-center">$517.73</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center">$517.73</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-gray-400">Identical ($0.00 Diff)</td>
-              </tr>
-              <tr class="bg-brand-purple/15">
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-bold text-white text-center">Total PITI Payment</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-extrabold text-indigo-300 bg-indigo-950/30 text-base print:text-sm text-center">$1,667.24</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-gray-300 text-center">$2,071.40</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-brand-emerald font-extrabold text-base print:text-sm">+$404.16 / mo Cash Flow</td>
-              </tr>
-              <tr class="bg-brand-emerald/10">
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-bold text-white text-center">Interest Paid Over Life of Loan</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 font-bold text-brand-emerald bg-indigo-950/10 text-center">$133,184.55</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-red-400 text-center">$328,710.11</td>
-                <td class="px-6 py-4 print:py-2.5 print:px-4 text-center text-brand-emerald font-extrabold">+$195,525.56 Net Savings</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <!-- Glowing Background Mesh Spheres -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="glow-sphere-purple top-10 left-10"></div>
+        <div class="glow-sphere-red top-[40%] right-10"></div>
+        <div class="glow-sphere-purple bottom-10 left-[30%]"></div>
     </div>
 
-    <!-- PAGE 2 CONTENT WRAPPER -->
-    <div class="print-page-2 mt-12 md:mt-16 print:mt-0">
-      <div class="bg-gradient-to-br from-indigo-950/30 to-brand-crimsonDark/10 p-8 rounded-2xl border border-gray-800 print:p-5 print-m-tight text-center flex flex-col items-center">
-        <div class="max-w-6xl mx-auto flex flex-col items-center">
-          <div class="text-center mb-8 print:mb-4">
-            <span class="text-brand-emerald font-bold uppercase text-xs tracking-wider block text-center">Holding Horizon Projection</span>
-            <h3 class="text-2xl font-black text-white mt-1 text-center print:text-lg">Projected Wealth Accumulation Milestones</h3>
-            <p class="text-sm text-gray-300 mt-2 text-center print:text-xs">
-              Cumulative financial advantage breakdown comparing the Sub2 deal metrics for 9 Locksley Ct over standard options.
-            </p>
-          </div>
-          
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 print-grid-4 w-full justify-center">
+    <!-- Header Block -->
+    <header class="border-b border-slate-800/80 bg-[#070a16]/90 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             
-            <!-- Year 5 -->
-            <div class="bg-gray-900/80 p-5 rounded-xl border border-gray-800 hover:border-gray-700 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 print-p-tight text-center flex flex-col justify-between">
-              <span class="text-xs font-bold text-indigo-400 tracking-wider uppercase block text-center">Year 5 Milestone</span>
-              <div class="mt-3">
-                <p class="text-[10px] text-gray-400 text-center">Cumulative Cash Flow Saved</p>
-                <p class="text-xl font-bold text-white text-center print:text-base">$24,249.60</p>
-              </div>
-              <div class="mt-2 pt-2 border-t border-gray-800">
-                <p class="text-[10px] text-gray-400 text-center">Cumulative Interest Saved</p>
-                <p class="text-lg font-bold text-brand-emerald text-center print:text-sm">$32,587.50</p>
-              </div>
-              <div class="mt-3 text-center bg-indigo-950/50 rounded py-1">
-                <p class="text-[10px] text-gray-400 text-center">Combined Yield Boost</p>
-                <p class="text-sm font-bold text-white text-center print:text-xs">$56,837.10</p>
-              </div>
+            <!-- Brand Logo & Responsive Titles -->
+            <div class="flex items-center gap-4">
+                <div class="relative bg-[#0d1122]/90 p-2 rounded-xl border border-slate-800/60 flex items-center justify-center h-16 w-48">
+                    <img src="https://i.postimg.cc/9zn5PrgX/TCHB-LOGO.png" alt="TCHB Logo" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/180x60/241a45/ffffff?text=Total+Cash+Buyers'">
+                </div>
+                <div class="h-8 w-px bg-slate-800/60 hidden sm:block"></div>
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-tchbRed-500 font-bold block">Internal Blueprint</span>
+                    <h1 class="text-xl font-heading font-extrabold text-white tracking-tight flex items-center gap-2">
+                        TCHB DISPO SOP
+                    </h1>
+                </div>
             </div>
 
-            <!-- Year 10 -->
-            <div class="bg-gray-900/80 p-5 rounded-xl border border-gray-800 hover:border-gray-700 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 print-p-tight text-center flex flex-col justify-between">
-              <span class="text-xs font-bold text-indigo-400 tracking-wider uppercase block text-center">Year 10 Milestone</span>
-              <div class="mt-3">
-                <p class="text-[10px] text-gray-400 text-center">Cumulative Cash Flow Saved</p>
-                <p class="text-xl font-bold text-white text-center print:text-base">$48,499.20</p>
-              </div>
-              <div class="mt-2 pt-2 border-t border-gray-800">
-                <p class="text-[10px] text-gray-400 text-center">Cumulative Interest Saved</p>
-                <p class="text-lg font-bold text-brand-emerald text-center print:text-sm">$65,175.00</p>
-              </div>
-              <div class="mt-3 text-center bg-indigo-950/50 rounded py-1">
-                <p class="text-[10px] text-gray-400 text-center">Combined Yield Boost</p>
-                <p class="text-sm font-bold text-white text-center print:text-xs">$113,674.20</p>
-              </div>
+            <!-- Global Target Window Indicator -->
+            <div class="flex items-center gap-3 bg-[#0d1122]/80 p-1.5 rounded-xl border border-slate-800/80">
+                <div class="flex items-center gap-2 px-3 py-1">
+                    <div class="h-2.5 w-2.5 rounded-full bg-tchbGreen-500 animate-ping"></div>
+                    <span class="text-xs font-semibold text-slate-300">Action Window:</span>
+                    <span class="bg-tchbRed-600 text-white font-extrabold text-xs px-2.5 py-0.5 rounded-md tracking-wider shadow">24 HOURS</span>
+                </div>
+                <div class="h-6 w-px bg-slate-800"></div>
+                <div class="flex items-center gap-2 px-3 py-1 text-xs">
+                    <img src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon Badge" class="h-5 w-5 object-contain" onerror="this.src='https://placehold.co/20x20/D12335/ffffff?text=T'">
+                    <span class="text-slate-400 font-medium">Compliance Certified</span>
+                </div>
             </div>
 
-            <!-- Year 15 -->
-            <div class="bg-gray-900/80 p-5 rounded-xl border border-gray-800 hover:border-gray-700 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 print-p-tight text-center flex flex-col justify-between">
-              <span class="text-xs font-bold text-indigo-400 tracking-wider uppercase block text-center">Year 15 Milestone</span>
-              <div class="mt-3">
-                <p class="text-[10px] text-gray-400 text-center">Cumulative Cash Flow Saved</p>
-                <p class="text-xl font-bold text-white text-center print:text-base">$72,748.80</p>
-              </div>
-              <div class="mt-2 pt-2 border-t border-gray-800">
-                <p class="text-[10px] text-gray-400 text-center">Cumulative Interest Saved</p>
-                <p class="text-lg font-bold text-brand-emerald text-center print:text-sm">$97,762.50</p>
-              </div>
-              <div class="mt-3 text-center bg-indigo-950/50 rounded py-1">
-                <p class="text-[10px] text-gray-400 text-center">Combined Yield Boost</p>
-                <p class="text-sm font-bold text-white text-center print:text-xs">$170,511.30</p>
-              </div>
-            </div>
-
-            <!-- Year 30 (Full Maturity) -->
-            <div class="bg-gradient-to-b from-indigo-950/60 to-gray-900/80 p-5 rounded-xl border border-indigo-500/30 hover:border-indigo-400/50 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-[0_15px_30px_rgba(99,102,241,0.2)] transition-all duration-300 print-p-tight text-center flex flex-col justify-between">
-              <span class="text-xs font-bold text-yellow-400 tracking-wider uppercase block text-center">Full Maturity (30 Yr)</span>
-              <div class="mt-3">
-                <p class="text-[10px] text-gray-400 text-center">Cumulative Cash Flow Saved</p>
-                <p class="text-xl font-bold text-white text-center print:text-base">$121,248.00</p>
-              </div>
-              <div class="mt-2 pt-2 border-t border-gray-800">
-                <p class="text-[10px] text-gray-400 text-center">Total Interest Saved</p>
-                <p class="text-lg font-bold text-brand-emerald text-center print:text-sm">$195,525.56</p>
-              </div>
-              <div class="mt-3 text-center bg-brand-purple/20 rounded py-1">
-                <p class="text-[10px] text-gray-300 text-center">Lifetime Advantage</p>
-                <p class="text-sm font-black text-white text-center print:text-xs">$316,773.56</p>
-              </div>
-            </div>
-
-          </div>
         </div>
-      </div>
+    </header>
 
-      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 print-grid-2-col print-m-tight">
-        <div class="bg-gray-900/20 p-6 rounded-xl border border-gray-800 flex gap-4 print:p-4 text-left hover:border-gray-700 hover:shadow-lg transition-all duration-300">
-          <div class="flex-shrink-0">
-            <div class="w-10 h-10 rounded-full border border-gray-700 overflow-hidden bg-gray-950 flex items-center justify-center">
-              <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
-            </div>
-          </div>
-          <div>
-            <h4 class="text-base font-extrabold text-white flex items-center gap-2 print:text-sm">
-              The Subject-To Execution Advantage
-            </h4>
-            <p class="text-xs text-gray-400 mt-2 leading-relaxed print:text-[11px] print:mt-1">
-              In a macroeconomic regime where standard financing rates linger above 7%, acquiring this asset subject to its existing <span class="text-white font-semibold">3.25% locked FHA note</span> represents immediate capital arbitrage. Your buyer completely bypasses severe interest inflation, scaling their initial cash yield without altering structural risk metrics.
-            </p>
-          </div>
-        </div>
-
-        <div class="bg-gray-900/20 p-6 rounded-xl border border-gray-800 flex gap-4 print:p-4 text-left hover:border-gray-700 hover:shadow-lg transition-all duration-300">
-          <div class="flex-shrink-0">
-            <div class="w-10 h-10 rounded-full border border-gray-700 overflow-hidden bg-gray-950 flex items-center justify-center">
-              <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
-            </div>
-          </div>
-          <div>
-            <h4 class="text-base font-extrabold text-white flex items-center gap-2 print:text-sm">
-              Broker Capital Velocity Focus
-            </h4>
-            <p class="text-xs text-gray-400 mt-2 leading-relaxed print:text-[11px] print:mt-1">
-              Because debt-servicing demands are lowered by <span class="text-white font-semibold">$404.16 monthly</span>, this asset operates at a highly competitive Debt Service Coverage Ratio (DSCR). This leaves your buyer with surplus credit flexibility and raw liquidity to scale into their next acquisition effortlessly.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PAGE 3 CONTENT WRAPPER -->
-    <div class="print-page-3 mt-12 print:mt-0">
-      <div class="text-center mb-6 no-print md:block">
-        <span class="text-indigo-400 font-bold uppercase text-xs tracking-wider">Visual Performance Analytics</span>
-        <h3 class="text-2xl font-black text-white mt-1">Direct Comparative Visualizations</h3>
-      </div>
-
-      <!-- Charts Wrapper: Stacked cleanly in 1 Column for Print engine, beautiful layout grid on web -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 print-stacked-charts print-m-tight">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         
-        <!-- Chart A: Payment Structuring Comparison -->
-        <div class="bg-gray-900/40 p-6 rounded-2xl border border-gray-800 print:p-4 hover:border-indigo-500/30 transition-all duration-300 shadow-md">
-          <h3 class="text-base font-bold text-white mb-1 print:text-sm">PITI Payment Breakdown</h3>
-          <p class="text-xs text-gray-400 mb-6 print:mb-2">Visualizing direct monthly overhead demands</p>
-          <div class="relative h-64 w-full chart-container-print" style="height: 200px;">
-            <canvas id="paymentChart"></canvas>
-          </div>
+        <!-- Interactive Welcome Banner -->
+        <div class="relative glass-card rounded-2xl border border-slate-800/80 p-6 md:p-8 overflow-hidden mb-8">
+            <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-tchbPurple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-20 -top-20 w-80 h-80 bg-tchbRed-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tchbRed-950/60 border border-tchbRed-700/50 text-tchbRed-100 text-xs font-bold mb-3 uppercase tracking-wider">
+                        <i class="fa-solid fa-bolt text-tchbRed-500"></i> Speed & Yield Maximizer
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-heading font-extrabold text-white tracking-tight">The 10-Step Disposition Workflow</h2>
+                    <p class="text-slate-400 mt-2 text-sm md:text-base leading-relaxed">
+                        To guarantee high contract velocity and optimal exit yields, this strategy must be executed continuously within the first <span class="text-white font-semibold">24 hours</span> of securing a contract. Follow the system meticulously.
+                    </p>
+                </div>
+                <!-- Interactive Action Tabs -->
+                <div class="flex flex-wrap gap-2.5">
+                    <button onclick="switchTab('sop-timeline')" class="tab-btn active-tab px-4 py-3 rounded-xl font-heading text-xs font-bold tracking-wider uppercase transition-all duration-300 border border-tchbPurple-500 bg-tchbPurple-600/80 hover:bg-tchbPurple-600 text-white shadow-lg" id="tab-sop-timeline">
+                        <i class="fa-solid fa-sitemap mr-2"></i>Interactive Flow
+                    </button>
+                    <button onclick="switchTab('checklist')" class="tab-btn px-4 py-3 rounded-xl font-heading text-xs font-bold tracking-wider uppercase transition-all duration-300 border border-slate-800 text-slate-400 hover:text-white hover:bg-[#0f1424]/60" id="tab-checklist">
+                        <i class="fa-solid fa-list-check mr-2"></i>Tracker
+                    </button>
+                    <button onclick="switchTab('analytics')" class="tab-btn px-4 py-3 rounded-xl font-heading text-xs font-bold tracking-wider uppercase transition-all duration-300 border border-slate-800 text-slate-400 hover:text-white hover:bg-[#0f1424]/60" id="tab-analytics">
+                        <i class="fa-solid fa-chart-line mr-2"></i>Templates & Data
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <!-- Chart B: Interest Over Time Accumulation -->
-        <div class="bg-gray-900/40 p-6 rounded-2xl border border-gray-800 print:p-4 hover:border-indigo-500/30 transition-all duration-300 shadow-md">
-          <h3 class="text-base font-bold text-white mb-1 print:text-sm">Interest Accumulation Contrast</h3>
-          <p class="text-xs text-gray-400 mb-6 print:mb-2">Total interest paid over the life of the loan</p>
-          <div class="relative h-64 w-full chart-container-print" style="height: 200px;">
-            <canvas id="interestChart"></canvas>
-          </div>
+        <!-- Content Container -->
+        <div id="content-container">
+
+            <!-- TAB 1: INTERACTIVE TIMELINE -->
+            <div id="view-sop-timeline" class="tab-view block space-y-8">
+                
+                <!-- Quick Navigation Shortcuts -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <a href="#phase-1" class="flex items-center gap-3 bg-[#0d1122]/60 hover:bg-[#0d1122]/90 p-4 rounded-xl border border-slate-800/80 transition-all hover:border-tchbRed-600/50">
+                        <span class="w-8 h-8 rounded-lg bg-tchbRed-950/80 border border-tchbRed-700 flex items-center justify-center text-tchbRed-100 font-extrabold text-sm shadow">I</span>
+                        <div>
+                            <span class="text-slate-500 text-[9px] uppercase font-bold tracking-wider block">Phase One</span>
+                            <span class="text-xs font-bold text-white block">CRM Integrity</span>
+                        </div>
+                    </a>
+                    <a href="#phase-2" class="flex items-center gap-3 bg-[#0d1122]/60 hover:bg-[#0d1122]/90 p-4 rounded-xl border border-slate-800/80 transition-all hover:border-tchbPurple-600/50">
+                        <span class="w-8 h-8 rounded-lg bg-tchbPurple-900/80 border border-tchbPurple-600 flex items-center justify-center text-tchbPurple-100 font-extrabold text-sm shadow">II</span>
+                        <div>
+                            <span class="text-slate-500 text-[9px] uppercase font-bold tracking-wider block">Phase Two</span>
+                            <span class="text-xs font-bold text-white block">Hyper-Sourcing</span>
+                        </div>
+                    </a>
+                    <a href="#phase-3" class="flex items-center gap-3 bg-[#0d1122]/60 hover:bg-[#0d1122]/90 p-4 rounded-xl border border-slate-800/80 transition-all hover:border-purple-500/50">
+                        <span class="w-8 h-8 rounded-lg bg-purple-950/80 border border-purple-800 flex items-center justify-center text-purple-200 font-extrabold text-sm shadow">III</span>
+                        <div>
+                            <span class="text-slate-500 text-[9px] uppercase font-bold tracking-wider block">Phase Three</span>
+                            <span class="text-xs font-bold text-white block">Asset Upload</span>
+                        </div>
+                    </a>
+                    <a href="#phase-4" class="flex items-center gap-3 bg-[#0d1122]/60 hover:bg-[#0d1122]/90 p-4 rounded-xl border border-slate-800/80 transition-all hover:border-tchbGreen-500/50">
+                        <span class="w-8 h-8 rounded-lg bg-green-950/80 border border-green-800 flex items-center justify-center text-tchbGreen-500 font-extrabold text-sm shadow">IV</span>
+                        <div>
+                            <span class="text-slate-500 text-[9px] uppercase font-bold tracking-wider block">Phase Four</span>
+                            <span class="text-xs font-bold text-white block">Multi-Channel</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Vertical Process Line Map -->
+                <div class="relative pl-6 sm:pl-10 border-l border-slate-800/80 space-y-12 py-4">
+
+                    <!-- Anchors and Floating line colors -->
+                    <div id="phase-1" class="absolute -top-10"></div>
+                    <div class="absolute left-0 top-0 w-1 bg-gradient-to-b from-tchbRed-600 via-tchbPurple-600 to-tchbGreen-500 h-full pointer-events-none -ml-px rounded-full opacity-60"></div>
+
+                    <!-- PHASE 1 TITLE CARD -->
+                    <div class="relative -ml-[31px] sm:-ml-[47px] mb-8">
+                        <div class="inline-flex items-center gap-3">
+                            <span class="bg-tchbRed-600 text-white font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4 border-[#05070f] shadow-lg">
+                                <i class="fa-solid fa-shield-halved"></i> PHASE I: INTEGRITY & INTAKE Verification
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 1 CARD -->
+                    <div class="relative group">
+                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbRed-600 border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">1</div>
+                        <div class="glass-card rounded-xl p-6 glass-card-red">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="text-xs font-extrabold tracking-widest text-tchbRed-500 bg-tchbRed-950/50 border border-tchbRed-600/30 px-2.5 py-1 rounded uppercase">Step 1</span>
+                                    <h3 class="text-lg font-heading font-bold text-white">Underwrite (UW) the Deal</h3>
+                                </div>
+                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+                                    <i class="fa-solid fa-cube text-tchbRed-500"></i> AI Underwriting Engine
+                                </span>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Run complete subject property metrics and comp profiles directly through the **AI UW Tool** to evaluate and confirm wholesale purchase margins. Double check calculations to prevent faulty deploy rates.
+                            </p>
+                            <div class="p-3 bg-slate-950/80 rounded-lg border border-slate-800/50 flex items-center gap-3">
+                                <i class="fa-solid fa-circle-info text-tchbRed-500 text-sm shrink-0"></i>
+                                <span class="text-xs text-slate-400 leading-relaxed">Underwritten stats must be locked in to establish verified parameters for Step 6 (InvestorLift Assets).</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2 CARD -->
+                    <div class="relative group">
+                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbRed-600 border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">2</div>
+                        <div class="glass-card rounded-xl p-6 glass-card-red">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="text-xs font-extrabold tracking-widest text-tchbRed-500 bg-tchbRed-950/50 border border-tchbRed-600/30 px-2.5 py-1 rounded uppercase">Step 2</span>
+                                    <h3 class="text-lg font-heading font-bold text-white">Search Entire CRM Database</h3>
+                                </div>
+                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+                                    <i class="fa-solid fa-shield-halved text-tchbRed-500"></i> DND Safety Scrubbing
+                                </span>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Search the seller's active mobile and landline numbers across our unified CRM. Immediately verify and configure the seller profile to either **Disqualified (DQ'd)** or **Do Not Disturb (DND)**.
+                            </p>
+                            <div class="p-4 bg-tchbRed-950/20 rounded-xl border border-tchbRed-900/30 flex items-start gap-3">
+                                <img src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="Compliance Check" class="h-6 w-6 object-contain mt-0.5 shrink-0" onerror="this.src='https://placehold.co/24x24/D12335/ffffff?text=T'">
+                                <div>
+                                    <h4 class="text-xs font-bold text-tchbRed-100 uppercase tracking-wide">Critical Seller Guardrail Protocol</h4>
+                                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                                        This compliance step is mandatory to ensure our home seller is never targeted with automated buyer marketing blasts or text notifications referring directly to their own house.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 2 TITLE CARD -->
+                    <div id="phase-2" class="absolute pt-12"></div>
+                    <div class="relative -ml-[31px] sm:-ml-[47px] mb-8 pt-8">
+                        <div class="inline-flex items-center gap-3">
+                            <span class="bg-tchbPurple-600 text-white font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4 border-[#05070f] shadow-lg">
+                                <i class="fa-solid fa-magnifying-glass-chart"></i> PHASE II: HYPER-LOCAL BUYER SOURCING
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3 CARD -->
+                    <div class="relative group">
+                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbPurple-600 border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">3</div>
+                        <div class="glass-card rounded-xl p-6 glass-card-interactive animate-card">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="text-xs font-extrabold tracking-widest text-tchbPurple-500 bg-tchbPurple-950/50 border border-tchbPurple-600/30 px-2.5 py-1 rounded uppercase">Step 3</span>
+                                    <h3 class="text-lg font-heading font-bold text-white">Pull Local Hyper-Qualified Buyers</h3>
+                                </div>
+                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+                                    <i class="fa-solid fa-magnifying-glass text-tchbPurple-500"></i> Local Data Mining
+                                </span>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Target and extract information on local cash buyers active inside the property's sub-market. Construct a buyer spreadsheet matching precise localized parameters:
+                            </p>
+                            
+                            <!-- Sub-nested Sourcing parameters -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+                                <div class="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
+                                    <div>
+                                        <div class="text-tchbPurple-500 font-extrabold text-xs uppercase tracking-wide mb-1"><i class="fa-solid fa-tag mr-1"></i> Target Pricing Delta</div>
+                                        <p class="text-xs text-slate-400 leading-normal">Query cash properties sold within <span class="text-white font-semibold">+/- $10,000 to $15,000</span> of our target asking rate.</p>
+                                    </div>
+                                    <span class="text-[10px] text-slate-500 mt-2 font-bold uppercase">Budget Alignment</span>
+                                </div>
+                                <div class="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
+                                    <div>
+                                        <div class="text-tchbPurple-500 font-extrabold text-xs uppercase tracking-wide mb-1"><i class="fa-solid fa-building mr-1"></i> Corporate Intelligence</div>
+                                        <p class="text-xs text-slate-400 leading-normal">Pull purchasing LLC details, then extract their direct <span class="text-white font-semibold">Point of Contact (POC)</span> using OpenCorporates.</p>
+                                    </div>
+                                    <span class="text-[10px] text-slate-500 mt-2 font-bold uppercase">Owner Tracing</span>
+                                </div>
+                                <div class="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
+                                    <div>
+                                        <div class="text-tchbPurple-500 font-extrabold text-xs uppercase tracking-wide mb-1"><i class="fa-solid fa-address-book mr-1"></i> Agent Mobile Digging</div>
+                                        <p class="text-xs text-slate-400 leading-normal">Isolate and log direct contact info of representing agents for those transactions.</p>
+                                    </div>
+                                    <span class="text-[10px] text-tchbRed-500 mt-2 font-bold uppercase">Mobile Numbers Only</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 p-3 bg-tchbPurple-950/20 border border-tchbPurple-900/30 rounded-lg flex items-start gap-2.5 text-xs text-slate-400 leading-relaxed">
+                                <i class="fa-solid fa-mobile-screen-button text-tchbPurple-500 mt-0.5 shrink-0 text-sm"></i>
+                                <span><strong>Zillow Extraction Note:</strong> Many interfaces hide real estate agents' phone numbers behind central brokerage desk lines. Click into biography listings or query local agent registers to obtain their true <strong>personal mobile number</strong>.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4 CARD -->
+                    <div class="relative group">
+                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbPurple-600 border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">4</div>
+                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="text-xs font-extrabold tracking-widest text-tchbPurple-500 bg-tchbPurple-950/50 border border-tchbPurple-600/30 px-2.5 py-1 rounded uppercase">Step 4</span>
+                                    <h3 class="text-lg font-heading font-bold text-white">Join Local Facebook Groups</h3>
+                                </div>
+                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+                                    <i class="fa-brands fa-facebook text-tchbPurple-500"></i> Social Planting
+                                </span>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed">
+                                Request access to localized Real Estate Investing (REI), wholesale, and county-specific cash buyer groups on Facebook. Doing this in advance ensures you are approved and ready to post when the syndication drafts are signed off.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5 CARD -->
+                    <div class="relative group">
+                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbPurple-600 border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">5</div>
+                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="text-xs font-extrabold tracking-widest text-tchbPurple-500 bg-tchbPurple-950/50 border border-tchbPurple-600/30 px-2.5 py-1 rounded uppercase">Step 5</span>
+                                    <h3 class="text-lg font-heading font-bold text-white">Immediately Begin Investor Scraping</h3>
+                                </div>
+                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+                                    <i class="fa-solid fa-server text-tchbPurple-500"></i> Investorbase Mining
+                                </span>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Extract active regional buyer cohorts directly using our specialized **Investorbase** scraping credentials. Filter searches to target active cash buyers in the property's sub-market.
+                            </p>
+                            <!-- Smart List Feature Grid -->
+                            <div class="p-4 bg-slate-950/80 rounded-xl border border-slate-800 flex items-start gap-4">
+                                <div class="p-3 bg-tchbPurple-950 border border-tchbPurple-600/30 rounded-lg text-tchbPurple-100 font-extrabold text-xs tracking-wider shrink-0 uppercase">
+                                    <i class="fa-solid fa-location-crosshairs text-tchbPurple-500"></i> 1-Hour Proximity Rule
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-white uppercase tracking-wider">Historical Lead Mapping</h4>
+                                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                                        If our newly acquired property is located within **1 hour** of any previously marketed or closed deals, instantly query those past transactions to assemble highly relevant Smart Lists for our SMS outreach database.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 3 TITLE CARD -->
+                    <div id="phase-3" class="absolute pt-12"></div>
+                    <div class="relative -ml-[31px] sm:-ml-[47px] mb-8 pt-8">
+                        <div class="inline-flex items-center gap-3">
+                            <span class="bg-purple-600 text-white font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4 border-[#05070f] shadow-lg">
+                                <i class="fa-solid fa-folder-open"></i> PHASE III: PLATFORM DEPLOYMENT & DIGITAL DRAFTS
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 6 CARD -->
+                    <div class="relative group">
+                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-purple-600 border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">6</div>
+                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="text-xs font-extrabold tracking-widest text-purple-400 bg-purple-950/50 border border-purple-500/30 px-2.5 py-1 rounded uppercase">Step 6</span>
+                                    <h3 class="text-lg font-heading font-bold text-white">Create InvestorLift Draft</h3>
+                                </div>
+                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+                                    <i class="fa-solid fa-cloud-arrow-up text-purple-400"></i> InvestorLift Profile
+                                </span>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Create an optimized public landing page profile inside **InvestorLift**. Compile and input complete underwriting details, maintaining the listing strictly in **Draft** mode until checked by a supervisor.
+                            </p>
+                            <!-- Investorlift component checkboxes -->
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                                <div class="p-3 bg-slate-950 rounded-lg border border-slate-800/80 flex items-center gap-2.5">
+                                    <i class="fa-solid fa-file-signature text-tchbGreen-500 text-sm"></i>
+                                    <span class="text-[11px] font-semibold text-slate-300">Description Copy</span>
+                                </div>
+                                <div class="p-3 bg-slate-950 rounded-lg border border-slate-800/80 flex items-center gap-2.5">
+                                    <i class="fa-solid fa-images text-tchbGreen-500 text-sm"></i>
+                                    <span class="text-[11px] font-semibold text-slate-300">Categorized Photos</span>
+                                </div>
+                                <div class="p-3 bg-slate-950 rounded-lg border border-slate-800/80 flex items-center gap-2.5">
+                                    <i class="fa-solid fa-video text-tchbGreen-500 text-sm"></i>
+                                    <span class="text-[11px] font-semibold text-slate-300">Walkthrough Video</span>
+                                </div>
+                                <div class="p-3 bg-slate-950 rounded-lg border border-slate-800/80 flex items-center gap-2.5">
+                                    <i class="fa-solid fa-chart-line text-tchbGreen-500 text-sm"></i>
+                                    <span class="text-[11px] font-semibold text-slate-300">Verified Comps</span>
+                                </div>
+                            </div>
+                            <!-- Pro Tip box -->
+                            <div class="mt-4 p-3 bg-purple-950/20 border border-purple-900/30 rounded-lg text-xs text-slate-400">
+                                <span class="font-bold text-slate-300"><i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1.5"></i>Status Guardrail:</span> Once fully checked and approved by the supervisor, the page should immediately be switched to **Active** mode to start collecting inquiries.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHASE 4 TITLE CARD -->
+                    <div id="phase-4" class="absolute pt-12"></div>
+                    <div class="relative -ml-[31px] sm:-ml-[47px] mb-8 pt-8">
+                        <div class="inline-flex items-center gap-3">
+                            <span class="bg-tchbGreen-500 text-slate-950 font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4 border-[#05070f] shadow-lg">
+                                <i class="fa-solid fa-paper-plane"></i> PHASE IV: SYNDICATION & BROADCAST outreach
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 7 CARD -->
+                    <div class="relative group">
+                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbGreen-500 border-4 border-[#05070f] flex items-center justify-center text-slate-950 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">7</div>
+                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="text-xs font-extrabold tracking-widest text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-1 rounded uppercase">Step 7</span>
+                                    <h3 class="text-lg font-heading font-bold text-white">Prepare Realtor Outreach Database</h3>
+                                </div>
+                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+                                    <i class="fa-solid fa-users-viewfinder text-tchbGreen-500"></i> Outreach Logistics
+                                </span>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Build an active list of localized buyer's agents operating within the property's sub-market. Execute this extraction using our dual-track logistics workflow:
+                            </p>
+                            <!-- Realtor list strategy steps -->
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800/80">
+                                    <span class="text-xs font-extrabold text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-0.5 rounded">7.1</span>
+                                    <div>
+                                        <h5 class="text-xs font-bold text-white uppercase">Individual Search</h5>
+                                        <p class="text-xs text-slate-400 mt-0.5 leading-normal">Manually search agent directories on Zillow, Realtor.com, and local MLS resources representing transactions near our subject asset.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800/80">
+                                    <span class="text-xs font-extrabold text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-0.5 rounded">7.2</span>
+                                    <div>
+                                        <h5 class="text-xs font-bold text-white uppercase">Macro Scraping Extraction</h5>
+                                        <p class="text-xs text-slate-400 mt-0.5 leading-normal">Deploy local scraping tools to automatically extract details of active registered agents operating within the targets ZIP codes.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800/80">
+                                    <span class="text-xs font-extrabold text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-0.5 rounded">7.3</span>
+                                    <div>
+                                        <h5 class="text-xs font-bold text-white uppercase">Format List & Import</h5>
+                                        <p class="text-xs text-slate-400 mt-0.5 leading-normal">Clean, organize, and format the harvested lists (First Name, Last Name, Mobile, Email, Brokerage) and import them directly into our CRM under target tags.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 8 CARD -->
+                    <div class="relative group">
+                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbGreen-500 border-4 border-[#05070f] flex items-center justify-center text-slate-950 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">8</div>
+                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="text-xs font-extrabold tracking-widest text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-1 rounded uppercase">Step 8</span>
+                                    <h3 class="text-lg font-heading font-bold text-white">Create Investor Text Blast Draft</h3>
+                                </div>
+                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+                                    <i class="fa-solid fa-comment-sms text-tchbGreen-500"></i> SMS Broadcast
+                                </span>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Draft the investor SMS campaign using your compiled Hyper-Qualified Smart Lists. Optimize the text to feature: **Property Address/Submarket, Price, ARV, Rehab Estimate, and direct link to photos**. Keep on standby in Draft status, and dispatch immediately once approved.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- STEP 9 CARD -->
+                    <div class="relative group">
+                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbGreen-500 border-4 border-[#05070f] flex items-center justify-center text-slate-950 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">9</div>
+                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="text-xs font-extrabold tracking-widest text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-1 rounded uppercase">Step 9</span>
+                                    <h3 class="text-lg font-heading font-bold text-white">Create Realtor Text Blast Draft</h3>
+                                </div>
+                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+                                    <i class="fa-solid fa-comment-sms text-tchbGreen-500"></i> SMS Broadcast
+                                </span>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Tailor an SMS sequence focused on buyer's agents. Incentivize outreach by clearly highlighting broker-to-broker commission splits, flexible showing schedules, and direct access terms. Keep in Draft status, and dispatch immediately once authorized.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- STEP 10 CARD -->
+                    <div class="relative group">
+                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbGreen-500 border-4 border-[#05070f] flex items-center justify-center text-slate-950 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">10</div>
+                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="text-xs font-extrabold tracking-widest text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-1 rounded uppercase">Step 10</span>
+                                    <h3 class="text-lg font-heading font-bold text-white">Create Facebook Post Draft</h3>
+                                </div>
+                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+                                    <i class="fa-brands fa-square-facebook text-tchbGreen-500"></i> Social Syndication
+                                </span>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Compose an engaging post designed for local investing groups selected during Step 4. Format the call-to-action details clearly (asking price, visual files, direct PM instructions). Save as a draft, and share post immediately upon manager sign-off.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- TAB 2: INTERACTIVE DEAL TRACKER -->
+            <div id="view-checklist" class="tab-view hidden space-y-6">
+                <div class="glass-card rounded-2xl p-6 border border-slate-800/80">
+                    
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-6 mb-6">
+                        <div>
+                            <h3 class="text-xl font-heading font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-tchbPurple-500"></i> Active Campaign Log
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1 leading-relaxed">Systematically log your steps sequentially, track dispo velocity, and automatically save the state locally in real time.</p>
+                        </div>
+                        <!-- Controls -->
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="resetChecksheet()" class="px-3.5 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-900 border border-slate-800 text-xs font-bold text-slate-300 transition-all flex items-center gap-1.5">
+                                <i class="fa-solid fa-rotate-left"></i>Reset Progress
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Setup Active Deal Metadata Inputs -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Subject Property Address</label>
+                            <input type="text" id="deal-address" oninput="saveDealMeta()" placeholder="e.g. 123 Main Street, Orlando, FL" class="w-full bg-slate-950 border border-slate-800 focus:border-tchbPurple-500 rounded-lg py-2 px-3 text-sm text-white focus:outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Target Asking Price</label>
+                            <input type="text" id="deal-price" oninput="saveDealMeta()" placeholder="e.g. $195,000" class="w-full bg-slate-950 border border-slate-800 focus:border-tchbPurple-500 rounded-lg py-2 px-3 text-sm text-white focus:outline-none transition-colors">
+                        </div>
+                    </div>
+
+                    <!-- Live progress indicator -->
+                    <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800/80 mb-8">
+                        <div class="flex items-center justify-between text-xs font-bold mb-2">
+                            <span class="text-slate-400">Campaign Completion Tracker:</span>
+                            <span id="completion-perc" class="text-tchbGreen-500 bg-green-950/50 border border-green-900/30 px-2 py-0.5 rounded font-black">0% Done</span>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-3 overflow-hidden border border-slate-800">
+                            <div id="completion-bar" class="bg-gradient-to-r from-tchbRed-600 via-tchbPurple-600 to-tchbGreen-500 h-full w-0 transition-all duration-500"></div>
+                        </div>
+                    </div>
+
+                    <!-- Checklist Interactive Steps -->
+                    <div class="space-y-4">
+                        
+                        <!-- Check Step 1 -->
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
+                            <input type="checkbox" id="check-step1" onchange="toggleCheckStep(1)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <div class="flex-grow">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-tchbRed-950 border border-tchbRed-800 text-tchbRed-100 px-1.5 py-0.5 rounded">Step 1</span>
+                                    <span class="text-sm font-bold text-white">Underwrite (UW) the Deal</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Check against our AI UW Tool to confirm wholesale purchase margins are accurate.</p>
+                            </div>
+                        </div>
+
+                        <!-- Check Step 2 -->
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
+                            <input type="checkbox" id="check-step2" onchange="toggleCheckStep(2)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <div class="flex-grow">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-tchbRed-950 border border-tchbRed-800 text-tchbRed-100 px-1.5 py-0.5 rounded">Step 2</span>
+                                    <span class="text-sm font-bold text-white">CRM Database DND Check</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Search our internal records using the seller's mobile number. Mark the user profile as DND or Disqualified.</p>
+                            </div>
+                        </div>
+
+                        <!-- Check Step 3 -->
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
+                            <input type="checkbox" id="check-step3" onchange="toggleCheckStep(3)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <div class="flex-grow">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-tchbPurple-950 border border-tchbPurple-800 text-tchbPurple-100 px-1.5 py-0.5 rounded">Step 3</span>
+                                    <span class="text-sm font-bold text-white">Sourcing Hyper-Qualified Buyers</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Isolate cash buyers who purchased homes within a $10K-$15K price delta. Track LLC name, POC details, and buying agent's mobile phone numbers via Zillow profiles.</p>
+                            </div>
+                        </div>
+
+                        <!-- Check Step 4 -->
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
+                            <input type="checkbox" id="check-step4" onchange="toggleCheckStep(4)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <div class="flex-grow">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-tchbPurple-950 border border-tchbPurple-800 text-tchbPurple-100 px-1.5 py-0.5 rounded">Step 4</span>
+                                    <span class="text-sm font-bold text-white">Join Local Facebook Groups</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Identify and join active local wholesaling and investing networks on Facebook.</p>
+                            </div>
+                        </div>
+
+                        <!-- Check Step 5 -->
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
+                            <input type="checkbox" id="check-step5" onchange="toggleCheckStep(5)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <div class="flex-grow">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-tchbPurple-950 border border-tchbPurple-800 text-tchbPurple-100 px-1.5 py-0.5 rounded">Step 5</span>
+                                    <span class="text-sm font-bold text-white">Investorbase Extraction & Proximity Check</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Extract direct emails/phones. Run the proximity search tool (within 1 hour) to auto-generate corresponding buyer segments.</p>
+                            </div>
+                        </div>
+
+                        <!-- Check Step 6 -->
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
+                            <input type="checkbox" id="check-step6" onchange="toggleCheckStep(6)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <div class="flex-grow">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-purple-950 border border-purple-800 text-purple-200 px-1.5 py-0.5 rounded">Step 6</span>
+                                    <span class="text-sm font-bold text-white">Assemble InvestorLift Landing Page Draft</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Compile and input detailed marketing descriptions, folders of organized photos, videos, and comparable sales. Retain in Draft.</p>
+                            </div>
+                        </div>
+
+                        <!-- Check Step 7 -->
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
+                            <input type="checkbox" id="check-step7" onchange="toggleCheckStep(7)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <div class="flex-grow">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-purple-950 border border-purple-800 text-purple-200 px-1.5 py-0.5 rounded">Step 7</span>
+                                    <span class="text-sm font-bold text-white">Prepare Realtor Outreach Database</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Uncover buyer's agents individually and compile lists using macro scrapers. Format listings cleanly and upload to your SMS marketing tool.</p>
+                            </div>
+                        </div>
+
+                        <!-- Check Step 8 -->
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
+                            <input type="checkbox" id="check-step8" onchange="toggleCheckStep(8)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <div class="flex-grow">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-green-950 border border-green-800 text-tchbGreen-500 px-1.5 py-0.5 rounded">Step 8</span>
+                                    <span class="text-sm font-bold text-white">Investor Text Blast draft</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Compose highly targeted copy referencing asking rates and direct image links. Keep draft stored until approved, then send.</p>
+                            </div>
+                        </div>
+
+                        <!-- Check Step 9 -->
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
+                            <input type="checkbox" id="check-step9" onchange="toggleCheckStep(9)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <div class="flex-grow">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-green-950 border border-green-800 text-tchbGreen-500 px-1.5 py-0.5 rounded">Step 9</span>
+                                    <span class="text-sm font-bold text-white">Realtor Text Blast draft</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Draft the realtor pitch emphasizing commission opportunities. Keep in draft until signed off, then send.</p>
+                            </div>
+                        </div>
+
+                        <!-- Check Step 10 -->
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
+                            <input type="checkbox" id="check-step10" onchange="toggleCheckStep(10)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
+                            <div class="flex-grow">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-green-950 border border-green-800 text-tchbGreen-500 px-1.5 py-0.5 rounded">Step 10</span>
+                                    <span class="text-sm font-bold text-white">Facebook Post Draft</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Formulate copy customized for selected local investment groups. Keep saved in drafts, then share post immediately upon approval.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- TAB 3: RESOURCE TEMPLATES & ANALYTICS -->
+            <div id="view-analytics" class="tab-view hidden space-y-8">
+                
+                <!-- Quick Copy Content Templates -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Copy Template 1 -->
+                    <div class="glass-card border border-slate-800/80 p-6 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                                <h4 class="font-heading font-bold text-white text-sm"><i class="fa-solid fa-comment-sms text-tchbGreen-500 mr-2"></i>Investor SMS Template</h4>
+                                <span class="text-[10px] bg-slate-950 border border-slate-800 px-2.5 py-0.5 rounded font-extrabold text-slate-400">Step 8</span>
+                            </div>
+                            <div class="p-3 bg-slate-950 text-slate-300 text-xs font-mono rounded-lg border border-slate-800/80 leading-relaxed mb-4" id="template-sms-investor">
+TCHB Hot Deal: [Address]
+Price: [Price] | Est Rehab: [Rehab]
+Estimated ARV: [ARV]
+Check out full property photos & specs: [InvestorLift Link]
+Reply to schedule showings or submit offers!
+                            </div>
+                        </div>
+                        <button onclick="copyToClipboard('template-sms-investor')" class="w-full py-2.5 bg-tchbPurple-600/80 hover:bg-tchbPurple-600 rounded-xl text-xs font-bold text-white transition-all flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-copy"></i>Copy SMS Block</button>
+                    </div>
+
+                    <!-- Copy Template 2 -->
+                    <div class="glass-card border border-slate-800/80 p-6 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                                <h4 class="font-heading font-bold text-white text-sm"><i class="fa-solid fa-comment-sms text-tchbGreen-500 mr-2"></i>Realtor SMS Template</h4>
+                                <span class="text-[10px] bg-slate-950 border border-slate-800 px-2.5 py-0.5 rounded font-extrabold text-slate-400">Step 9</span>
+                            </div>
+                            <div class="p-3 bg-slate-950 text-slate-300 text-xs font-mono rounded-lg border border-slate-800/80 leading-relaxed mb-4" id="template-sms-realtor">
+Hey [Agent Name], noticed your recent buyer activity near [Submarket]. 
+We have a highly discounted asset locked up at [Address] asking [Price].
+Offering full broker compensation. Contact us for direct access or full comparable sheets: [Link]
+                            </div>
+                        </div>
+                        <button onclick="copyToClipboard('template-sms-realtor')" class="w-full py-2.5 bg-tchbPurple-600/80 hover:bg-tchbPurple-600 rounded-xl text-xs font-bold text-white transition-all flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-copy"></i>Copy SMS Block</button>
+                    </div>
+
+                    <!-- Copy Template 3 -->
+                    <div class="glass-card border border-slate-800/80 p-6 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                                <h4 class="font-heading font-bold text-white text-sm"><i class="fa-brands fa-facebook text-tchbGreen-500 mr-2"></i>FB Post Template</h4>
+                                <span class="text-[10px] bg-slate-950 border border-slate-800 px-2.5 py-0.5 rounded font-extrabold text-slate-400">Step 10</span>
+                            </div>
+                            <div class="p-3 bg-slate-950 text-slate-300 text-xs font-mono rounded-lg border border-slate-800/80 leading-relaxed mb-4" id="template-post-fb">
+🔥 OFF-MARKET HANDYMAN SPECIAL IN [CITY] 🔥
+- Purchase Price: [Price]
+- Beds/Baths: [Beds/Baths]
+- Great rental property yield or flip potential.
+First come, first served. Access details & comps are locked in here: [InvestorLift Link]
+Comment or PM me directly for details!
+                            </div>
+                        </div>
+                        <button onclick="copyToClipboard('template-post-fb')" class="w-full py-2.5 bg-tchbPurple-600/80 hover:bg-tchbPurple-600 rounded-xl text-xs font-bold text-white transition-all flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-copy"></i>Copy Post Block</button>
+                    </div>
+
+                </div>
+
+                <!-- Graphic Analytics Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    <!-- Chart 1 -->
+                    <div class="glass-card border border-slate-800/80 rounded-2xl p-6">
+                        <h4 class="font-heading font-bold text-white text-sm mb-1"><i class="fa-solid fa-chart-bar text-tchbPurple-500 mr-1.5"></i>Buyer Search Delta (Step 3 Criteria)</h4>
+                        <p class="text-xs text-slate-400 mb-6">Targeting properties closed within a precise ±$10k to $15k from asking price yields the highest conversion rates.</p>
+                        <div class="h-64 relative">
+                            <canvas id="chart-sourcing"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2 -->
+                    <div class="glass-card border border-slate-800/80 rounded-2xl p-6">
+                        <h4 class="font-heading font-bold text-white text-sm mb-1"><i class="fa-solid fa-chart-pie text-tchbRed-500 mr-1.5"></i>Workflow Resource Allocation</h4>
+                        <p class="text-xs text-slate-400 mb-6">Optimal operational effort distribution configured for our target 24-hour velocity window.</p>
+                        <div class="h-64 relative">
+                            <canvas id="chart-resources"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
 
-      </div>
+    </main>
 
-      <!-- FOOTER SEAL (Strictly displayed at the base of Page 3 in Print outputs) -->
-      <footer class="mt-12 pt-6 border-t border-gray-800 text-center text-xs text-gray-500 flex flex-col items-center gap-2 print:mt-10 print:pt-4">
-        <div class="flex items-center gap-2 justify-center">
-          <div class="w-6 h-6 rounded-full border border-gray-800 overflow-hidden bg-gray-950 flex items-center justify-center flex-shrink-0">
-            <img class="w-full h-full object-contain" src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon">
-          </div>
-          <span class="font-bold text-gray-400">TOTAL CASH HOME BUYERS</span>
-          <span>•</span>
-          <span>Transaction Underwriting Division</span>
+    <!-- Footer Section -->
+    <footer class="border-t border-slate-850 bg-[#03050c]/95 py-8 text-center mt-12 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col items-center gap-4">
+            <!-- Icon Image representing your white emblem badge -->
+            <img src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon Emblem" class="h-10 w-10 object-contain opacity-80" onerror="this.src='https://placehold.co/32x32/D12335/ffffff?text=T'">
+            
+            <p class="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+                © 2026 Total Cash Home Buyers. All rights reserved. Under proprietary license agreement. Redistribution or modifications without certified supervisor authorization is strictly prohibited.
+            </p>
+            <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg text-[9px] uppercase tracking-wider text-tchbRed-500 font-extrabold">
+                <i class="fa-solid fa-lock animate-pulse"></i> strictly confidential internal access only
+            </div>
         </div>
+    </footer>
 
-        <!-- Executive Contact Info Section -->
-        <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs text-gray-400 mt-1 mb-1">
-          <a href="mailto:Carlos@totalchb.com" class="hover:text-indigo-400 transition-colors flex items-center gap-1.5 font-medium">
-            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-            </svg>
-            Carlos@totalchb.com
-          </a>
-          <span class="text-gray-700 hidden sm:inline">|</span>
-          <a href="tel:+17035854331" class="hover:text-indigo-400 transition-colors flex items-center gap-1.5 font-medium">
-            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-            </svg>
-            +1 (703) 585-4331
-          </a>
-        </div>
+    <!-- Application Engine -->
+    <script>
+        // Local state management dictionary
+        let activeCampaign = {
+            address: "",
+            price: "",
+            steps: [false, false, false, false, false, false, false, false, false, false]
+        };
 
-        <p class="max-w-md text-[10px] print:max-w-lg mx-auto">
-          This analysis is constructed for informational real estate portfolio modeling purposes based on verified servicing metrics for the property at 9 Locksley Ct.
-        </p>
-      </footer>
-    </div>
+        // Window Onload Event Initializations
+        window.onload = function() {
+            loadCampaignData();
+            initializeAnalytics();
+            resizeCanvas();
+            animateGrid();
+        };
 
-  </div>
+        // Tab Switching Engine
+        function switchTab(tabId) {
+            // Update active menu buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-tchbPurple-600/80', 'bg-tchbPurple-600', 'text-white', 'shadow-lg', 'border-tchbPurple-500');
+                btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-[#0f1424]/60', 'border-slate-800');
+            });
 
-  <script>
-    const canvas = document.getElementById('gridCanvas');
-    const ctx = canvas.getContext('2d');
-    let gridSize = 55;
-    let mouse = { x: -1000, y: -1000, active: false };
-    let sparks = [];
-    let fadingLines = []; // Persistent lit grid lines as energy moves away
+            const currentActiveBtn = document.getElementById(`tab-${tabId}`);
+            currentActiveBtn.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-[#0f1424]/60', 'border-slate-800');
+            currentActiveBtn.classList.add('bg-tchbPurple-600/80', 'text-white', 'shadow-lg', 'border-tchbPurple-500');
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+            // Toggle view visibility
+            document.querySelectorAll('.tab-view').forEach(view => {
+                view.classList.add('hidden');
+                view.classList.remove('block');
+            });
+            
+            const targetView = document.getElementById(`view-${tabId}`);
+            targetView.classList.remove('hidden');
+            targetView.classList.add('block');
+        }
 
-    /* Tracks hover movement across grid coordinate boundaries */
-    window.addEventListener('mousemove', (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-      mouse.active = true;
-    });
+        // Checklist State Persistence Functions
+        function saveDealMeta() {
+            activeCampaign.address = document.getElementById('deal-address').value;
+            activeCampaign.price = document.getElementById('deal-price').value;
+            persistCampaignState();
+        }
 
-    window.addEventListener('mouseleave', () => {
-      mouse.active = false;
-    });
+        function toggleCheckStep(stepIdx) {
+            const checkControl = document.getElementById(`check-step${stepIdx}`);
+            activeCampaign.steps[stepIdx - 1] = checkControl.checked;
+            updateCompletionProgress();
+            persistCampaignState();
+        }
 
-    /* Initiate structured grid pulse sequence strictly when clicking outside info modules */
-    window.addEventListener('click', (e) => {
-      const isInteractive = e.target.closest('button, a, input, select, textarea, canvas, .gradient-border, .bg-gray-900\\/50, .bg-gray-900\\/40, .bg-gray-900\\/20, table, tr, td, header, img');
-      if (!isInteractive) {
-        triggerUniformPulse(e.clientX, e.clientY);
-      }
-    });
+        // Calculate progress percentage
+        function updateCompletionProgress() {
+            const checkedCount = activeCampaign.steps.filter(Boolean).length;
+            const computedPerc = Math.round((checkedCount / 10) * 100);
+            
+            document.getElementById('completion-perc').innerText = `${computedPerc}% Done`;
+            document.getElementById('completion-bar').style.width = `${computedPerc}%`;
+        }
 
-    function triggerUniformPulse(clickX, clickY) {
-      // Find the absolute closest grid intersection node
-      const gridX = Math.round(clickX / gridSize) * gridSize;
-      const gridY = Math.round(clickY / gridSize) * gridSize;
+        function persistCampaignState() {
+            localStorage.setItem('tchb_dispo_campaign_state', JSON.stringify(activeCampaign));
+        }
 
-      // Spawn electrical branches traversing cleanly along the 4 grid axes
-      const directions = [
-        { x: 1, y: 0 },
-        { x: -1, y: 0 },
-        { x: 0, y: 1 },
-        { x: 0, y: -1 }
-      ];
+        function loadCampaignData() {
+            const loadedDataStr = localStorage.getItem('tchb_dispo_campaign_state');
+            if (loadedDataStr) {
+                activeCampaign = JSON.parse(loadedDataStr);
+                document.getElementById('deal-address').value = activeCampaign.address || "";
+                document.getElementById('deal-price').value = activeCampaign.price || "";
+                
+                for (let i = 1; i <= 10; i++) {
+                    const checkElement = document.getElementById(`check-step${i}`);
+                    if (checkElement) {
+                        checkElement.checked = activeCampaign.steps[i - 1] || false;
+                    }
+                }
+                updateCompletionProgress();
+            }
+        }
 
-      directions.forEach(dir => {
-        sparks.push({
-          startX: gridX,
-          startY: gridY,
-          targetX: gridX + dir.x * gridSize,
-          targetY: gridY + dir.y * gridSize,
-          dirX: dir.x,
-          dirY: dir.y,
-          progress: 0,
-          speed: 0.012, // Slower uniform motion per frame (approx. 1.5 seconds per grid square segment)
-          life: 1.0,
-          decay: 0.09
+        function resetChecksheet() {
+            activeCampaign = {
+                address: "",
+                price: "",
+                steps: [false, false, false, false, false, false, false, false, false, false]
+            };
+            document.getElementById('deal-address').value = "";
+            document.getElementById('deal-price').value = "";
+            for (let i = 1; i <= 10; i++) {
+                const checkElement = document.getElementById(`check-step${i}`);
+                if (checkElement) checkElement.checked = false;
+            }
+            updateCompletionProgress();
+            persistCampaignState();
+        }
+
+        // Clipboard Copy Action Helper
+        function copyToClipboard(elementId) {
+            const copyElement = document.getElementById(elementId);
+            const rangeInstance = document.createRange();
+            rangeInstance.selectNode(copyElement);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(rangeInstance);
+            
+            try {
+                document.execCommand('copy');
+                const triggerBtn = event.currentTarget;
+                const origMarkup = triggerBtn.innerHTML;
+                triggerBtn.innerHTML = `<i class="fa-solid fa-check mr-1.5"></i>Copied!`;
+                setTimeout(() => {
+                    triggerBtn.innerHTML = origMarkup;
+                }, 2500);
+            } catch (err) {
+                console.error('Copy action failed:', err);
+            }
+            window.getSelection().removeAllRanges();
+        }
+
+        // ChartJS Graphical Data Renderer
+        function initializeAnalytics() {
+            // Sourcing bracket distribution graph logic
+            const deltaChartCtx = document.getElementById('chart-sourcing').getContext('2d');
+            new Chart(deltaChartCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['-$20k Range', '-$15k to -$10k (Target)', 'Subject Asking Rate', '+$10k to +$15k (Target)', '+$20k Range'],
+                    datasets: [{
+                        label: 'Qualified Buyers Density',
+                        data: [15, 95, 100, 85, 20],
+                        backgroundColor: [
+                            'rgba(241, 245, 249, 0.08)',
+                            'rgba(72, 63, 138, 0.85)',
+                            'rgba(209, 35, 53, 0.95)',
+                            'rgba(72, 63, 138, 0.85)',
+                            'rgba(241, 245, 249, 0.08)'
+                        ],
+                        borderColor: [
+                            '#334155',
+                            '#483F8A',
+                            '#D12335',
+                            '#483F8A',
+                            '#334155'
+                        ],
+                        borderWidth: 1.5,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+
+            // Effort allocation pie chart logic
+            const resourcesChartCtx = document.getElementById('chart-resources').getContext('2d');
+            new Chart(resourcesChartCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Compliance Scrubbing', 'Hyper-Sourcing Data', 'InvestorLift Assets', 'Direct SMS Syndication'],
+                    datasets: [{
+                        data: [15, 35, 20, 30],
+                        backgroundColor: [
+                            'rgba(209, 35, 53, 0.85)',
+                            'rgba(72, 63, 138, 0.85)',
+                            'rgba(168, 85, 247, 0.85)',
+                            'rgba(0, 168, 89, 0.85)'
+                        ],
+                        borderColor: '#0a0d1a',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#94a3b8',
+                                font: { size: 10, family: 'Inter' },
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        // =================================================================
+        // DYNAMIC COORDINATE INTERACTIVE CANVAS ENGINE (Matches Proposals Project)
+        // =================================================================
+        const canvas = document.getElementById('gridCanvas');
+        const ctx = canvas.getContext('2d');
+        let gridSize = 55;
+        let mouse = { x: -1000, y: -1000, active: false };
+        let sparks = [];
+        let fadingLines = []; 
+        let lastInteraction = Date.now();
+        let autoSparkInterval = 3500;
+        let lastAutoSpark = 0;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function registerInteraction(x, y, activeState) {
+            mouse.x = x;
+            mouse.y = y;
+            mouse.active = activeState;
+            lastInteraction = Date.now();
+        }
+
+        window.addEventListener('mousemove', (e) => registerInteraction(e.clientX, e.clientY, true));
+        window.addEventListener('mouseleave', () => mouse.active = false);
+
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                registerInteraction(e.touches[0].clientX, e.touches[0].clientY, true);
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                registerInteraction(e.touches[0].clientX, e.touches[0].clientY, true);
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchend', () => mouse.active = false);
+
+        // Click detection avoiding interface buttons
+        window.addEventListener('click', (e) => {
+            lastInteraction = Date.now();
+            const isInteractive = e.target.closest('button, a, input, select, textarea, canvas, .glass-card, .bg-slate-950, table, tr, td, header, img');
+            if (!isInteractive) {
+                triggerUniformPulse(e.clientX, e.clientY);
+            }
         });
-      });
-    }
 
-    /* Animation Frame Rendering Loop */
-    function animateGrid() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Pulse generation on coordinates
+        function triggerUniformPulse(clickX, clickY) {
+            const gridX = Math.round(clickX / gridSize) * gridSize;
+            const gridY = Math.round(clickY / gridSize) * gridSize;
 
-      // 1. Render STATIC Digital Grid Matrix - Highly Seen & Visible
-      ctx.strokeStyle = 'rgba(79, 70, 229, 0.16)'; // More seen, crisp opacity
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      for (let x = 0; x < canvas.width; x += gridSize) {
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-      }
-      for (let y = 0; y < canvas.height; y += gridSize) {
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-      }
-      ctx.stroke();
+            const directions = [
+                { x: 1, y: 0 },
+                { x: -1, y: 0 },
+                { x: 0, y: 1 },
+                { x: 0, y: -1 }
+            ];
 
-      // 2. Render Mouse Position Radial Grid Halo
-      if (mouse.active) {
-        let haloGradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 180);
-        haloGradient.addColorStop(0, 'rgba(79, 70, 229, 0.15)'); // Indigo accent
-        haloGradient.addColorStop(0.5, 'rgba(220, 38, 38, 0.04)'); // Crimson horizon tint
-        haloGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        
-        ctx.fillStyle = haloGradient;
-        ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 180, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // 3. Render Lit Fading Grid segments (Lights up the grid as the pulse moves away)
-      for (let i = fadingLines.length - 1; i >= 0; i--) {
-        let line = fadingLines[i];
-        
-        ctx.beginPath();
-        ctx.moveTo(line.x1, line.y1);
-        ctx.lineTo(line.x2, line.y2);
-
-        // Wide background neon discharge glow
-        ctx.strokeStyle = `rgba(139, 92, 246, ${line.alpha * 0.45})`; 
-        ctx.lineWidth = 4;
-        ctx.stroke();
-
-        // Focused bright core line
-        ctx.strokeStyle = `rgba(167, 139, 250, ${line.alpha})`;
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-
-        // Slow clean fade out
-        line.alpha -= line.decay;
-        if (line.alpha <= 0) {
-          fadingLines.splice(i, 1);
+            directions.forEach(dir => {
+                sparks.push({
+                    startX: gridX,
+                    startY: gridY,
+                    targetX: gridX + dir.x * gridSize,
+                    targetY: gridY + dir.y * gridSize,
+                    dirX: dir.x,
+                    dirY: dir.y,
+                    progress: 0,
+                    speed: 0.012, 
+                    life: 1.0,
+                    decay: 0.09
+                });
+            });
         }
-      }
 
-      // 4. Update and Render Active Sparks moving uniformly
-      for (let i = sparks.length - 1; i >= 0; i--) {
-        let spark = sparks[i];
-        spark.progress += spark.speed;
-
-        // Calculate exact intermediate coordinates
-        let currentX = spark.startX + (spark.targetX - spark.startX) * spark.progress;
-        let currentY = spark.startY + (spark.targetY - spark.startY) * spark.progress;
-
-        // Draw temporary connection line for seamless transition
-        ctx.beginPath();
-        ctx.moveTo(spark.startX, spark.startY);
-        ctx.lineTo(currentX, currentY);
-        ctx.strokeStyle = `rgba(167, 139, 250, 0.95)`;
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
-
-        // Glowing spark node head
-        ctx.beginPath();
-        ctx.arc(currentX, currentY, 3.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = '#8b5cf6';
-        ctx.shadowBlur = 10;
-        ctx.fill();
-        ctx.shadowBlur = 0; // Reset shadow
-
-        // Check if segment is completed
-        if (spark.progress >= 1.0) {
-          // Push to persistent fading lit list (leaves trail lighting the grid behind it)
-          fadingLines.push({
-            x1: spark.startX,
-            y1: spark.startY,
-            x2: spark.targetX,
-            y2: spark.targetY,
-            alpha: 1.0,
-            decay: 0.007 // Extremely slow fadeout to allow grid to stay beautifully illuminated
-          });
-
-          spark.life -= spark.decay;
-
-          if (spark.life > 0) {
-            // Reposition start intersection to the current node
-            spark.startX = spark.targetX;
-            spark.startY = spark.targetY;
-            spark.progress = 0;
-
-            // Optional branching: split path uniformly at intersection nodes
-            if (Math.random() < 0.32 && sparks.length < 32) {
-              let isHorizontal = spark.dirX !== 0;
-              let branchDirX = isHorizontal ? 0 : (Math.random() > 0.5 ? 1 : -1);
-              let branchDirY = isHorizontal ? (Math.random() > 0.5 ? 1 : -1) : 0;
-
-              sparks.push({
-                startX: spark.startX,
-                startY: spark.startY,
-                targetX: spark.startX + branchDirX * gridSize,
-                targetY: spark.startY + branchDirY * gridSize,
-                dirX: branchDirX,
-                dirY: branchDirY,
-                progress: 0,
-                speed: spark.speed,
-                life: spark.life * 0.75,
-                decay: spark.decay
-              });
+        // Idle state automated branches
+        function checkIdleActivity() {
+            let now = Date.now();
+            if (now - lastInteraction > 5000) {
+                if (now - lastAutoSpark > autoSparkInterval) {
+                    const cols = Math.floor(canvas.width / gridSize);
+                    const rows = Math.floor(canvas.height / gridSize);
+                    if (cols > 0 && rows > 0) {
+                        const randX = Math.floor(Math.random() * cols) * gridSize;
+                        const randY = Math.floor(Math.random() * rows) * gridSize;
+                        triggerUniformPulse(randX, randY);
+                    }
+                    lastAutoSpark = now;
+                }
             }
-
-            // Continue current pulse along the grid axes
-            spark.targetX = spark.startX + spark.dirX * gridSize;
-            spark.targetY = spark.startY + spark.dirY * gridSize;
-          } else {
-            sparks.splice(i, 1);
-          }
         }
-      }
 
-      requestAnimationFrame(animateGrid);
-    }
-    animateGrid();
-  </script>
+        // Main animation canvas renderer loop
+        function animateGrid() {
+            checkIdleActivity();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  <script>
-    const sub2Data = {
-      label: 'Proposed Sub2 Deal',
-      pi: 1149.50,
-      escrow: 517.73,
-      piti: 1667.24,
-      interestTotal: 133184.55
-    };
-
-    const marketData = {
-      label: "Standard FHA in Today's Market",
-      pi: 1553.67,
-      escrow: 517.73,
-      piti: 2071.40,
-      interestTotal: 328710.11
-    };
-
-    window.onload = function () {
-      const ctxPayment = document.getElementById('paymentChart').getContext('2d');
-      new Chart(ctxPayment, {
-        type: 'bar',
-        data: {
-          labels: ['Sub2 Deal (FHA)', "Standard FHA (Today's Market)"],
-          datasets: [
-            {
-              label: 'Principal & Interest (P&I)',
-              data: [sub2Data.pi, marketData.pi],
-              backgroundColor: '#4f46e5',
-              borderColor: '#6366f1',
-              borderWidth: 1
-            },
-            {
-              label: 'Escrow & Taxes',
-              data: [sub2Data.escrow, marketData.escrow],
-              backgroundColor: '#10b981',
-              borderColor: '#34d399',
-              borderWidth: 1
+            // Grid coordinates line drawing
+            ctx.strokeStyle = 'rgba(72, 63, 138, 0.04)'; 
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
             }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              labels: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } },
-              position: 'bottom'
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
             }
-          },
-          scales: {
-            x: {
-              stacked: true,
-              grid: { color: '#1f2937' },
-              ticks: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } }
-            },
-            y: {
-              stacked: true,
-              grid: { color: '#1f2937' },
-              ticks: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } }
+            ctx.stroke();
+
+            // Interactive mouse follow flare
+            if (mouse.active) {
+                let haloGradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 180);
+                haloGradient.addColorStop(0, 'rgba(72, 63, 138, 0.08)'); 
+                haloGradient.addColorStop(0.5, 'rgba(209, 35, 53, 0.02)'); 
+                haloGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                
+                ctx.fillStyle = haloGradient;
+                ctx.beginPath();
+                ctx.arc(mouse.x, mouse.y, 180, 0, Math.PI * 2);
+                ctx.fill();
             }
-          }
+
+            // Laser Line coordinate render (Fades using customized TCHB Red -> Purple -> Cash Green color array)
+            for (let i = fadingLines.length - 1; i >= 0; i--) {
+                let line = fadingLines[i];
+                
+                ctx.beginPath();
+                ctx.moveTo(line.x1, line.y1);
+                ctx.lineTo(line.x2, line.y2);
+
+                let gradient = ctx.createLinearGradient(line.x1, line.y1, line.x2, line.y2);
+                gradient.addColorStop(0, `rgba(209, 35, 53, ${line.alpha * 0.95})`);   // TCHB Red
+                gradient.addColorStop(0.5, `rgba(72, 63, 138, ${line.alpha * 0.85})`); // TCHB Purple
+                gradient.addColorStop(1, `rgba(0, 168, 89, ${line.alpha * 0.75})`);    // TCHB Green
+
+                ctx.strokeStyle = gradient; 
+                ctx.lineWidth = 4;
+                ctx.stroke();
+
+                ctx.strokeStyle = `rgba(255, 255, 255, ${line.alpha})`;
+                ctx.lineWidth = 1.0;
+                ctx.stroke();
+
+                line.alpha -= line.decay;
+                if (line.alpha <= 0) {
+                    fadingLines.splice(i, 1);
+                }
+            }
+
+            // Laser particle calculation and splitting
+            for (let i = sparks.length - 1; i >= 0; i--) {
+                let spark = sparks[i];
+                spark.progress += spark.speed;
+
+                let currentX = spark.startX + (spark.targetX - spark.startX) * spark.progress;
+                let currentY = spark.startY + (spark.targetY - spark.startY) * spark.progress;
+
+                ctx.beginPath();
+                ctx.moveTo(spark.startX, spark.startY);
+                ctx.lineTo(currentX, currentY);
+                ctx.strokeStyle = 'rgba(168, 85, 247, 0.95)';
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(currentX, currentY, 3.5, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffffff';
+                ctx.shadowColor = '#483F8A';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0; 
+
+                if (spark.progress >= 1.0) {
+                    fadingLines.push({
+                        x1: spark.startX,
+                        y1: spark.startY,
+                        x2: spark.targetX,
+                        y2: spark.targetY,
+                        alpha: 1.0,
+                        decay: 0.007 
+                    });
+
+                    spark.life -= spark.decay;
+
+                    if (spark.life > 0) {
+                        spark.startX = spark.targetX;
+                        spark.startY = spark.targetY;
+                        spark.progress = 0;
+
+                        // Coordinate branch-off split calculations
+                        if (Math.random() < 0.32 && sparks.length < 32) {
+                            let isHorizontal = spark.dirX !== 0;
+                            let branchDirX = isHorizontal ? 0 : (Math.random() > 0.5 ? 1 : -1);
+                            let branchDirY = isHorizontal ? (Math.random() > 0.5 ? 1 : -1) : 0;
+
+                            sparks.push({
+                                startX: spark.startX,
+                                startY: spark.startY,
+                                targetX: spark.startX + branchDirX * gridSize,
+                                targetY: spark.startY + branchDirY * gridSize,
+                                dirX: branchDirX,
+                                dirY: branchDirY,
+                                progress: 0,
+                                speed: spark.speed,
+                                life: spark.life * 0.75,
+                                decay: spark.decay
+                            });
+                        }
+
+                        spark.targetX = spark.startX + spark.dirX * gridSize;
+                        spark.targetY = spark.startY + spark.dirY * gridSize;
+                    } else {
+                        sparks.splice(i, 1);
+                    }
+                }
+            }
+
+            requestAnimationFrame(animateGrid);
         }
-      });
-
-      const ctxInterest = document.getElementById('interestChart').getContext('2d');
-      const labelsYear = ['Year 1', 'Year 5', 'Year 10', 'Year 15', 'Year 20', 'Year 25', 'Year 30'];
-      const sub2Curve = [5000, 32587, 65175, 97762, 115000, 126000, 133184.55];
-      const marketCurve = [20000, 85000, 160000, 220000, 265000, 300000, 328710.11];
-
-      new Chart(ctxInterest, {
-        type: 'line',
-        data: {
-          labels: labelsYear,
-          datasets: [
-            {
-              label: "Standard FHA (7.125% Rate)",
-              data: marketCurve,
-              borderColor: '#dc2626',
-              backgroundColor: 'rgba(220, 38, 38, 0.1)',
-              fill: true,
-              tension: 0.3
-            },
-            {
-              label: 'Sub2 Deal (3.250% Rate)',
-              data: sub2Curve,
-              borderColor: '#10b981',
-              backgroundColor: 'rgba(16, 185, 129, 0.1)',
-              fill: true,
-              tension: 0.3
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              labels: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } },
-              position: 'bottom'
-            }
-          },
-          scales: {
-            x: {
-              grid: { color: '#1f2937' },
-              ticks: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } }
-            },
-            y: {
-              grid: { color: '#1f2937' },
-              ticks: { color: '#9ca3af', font: { family: 'Plus Jakarta Sans', size: 10 } }
-            }
-          }
-        }
-      });
-    };
-  </script>
+    </script>
 </body>
 </html>
