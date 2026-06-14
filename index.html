@@ -600,6 +600,7 @@
             if (activePropertyId) renderTrackerView();
         }, (error) => {
             console.error("Snapshot error", error);
+            renderDashboard(); // Safely render empty on error
         });
     }
 
@@ -631,7 +632,8 @@
 
     // --- 2. AUTHENTICATION LOGIC ---
     window.handleLogin = function() {
-        const emailInput = document.getElementById('gateEmailInput').value.trim();
+        // Enforce lowercase email processing to prevent mobile auto-caps from failing the check
+        const emailInput = document.getElementById('gateEmailInput').value.trim().toLowerCase();
         const keyInput = document.getElementById('gateAccessKeyInput').value.trim();
         const errorMsg = document.getElementById('gateErrorMessage');
         const modalBox = document.getElementById('gateModalBox');
@@ -660,15 +662,27 @@
         btn.className = "w-full bg-brand-emerald text-gray-900 font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 mt-6 cursor-not-allowed opacity-90";
 
         setTimeout(() => { 
-            document.getElementById('secureGate').classList.add('hidden');
-            document.documentElement.classList.add('gate-unlocked');
-            document.getElementById('mainContent').classList.remove('hidden');
-            document.getElementById('mainContent').classList.add('flex');
-            
-            isGatewayUnlocked = true;
-            if (currentUser && db) listenToProperties();
-            else renderDashboard();
-            
+            try {
+                // Bulletproof style display transition to avoid Tailwind `.flex` overrides
+                const gate = document.getElementById('secureGate');
+                if (gate) gate.style.display = 'none';
+                
+                const main = document.getElementById('mainContent');
+                if (main) {
+                    main.classList.remove('hidden');
+                    main.style.display = 'flex';
+                }
+                
+                isGatewayUnlocked = true;
+                if (currentUser && db) {
+                    listenToProperties();
+                } else {
+                    renderDashboard();
+                }
+            } catch (err) {
+                console.error("Critical transition error:", err);
+                renderDashboard();
+            }
         }, 1200);
     }
 
@@ -886,11 +900,17 @@
         return { percent, nextStep, nextAgent };
     }
 
+    // Safely format time to EST. In strict browsers fallback to default locale to avoid errors
     function formatEST(ms) {
         if (!ms) return '-';
         const d = new Date(ms);
-        const options = { timeZone: 'America/New_York', month: '2-digit', day: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true };
-        return d.toLocaleString('en-US', options);
+        try {
+            const options = { timeZone: 'America/New_York', month: '2-digit', day: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true };
+            return d.toLocaleString('en-US', options);
+        } catch (error) {
+            console.warn("Timezone formatter fallback active.");
+            return d.toLocaleString();
+        }
     }
 
     function timeSince(ms) {
@@ -906,6 +926,7 @@
 
     function updateGlobalAssetSelector() {
         const selector = document.getElementById('globalAssetSelector');
+        if(!selector) return;
         selector.innerHTML = '<option value="" class="bg-gray-900">-- Select an Active Deal --</option>';
         propertiesData.forEach(p => {
             const opt = document.createElement('option');
@@ -929,6 +950,8 @@
     function renderDashboard() {
         const tbody = document.getElementById('dashboard-tbody');
         const emptyState = document.getElementById('empty-state');
+        if (!tbody || !emptyState) return;
+        
         tbody.innerHTML = '';
 
         if (propertiesData.length === 0) {
@@ -979,6 +1002,7 @@
     function renderTrackerView() {
         const emptyView = document.getElementById('tracker-empty');
         const contentView = document.getElementById('tracker-content');
+        if(!emptyView || !contentView) return;
         
         if (!activePropertyId) {
             emptyView.classList.remove('hidden');
