@@ -117,7 +117,7 @@
 
   <!-- DEPLOY ASSET MODAL -->
   <div id="newAssetModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div class="bg-gray-900 border border-indigo-500/50 shadow-[0_0_30px_rgba(79,70,229,0.2)] rounded-2xl w-full max-w-md p-6 transform transition-all relative overflow-hidden">
+      <div class="bg-gray-900 border border-brand-emerald/50 shadow-[0_0_30px_rgba(16,185,129,0.15)] rounded-2xl w-full max-w-md p-6 transform transition-all relative overflow-hidden">
           <div class="absolute -right-20 -top-20 w-48 h-48 bg-brand-emerald/10 rounded-full blur-3xl pointer-events-none"></div>
           <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
             <i class="fa-solid fa-satellite-dish text-brand-emerald"></i> Deploy Asset Tracker
@@ -196,8 +196,9 @@
                 </h2>
                 <p class="text-sm text-gray-400 mt-1">Monitor real-time velocity and active agent assignments.</p>
             </div>
-            <button onclick="window.openAssetModal()" class="bg-gradient-to-r from-brand-crimson to-brand-purple text-white font-bold py-2 px-4 rounded-xl transition-all cursor-pointer flex items-center gap-2 shadow-[0_0_15px_rgba(79,70,229,0.3)]">
-                <i class="fa-solid fa-plus text-brand-emerald"></i> Deploy New Asset Tracker
+            <!-- Original Emerald Styling Reverted -->
+            <button onclick="window.openAssetModal()" class="bg-brand-emerald/10 border border-brand-emerald hover:bg-brand-emerald text-brand-emerald hover:text-gray-900 font-bold py-2 px-4 rounded-xl transition-all cursor-pointer flex items-center gap-2 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                <i class="fa-solid fa-plus"></i> Deploy New Asset Tracker
             </button>
         </div>
 
@@ -237,11 +238,13 @@
         <div class="glass-card p-4 rounded-2xl border border-gray-800 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3 w-full sm:w-auto">
                 <span class="text-xs font-bold text-gray-400 uppercase tracking-wider shrink-0"><i class="fa-solid fa-crosshairs mr-1"></i> Targeted Asset:</span>
+                <!-- Dropdown keeps the hue -->
                 <select id="globalAssetSelector" onchange="window.handleGlobalAssetSelection(this.value)" class="w-full sm:w-64 bg-gradient-to-r from-brand-crimson to-brand-purple border-transparent text-sm font-bold text-white rounded-lg px-3 py-2 focus:outline-none cursor-pointer appearance-none">
                     <option value="" class="bg-gray-900">-- Select an Active Deal --</option>
                     <!-- Options populated dynamically -->
                 </select>
             </div>
+            <!-- Add New Asset keeps the hue -->
             <button onclick="window.openAssetModal()" class="w-full sm:w-auto px-4 py-2 text-xs font-bold bg-gradient-to-r from-brand-crimson to-brand-purple text-white rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer">
                 <i class="fa-solid fa-plus text-brand-emerald"></i> Add New Asset
             </button>
@@ -342,9 +345,9 @@
                     </div>
                 </div>
 
-                <!-- Deal Intake Card -->
+                <!-- Card 1 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-crimson border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-calculator text-xs"></i></div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-crimson border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">1</div>
                     <div class="glass-card rounded-xl p-6 border-brand-crimson/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] transition-all">
                         <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
                             <h3 class="text-lg font-bold text-white">Underwriting</h3>
@@ -352,7 +355,19 @@
                         <ul class="space-y-3 text-sm text-gray-300">
                             <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Manually UW The Deal</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">6% (Carlos)</span></li>
                             <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> AI UW Tool To Confirm Manual UW</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">2% (Carlos)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Search Entire CRM For Seller Number(s) (Disqualified or DND'd)</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="relative group">
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-crimson border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">2</div>
+                    <div class="glass-card rounded-xl p-6 border-brand-crimson/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] transition-all">
+                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                            <h3 class="text-lg font-bold text-white">Search Entire CRM</h3>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Ensure Sellers Phone Number Is Either Disqualified or DND'd</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
                         </ul>
                     </div>
                 </div>
@@ -367,9 +382,9 @@
                     </div>
                 </div>
 
-                <!-- Marketing Prep Card 1 -->
+                <!-- Card 3 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-magnifying-glass text-xs"></i></div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">3</div>
                     <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
                         <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
                             <h3 class="text-lg font-bold text-white">Pull Local Hyper Qualified Buyers</h3>
@@ -382,9 +397,9 @@
                     </div>
                 </div>
 
-                <!-- Marketing Prep Card 2 -->
+                <!-- Card 4 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-database text-xs"></i></div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">4</div>
                     <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
                         <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
                             <h3 class="text-lg font-bold text-white">Investor Data Scraping</h3>
@@ -399,9 +414,9 @@
                     </div>
                 </div>
 
-                <!-- Marketing Prep Card 3 -->
+                <!-- Card 5 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-building text-xs"></i></div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">5</div>
                     <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
                         <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
                             <h3 class="text-lg font-bold text-white">Realtor Data Scraping</h3>
@@ -416,9 +431,9 @@
                     </div>
                 </div>
 
-                <!-- Marketing Prep Card 4 -->
+                <!-- Card 6 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-brands fa-facebook-f text-xs"></i></div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">6</div>
                     <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
                         <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
                             <h3 class="text-lg font-bold text-white">Facebook Groups Hunt</h3>
@@ -431,9 +446,9 @@
                     </div>
                 </div>
 
-                <!-- Marketing Prep Card 5 -->
+                <!-- Card 7 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-cloud-arrow-up text-xs"></i></div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">7</div>
                     <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
                         <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
                             <h3 class="text-lg font-bold text-white">Create InvestorLift Draft</h3>
@@ -456,48 +471,48 @@
                     </div>
                 </div>
 
-                <!-- Marketing Execution Card 1 -->
+                <!-- Card 8 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-phone text-xs"></i></div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">8</div>
                     <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
                         <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
                             <h3 class="text-lg font-bold text-white">Call & Market To Buyers / Realtors</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Execute Calling & Marketing</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">10% (Carlos)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Execute Calls & Marketing (Buyers / Realtors)</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">10% (Carlos)</span></li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Marketing Execution Card 2 -->
+                <!-- Card 9 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-comment-sms text-xs"></i></div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">9</div>
                     <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
                         <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Investor Text Blast</h3>
+                            <h3 class="text-lg font-bold text-white">Investor Bulk/Individual Text Blast</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Execute Investor Bulk/Individual Blasts</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">10% (Sarah)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Execute SMS Deployment (Investors)</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">10% (Sarah)</span></li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Marketing Execution Card 3 -->
+                <!-- Card 10 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-comment-sms text-xs"></i></div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">10</div>
                     <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
                         <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Realtor Text Blast</h3>
+                            <h3 class="text-lg font-bold text-white">Realtor Bulk/Individual Text Blast</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Execute Realtor Bulk/Individual Blasts</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">10% (Sarah)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Execute SMS Deployment (Realtors)</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">10% (Sarah)</span></li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Marketing Execution Card 4 -->
+                <!-- Card 11 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-globe text-xs"></i></div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">11</div>
                     <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
                         <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
                             <h3 class="text-lg font-bold text-white">Post On InvestorLift</h3>
@@ -509,9 +524,9 @@
                     </div>
                 </div>
 
-                <!-- Marketing Execution Card 5 -->
+                <!-- Card 12 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-brands fa-facebook-f text-xs"></i></div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">12</div>
                     <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
                         <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
                             <h3 class="text-lg font-bold text-white">Post On Facebook</h3>
@@ -528,8 +543,8 @@
     </div>
 
     <!-- Footer -->
-    <footer class="mt-auto pt-6 pb-6 relative z-10 flex justify-center">
-        <img src="logo.svg" alt="TCHB Logo" class="h-16 opacity-50" onerror="this.src='https://placehold.co/180x60/0b0f19/ffffff?text=TCHB'">
+    <footer class="mt-auto pt-8 pb-8 relative z-10 flex justify-center border-t border-gray-800/60 mt-12 bg-[#080b14]">
+        <img src="logo.svg" alt="TCHB Logo" class="h-24 opacity-60 hover:opacity-100 transition-opacity" onerror="this.src='https://placehold.co/240x80/0b0f19/ffffff?text=TCHB'">
     </footer>
 
   </div>
@@ -549,7 +564,6 @@
 
     // --- 1. AUTHENTICATION LOGIC ---
     window.handleLogin = function() {
-        // Enforce lowercase email processing to prevent mobile auto-caps from failing the check
         const emailInput = document.getElementById('gateEmailInput').value.trim().toLowerCase();
         const keyInput = document.getElementById('gateAccessKeyInput').value.trim();
         const errorMsg = document.getElementById('gateErrorMessage');
@@ -571,7 +585,6 @@
         const lockIcon = document.getElementById('gateLockIcon');
         const lockContainer = document.getElementById('gateLockIconContainer');
         
-        // Transform the lock into an Open, Emerald Green padlock
         lockIcon.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path>';
         lockIcon.className = "w-6 h-6 text-brand-emerald transition-all duration-300 scale-110";
         lockContainer.className = "mx-auto w-14 h-14 rounded-full bg-brand-emerald/10 flex items-center justify-center border border-brand-emerald/20 mb-4 animate-bounce";
@@ -581,7 +594,6 @@
 
         setTimeout(() => { 
             try {
-                // Bulletproof style display transition to avoid CSS flex overrides
                 const gate = document.getElementById('secureGate');
                 if (gate) gate.style.display = 'none';
                 
@@ -593,7 +605,6 @@
                 
                 isGatewayUnlocked = true;
                 
-                // Init view, connect to live db if loaded
                 if (currentUser && db && window.listenToProperties) {
                     window.listenToProperties();
                 } else {
@@ -610,43 +621,43 @@
     const agentsList = ["Carlos", "Yanna", "Moe", "Sarah"];
     
     const sopBlueprint = [
-        { id: "p1_1", phase: "Deal Intake Section (10%)", mainTask: "Underwriting", title: "Manually UW The Deal", weight: 6, defaultAssignee: "Carlos" },
-        { id: "p1_2", phase: "Deal Intake Section (10%)", mainTask: "Underwriting", title: "AI UW Tool To Confirm Manual UW", weight: 2, defaultAssignee: "Carlos" },
-        { id: "p1_3", phase: "Deal Intake Section (10%)", mainTask: "Underwriting", title: "Search Entire CRM For Seller Number(s) (Disqualified or DND'd)", weight: 2, defaultAssignee: "Sarah" },
+        { id: "p1_1", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "Manually UW The Deal", weight: 6, defaultAssignee: "Carlos" },
+        { id: "p1_2", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "AI UW Tool To Confirm Manual UW", weight: 2, defaultAssignee: "Carlos" },
+        { id: "p1_3", phase: "Phase I: Deal Intake", mainTask: "Search Entire CRM", title: "Search Entire CRM For Seller Number(s) (Disqualified or DND'd)", weight: 2, defaultAssignee: "Sarah" },
         
-        { id: "p2_1", phase: "Marketing Prep Section (40%)", mainTask: "Pull Local Hyper Qualified Buyers", title: "At least 3 Local Investors that bought $10K - $15K from purchase price", weight: 3, defaultAssignee: "Carlos" },
-        { id: "p2_2", phase: "Marketing Prep Section (40%)", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3 Local Investors - for ARV Comps", weight: 3, defaultAssignee: "Carlos" },
-        { id: "p2_3", phase: "Marketing Prep Section (40%)", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3-5 Local investors w/ Active Leases in the area", weight: 2, defaultAssignee: "Carlos" },
+        { id: "p2_1", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At least 3 Local Investors that bought $10K - $15K from purchase price", weight: 3, defaultAssignee: "Carlos" },
+        { id: "p2_2", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3 Local Investors - for ARV Comps", weight: 3, defaultAssignee: "Carlos" },
+        { id: "p2_3", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3-5 Local investors w/ Active Leases in the area", weight: 2, defaultAssignee: "Carlos" },
         
-        { id: "p2_4", phase: "Marketing Prep Section (40%)", mainTask: "Investor Data Scraping", title: "Pull The Data From (Investorbase - etc)", weight: 2, defaultAssignee: "Moe" },
-        { id: "p2_5", phase: "Marketing Prep Section (40%)", mainTask: "Investor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah" },
-        { id: "p2_6", phase: "Marketing Prep Section (40%)", mainTask: "Investor Data Scraping", title: "Upload The Data To CRM", weight: 1, defaultAssignee: "Sarah" },
-        { id: "p2_7", phase: "Marketing Prep Section (40%)", mainTask: "Investor Data Scraping", title: "Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah" },
-        { id: "p2_8", phase: "Marketing Prep Section (40%)", mainTask: "Investor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah" },
+        { id: "p2_4", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Pull The Data From (Investorbase - etc)", weight: 2, defaultAssignee: "Moe" },
+        { id: "p2_5", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah" },
+        { id: "p2_6", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Upload The Data To CRM", weight: 1, defaultAssignee: "Sarah" },
+        { id: "p2_7", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah" },
+        { id: "p2_8", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah" },
 
-        { id: "p2_9", phase: "Marketing Prep Section (40%)", mainTask: "Realtor Data Scraping", title: "Pull The Data From (Zillow - realtor.com - etc.)", weight: 2, defaultAssignee: "Moe" },
-        { id: "p2_10", phase: "Marketing Prep Section (40%)", mainTask: "Realtor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah" },
-        { id: "p2_11", phase: "Marketing Prep Section (40%)", mainTask: "Realtor Data Scraping", title: "Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah" },
-        { id: "p2_12", phase: "Marketing Prep Section (40%)", mainTask: "Realtor Data Scraping", title: "Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah" },
-        { id: "p2_13", phase: "Marketing Prep Section (40%)", mainTask: "Realtor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah" },
+        { id: "p2_9", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Pull The Data From (Zillow - realtor.com - etc.)", weight: 2, defaultAssignee: "Moe" },
+        { id: "p2_10", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah" },
+        { id: "p2_11", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah" },
+        { id: "p2_12", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah" },
+        { id: "p2_13", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah" },
 
-        { id: "p2_14", phase: "Marketing Prep Section (40%)", mainTask: "Facebook Groups Hunt", title: "Join All Relevant FB Groups", weight: 6, defaultAssignee: "Moe" },
-        { id: "p2_15", phase: "Marketing Prep Section (40%)", mainTask: "Facebook Groups Hunt", title: "Create FB Post Draft", weight: 1, defaultAssignee: "Moe" },
-        { id: "p2_16", phase: "Marketing Prep Section (40%)", mainTask: "Facebook Groups Hunt", title: "Get The FB Post Draft Approved", weight: 1, defaultAssignee: "Moe" },
+        { id: "p2_14", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Join All Relevant FB Groups", weight: 6, defaultAssignee: "Moe" },
+        { id: "p2_15", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Create FB Post Draft", weight: 1, defaultAssignee: "Moe" },
+        { id: "p2_16", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Get The FB Post Draft Approved", weight: 1, defaultAssignee: "Moe" },
 
-        { id: "p2_17", phase: "Marketing Prep Section (40%)", mainTask: "Create InvestorLift Draft", title: "Description", weight: 3, defaultAssignee: "Yanna" },
-        { id: "p2_18", phase: "Marketing Prep Section (40%)", mainTask: "Create InvestorLift Draft", title: "Photos & Videos (if applicable)", weight: 2, defaultAssignee: "Yanna" },
-        { id: "p2_19", phase: "Marketing Prep Section (40%)", mainTask: "Create InvestorLift Draft", title: "Comps", weight: 3, defaultAssignee: "Yanna" },
+        { id: "p2_17", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Description", weight: 3, defaultAssignee: "Yanna" },
+        { id: "p2_18", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Photos & Videos (if applicable)", weight: 2, defaultAssignee: "Yanna" },
+        { id: "p2_19", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Comps", weight: 3, defaultAssignee: "Yanna" },
 
-        { id: "p3_1", phase: "Marketing Section (50%)", mainTask: "Call & Market To The Hyper Local Buyers / Realtors", title: "Execute Calls & Marketing (Buyers / Realtors)", weight: 10, defaultAssignee: "Carlos" },
-        { id: "p3_2", phase: "Marketing Section (50%)", mainTask: "Investor Bulk Text Blast / Individual Text Blast", title: "Execute SMS Deployment (Investors)", weight: 10, defaultAssignee: "Sarah" },
-        { id: "p3_3", phase: "Marketing Section (50%)", mainTask: "Realtor Bulk Text Blast / Individual Text Blast", title: "Execute SMS Deployment (Realtors)", weight: 10, defaultAssignee: "Sarah" },
+        { id: "p3_1", phase: "Phase III: Marketing Execution", mainTask: "Call & Market To Buyers / Realtors", title: "Execute Calls & Marketing (Buyers / Realtors)", weight: 10, defaultAssignee: "Carlos" },
+        { id: "p3_2", phase: "Phase III: Marketing Execution", mainTask: "Investor Bulk/Individual Text Blast", title: "Execute SMS Deployment (Investors)", weight: 10, defaultAssignee: "Sarah" },
+        { id: "p3_3", phase: "Phase III: Marketing Execution", mainTask: "Realtor Bulk/Individual Text Blast", title: "Execute SMS Deployment (Realtors)", weight: 10, defaultAssignee: "Sarah" },
         
-        { id: "p3_4", phase: "Marketing Section (50%)", mainTask: "Post On InvestorLift", title: "Calling Inquiries / Interest On Subject Deal", weight: 5, defaultAssignee: "Yanna" },
-        { id: "p3_5", phase: "Marketing Section (50%)", mainTask: "Post On InvestorLift", title: "Calling ALL Artemis Mode Buyers", weight: 5, defaultAssignee: "Yanna" },
+        { id: "p3_4", phase: "Phase III: Marketing Execution", mainTask: "Post On InvestorLift", title: "Calling Inquiries / Interest On Subject Deal", weight: 5, defaultAssignee: "Yanna" },
+        { id: "p3_5", phase: "Phase III: Marketing Execution", mainTask: "Post On InvestorLift", title: "Calling ALL Artemis Mode Buyers", weight: 5, defaultAssignee: "Yanna" },
         
-        { id: "p3_6", phase: "Marketing Section (50%)", mainTask: "Post On Facebook", title: "Reach Out To Investors That Expressed Interest In Other Deals", weight: 10, defaultAssignee: "Moe" },
-        { id: "p3_7", phase: "Marketing Section (50%)", mainTask: "Post On Facebook", title: "Boost the Post (If Needed)", weight: 0, defaultAssignee: "Moe" }
+        { id: "p3_6", phase: "Phase III: Marketing Execution", mainTask: "Post On Facebook", title: "Reach Out To Investors That Expressed Interest In Other Deals", weight: 10, defaultAssignee: "Moe" },
+        { id: "p3_7", phase: "Phase III: Marketing Execution", mainTask: "Post On Facebook", title: "Boost the Post (If Needed)", weight: 0, defaultAssignee: "Moe" }
     ];
 
     function getAgentColorClass(name, type = 'text') {
@@ -753,7 +764,7 @@
             tasks: generateTaskInstances()
         };
         
-        propertiesData.unshift(newProp);
+        if (!currentUser) { propertiesData.unshift(newProp); }
         await window.savePropertyData(newProp);
         
         window.closeAssetModal();
@@ -798,6 +809,7 @@
     function getPropStats(prop) {
         let percent = 0;
         let nextStep = "Fully Complete";
+        let nextTaskDetail = "All workflow tasks finished";
         let nextAgent = "-";
         let foundNext = false;
 
@@ -805,7 +817,8 @@
             if (t.completed) {
                 percent += t.weight;
             } else if (!foundNext) {
-                nextStep = t.title;
+                nextStep = t.phase;
+                nextTaskDetail = t.title;
                 nextAgent = t.assignee;
                 foundNext = true;
             }
@@ -813,13 +826,13 @@
         
         if (percent >= 100) {
             percent = 100;
-            nextStep = "All Workflow Tasks Complete";
             nextAgent = "Completed";
         }
 
-        return { percent, nextStep, nextAgent };
+        return { percent, nextStep, nextTaskDetail, nextAgent };
     }
 
+    // Safely format time strictly to EST
     function formatEST(ms) {
         if (!ms) return '-';
         const d = new Date(ms);
@@ -896,7 +909,9 @@
                     <td class="p-4">
                         <span class="${agentBgColor} ${agentTxtColor} px-2.5 py-1 rounded text-xs font-extrabold border ${agentBorderColor}">${stats.nextAgent}</span>
                     </td>
-                    <td class="p-4 text-xs truncate max-w-[200px]" title="${stats.nextStep}">${stats.nextStep}</td>
+                    <td class="p-4 text-xs font-semibold truncate max-w-[200px] text-gray-200" title="${stats.nextTaskDetail}">
+                        ${stats.nextStep}
+                    </td>
                     <td class="p-4 text-center">
                         <div class="flex items-center justify-center gap-2">
                             <span class="font-black text-lg drop-shadow" style="color: ${progressColor}">${stats.percent}%</span>
@@ -983,9 +998,11 @@
                     const row = document.createElement('div');
                     row.className = `p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors hover:bg-gray-800/30 ${t.completed ? 'opacity-60' : ''}`;
                     
-                    const agentOpts = agentsList.map(a => `<option value="${a}" ${t.assignee === a ? 'selected' : ''}>${a}</option>`).join('');
-                    
-                    const weightColor = t.completed ? 'text-brand-purple' : 'text-brand-crimson';
+                    const agentOpts = agentsList.map(a => `<option value="${a}" ${t.assignee === a ? 'selected' : ''} class="bg-gray-900 text-white">${a}</option>`).join('');
+                    const agentColor = getAgentColorClass(t.assignee, 'text');
+                    const agentBorder = getAgentColorClass(t.assignee, 'border');
+
+                    const weightColor = t.completed ? 'text-brand-emerald bg-brand-emerald/10 border-brand-emerald/30' : 'text-brand-crimson bg-gray-900 border-gray-700';
                     const paddingAdjust = (tasks.length === 1 && tasks[0].title === mainTaskName) ? "" : "pl-6 sm:pl-8";
 
                     row.innerHTML = `
@@ -996,10 +1013,10 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-3 shrink-0">
-                            <select onchange="window.changeAssignee(${t.originalIndex}, this.value)" class="bg-gray-900 border border-gray-700 text-gray-300 text-xs font-bold rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-purple cursor-pointer appearance-none text-center min-w-[80px]">
+                            <select onchange="window.changeAssignee(${t.originalIndex}, this.value)" class="bg-gray-950 border ${agentBorder} ${agentColor} text-xs font-bold rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-purple cursor-pointer appearance-none text-center min-w-[80px]">
                                 ${agentOpts}
                             </select>
-                            <span class="bg-gray-900 border border-gray-700 ${weightColor} text-xs font-black px-2 py-1 rounded w-12 text-center transition-colors">+${t.weight}%</span>
+                            <span class="${weightColor} text-xs font-black px-2 py-1 rounded w-12 text-center transition-colors">+${t.weight}%</span>
                         </div>
                     `;
                     listDiv.appendChild(row);
@@ -1103,7 +1120,7 @@
     }
 
     function initLocalApp() {
-        const stored = localStorage.getItem('tchb_dispo_app_data_v5');
+        const stored = localStorage.getItem('tchb_dispo_app_data_v6');
         if (stored) propertiesData = JSON.parse(stored);
         if (isGatewayUnlocked) {
             renderDashboard();
@@ -1116,7 +1133,7 @@
             await firebaseSavePropertyData(prop);
         } else {
             prop.dateLastEdited = Date.now();
-            localStorage.setItem('tchb_dispo_app_data_v5', JSON.stringify(propertiesData));
+            localStorage.setItem('tchb_dispo_app_data_v6', JSON.stringify(propertiesData));
             renderDashboard();
         }
     }
@@ -1126,7 +1143,7 @@
             await firebaseRemovePropertyData(id);
         } else {
             propertiesData = propertiesData.filter(p => p.id !== id);
-            localStorage.setItem('tchb_dispo_app_data_v5', JSON.stringify(propertiesData));
+            localStorage.setItem('tchb_dispo_app_data_v6', JSON.stringify(propertiesData));
             renderDashboard();
         }
     }
