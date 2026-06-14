@@ -170,7 +170,12 @@
             <div class="h-8 w-px bg-gray-700 hidden md:block"></div>
             <div class="flex items-center gap-3">
                 <h1 class="text-lg font-bold text-white tracking-tight">DISPO Operations Dashboard</h1>
-                <button onclick="window.logOut()" class="text-xs font-bold text-gray-500 hover:text-brand-crimson transition-colors cursor-pointer" title="Sign Out">
+                <!-- Logged In User Display Badge -->
+                <div id="userBadge" class="hidden items-center gap-2 bg-gray-800/60 border border-gray-700/60 rounded-lg px-2.5 py-1">
+                    <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></div>
+                    <span id="userEmailDisplay" class="text-[10px] font-bold text-gray-300 lowercase tracking-wide"></span>
+                </div>
+                <button onclick="window.logOut()" class="text-xs font-bold text-gray-500 hover:text-brand-crimson transition-colors cursor-pointer ml-1" title="Sign Out">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
             </div>
@@ -223,7 +228,7 @@
             </div>
             
             <!-- External Floating Dashboard Tooltip -->
-            <div id="dashboard-tooltip" class="fixed hidden w-max max-w-[300px] bg-[#0f1423] border border-brand-emerald/40 text-white text-xs p-4 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] z-[100] whitespace-normal text-left pointer-events-none transition-opacity duration-200 opacity-0">
+            <div id="dashboard-tooltip" class="fixed hidden w-max max-w-[300px] bg-[#0f1423] border border-brand-emerald/40 text-white text-xs p-4 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] z-[9999] whitespace-normal text-left pointer-events-none transition-opacity duration-200 opacity-0">
                 <span class="text-brand-emerald font-bold block mb-1.5 uppercase tracking-wider text-[10px]"><i class="fa-solid fa-bolt mr-1"></i> Target Action</span>
                 <span id="dashboard-tooltip-text" class="leading-relaxed text-gray-200 font-medium"></span>
             </div>
@@ -637,6 +642,12 @@
     function grantAccess() {
         if (isGatewayUnlocked) return; // Prevent double firing
         
+        if (currentUser && currentUser.email) {
+            document.getElementById('userEmailDisplay').innerText = currentUser.email;
+            document.getElementById('userBadge').classList.remove('hidden');
+            document.getElementById('userBadge').classList.add('flex');
+        }
+
         const btn = document.getElementById('googleAuthButton');
         if (btn) {
             btn.innerHTML = 'Authentication Valid <i class="fa-solid fa-check ml-1"></i>';
@@ -1030,12 +1041,24 @@
         textEl.innerText = text;
         tooltip.classList.remove('hidden');
         
+        // Calculate exact horizontal position anchoring to the right of the table wrapper
+        const tableCard = tr.closest('.glass-card');
+        const cardRect = tableCard.getBoundingClientRect();
         const trRect = tr.getBoundingClientRect();
+        
         const topPos = trRect.top + (trRect.height / 2);
+        let leftPos = cardRect.right + 20;
 
-        // Position anchored explicitly to the right margin of the screen
-        tooltip.style.left = 'auto';
-        tooltip.style.right = '2rem'; 
+        // Ensure tooltip has a computed width for fallback calculation, fallback to standard 250px
+        const tooltipWidth = tooltip.offsetWidth || 250;
+        
+        // If placing it 20px right of the table flows off-screen, reposition relative to the cursor
+        if (leftPos + tooltipWidth > window.innerWidth) {
+            leftPos = event.clientX + 20;
+        }
+
+        tooltip.style.left = `${leftPos}px`;
+        tooltip.style.right = 'auto'; // Reset right mapping to force left alignment
         tooltip.style.top = `${topPos}px`;
         tooltip.style.transform = `translateY(-50%)`;
         
@@ -1371,7 +1394,30 @@
                 
                 firestoreModule.onSnapshot(propsRef, (snapshot) => {
                     propertiesData = [];
-                    snapshot.forEach(doc => propertiesData.push(doc.data()));
+                    snapshot.forEach(doc => {
+                        let data = doc.data();
+                        
+                        // --- MIGRATION BLOCK: Clean up legacy duplicate tasks ---
+                        if (data.tasks) {
+                            data.tasks = data.tasks.filter(t => t.id !== 'p3_7'); // Permanently remove old main task
+                            let p3_6 = data.tasks.find(t => t.id === 'p3_6');
+                            if (p3_6) {
+                                p3_6.subtasks = p3_6.subtasks || [];
+                                // Ensure the default subtask exists backwards compatibly
+                                if (!p3_6.subtasks.some(s => s.title.includes("Boost the Post"))) {
+                                    p3_6.subtasks.unshift({
+                                        id: 'sub_default_boost',
+                                        title: "Boost the Post (If Needed)",
+                                        completed: false,
+                                        isDefault: true
+                                    });
+                                }
+                            }
+                        }
+                        // --------------------------------------------------------
+                        
+                        propertiesData.push(data);
+                    });
                     propertiesData.sort((a, b) => b.dateStarted - a.dateStarted);
                     
                     if (isGatewayUnlocked) {
@@ -1424,7 +1470,27 @@
 
     function initLocalApp() {
         const stored = localStorage.getItem('tchb_dispo_app_data_v7');
-        if (stored) propertiesData = JSON.parse(stored);
+        if (stored) {
+            let parsed = JSON.parse(stored);
+            propertiesData = parsed.map(data => {
+                if (data.tasks) {
+                    data.tasks = data.tasks.filter(t => t.id !== 'p3_7');
+                    let p3_6 = data.tasks.find(t => t.id === 'p3_6');
+                    if (p3_6) {
+                        p3_6.subtasks = p3_6.subtasks || [];
+                        if (!p3_6.subtasks.some(s => s.title.includes("Boost the Post"))) {
+                            p3_6.subtasks.unshift({
+                                id: 'sub_default_boost',
+                                title: "Boost the Post (If Needed)",
+                                completed: false,
+                                isDefault: true
+                            });
+                        }
+                    }
+                }
+                return data;
+            });
+        }
         if (isGatewayUnlocked) {
             renderDashboard();
             updateGlobalAssetSelector();
