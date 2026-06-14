@@ -86,6 +86,9 @@
 </head>
 <body class="font-sans antialiased relative selection:bg-brand-crimson selection:text-white capitalize">
 
+  <!-- TAILWIND SAFELIST (Forces compilation of dynamic phase & strategy classes once and for all) -->
+  <div class="hidden bg-brand-crimson bg-brand-crimson/20 border-brand-crimson border-brand-crimson/30 text-brand-crimson shadow-[0_0_15px_rgba(220,38,38,0.4)] group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] bg-brand-purple bg-brand-purple/20 border-brand-purple border-brand-purple/30 text-brand-purple shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] bg-brand-emerald bg-brand-emerald/20 border-brand-emerald border-brand-emerald/30 border-brand-emerald/50 text-brand-emerald text-gray-900 shadow-[0_0_15px_rgba(16,185,129,0.4)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] bg-brand-cyan bg-brand-cyan/20 border-brand-cyan border-brand-cyan/30 border-brand-cyan/50 text-brand-cyan shadow-[0_0_15px_rgba(6,182,212,0.4)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.2)] bg-brand-gold bg-brand-gold/20 border-brand-gold border-brand-gold/30 border-brand-gold/50 text-brand-gold bg-pink-500/20 text-pink-400 border-pink-500/50"></div>
+
   <!-- CURSOR OVERLAYS -->
   <div id="mouseGlow"></div>
   <div id="cursor-dot"></div>
@@ -352,14 +355,12 @@
                 <div class="absolute -right-20 -top-20 w-64 h-64 bg-brand-purple/10 rounded-full blur-3xl pointer-events-none"></div>
                 
                 <div class="relative z-10 flex-1">
-                    <div class="flex items-center gap-3 mb-1">
-                        <span id="tracker-strategy-badge" class="bg-gray-800 border border-gray-600 text-gray-300 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded">Strategy</span>
-                    </div>
                     <h2 id="tracker-address" class="text-2xl md:text-3xl font-extrabold text-white">123 Example Street</h2>
                     
                     <div class="mt-3 flex flex-wrap items-center gap-4 text-xs font-mono text-gray-400">
                         <span class="flex items-center gap-1.5"><i class="fa-solid fa-play text-gray-500"></i> <span id="tracker-date-started">-</span></span>
                         <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock-rotate-left text-gray-500"></i> <span id="tracker-last-edited">-</span></span>
+                        <span id="tracker-strategy-badge" class="bg-gray-800 border border-gray-600 text-gray-300 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded font-sans ml-2 shadow-sm">Strategy</span>
                     </div>
                 </div>
 
