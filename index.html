@@ -105,11 +105,11 @@
         
         <div class="space-y-4">
             <input type="email" id="gateEmailInput" placeholder="Email" class="w-full bg-[#18182d] border border-white/10 rounded-lg px-4 py-3 text-center text-white focus:outline-none focus:border-brand-purple transition-all cursor-pointer">
-            <input type="password" id="gateAccessKeyInput" placeholder="Password" class="w-full bg-[#18182d] border border-white/10 rounded-lg px-4 py-3 text-center text-white tracking-widest focus:outline-none focus:border-brand-purple transition-all cursor-pointer" onkeydown="if(event.key === 'Enter') handleLogin()">
+            <input type="password" id="gateAccessKeyInput" placeholder="Password" class="w-full bg-[#18182d] border border-white/10 rounded-lg px-4 py-3 text-center text-white tracking-widest focus:outline-none focus:border-brand-purple transition-all cursor-pointer" onkeydown="if(event.key === 'Enter') window.handleLogin()">
         </div>
 
         <p id="gateErrorMessage" class="text-xs text-brand-crimson font-medium text-center hidden mt-4">Invalid Access Protocol.</p>
-        <button id="gateAuthButton" onclick="handleLogin()" class="w-full bg-brand-purple hover:bg-indigo-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 mt-6 cursor-pointer shadow-[0_0_15px_rgba(79,70,229,0.3)]">
+        <button id="gateAuthButton" onclick="window.handleLogin()" class="w-full bg-brand-purple hover:bg-indigo-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 mt-6 cursor-pointer shadow-[0_0_15px_rgba(79,70,229,0.3)]">
             Initialize Workspace <i class="fa-solid fa-arrow-right-to-bracket text-sm ml-1"></i>
         </button>
     </div>
@@ -127,15 +127,36 @@
           <div class="space-y-4">
               <div>
                   <label class="block text-xs font-bold uppercase text-gray-400 mb-1.5">Subject Property Address</label>
-                  <input type="text" id="newAssetAddressInput" placeholder="e.g. 123 Example Street" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-brand-emerald transition-colors cursor-pointer" onkeydown="if(event.key === 'Enter') confirmNewAsset()">
+                  <input type="text" id="newAssetAddressInput" placeholder="e.g. 123 Example Street" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-brand-emerald transition-colors cursor-pointer" onkeydown="if(event.key === 'Enter') window.confirmNewAsset()">
               </div>
           </div>
           
           <div class="flex justify-end gap-3 mt-6">
-              <button onclick="closeAssetModal()" class="px-4 py-2 text-sm font-bold text-gray-400 hover:text-white transition-colors cursor-pointer">Cancel</button>
-              <button onclick="confirmNewAsset()" class="px-5 py-2 text-sm font-bold bg-brand-emerald hover:bg-emerald-400 text-gray-900 rounded-lg shadow-lg transition-all cursor-pointer">Deploy Protocol</button>
+              <button onclick="window.closeAssetModal()" class="px-4 py-2 text-sm font-bold text-gray-400 hover:text-white transition-colors cursor-pointer">Cancel</button>
+              <button onclick="window.confirmNewAsset()" class="px-5 py-2 text-sm font-bold bg-brand-emerald hover:bg-emerald-400 text-gray-900 rounded-lg shadow-lg transition-all cursor-pointer">Deploy Protocol</button>
           </div>
       </div>
+  </div>
+
+  <!-- DELETE ASSET MODAL -->
+  <div id="deleteAuthModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="bg-gray-900 border border-brand-crimson/50 shadow-[0_0_30px_rgba(220,38,38,0.2)] rounded-2xl w-full max-w-md p-6 transform transition-all relative overflow-hidden">
+        <div class="absolute -right-20 -top-20 w-48 h-48 bg-brand-crimson/10 rounded-full blur-3xl pointer-events-none"></div>
+        <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-triangle-exclamation text-brand-crimson"></i> Authorization Required
+        </h3>
+        <p class="text-xs text-gray-400 mb-5">Enter deletion password to permanently remove this asset.</p>
+        
+        <div class="space-y-4">
+            <input type="password" id="deleteAuthInput" placeholder="Password" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-3 text-white tracking-widest focus:outline-none focus:border-brand-crimson transition-colors cursor-pointer" onkeydown="if(event.key === 'Enter') window.confirmDeleteProperty()">
+            <p id="deleteErrorMessage" class="text-xs text-brand-crimson font-medium hidden">Invalid Password.</p>
+        </div>
+        
+        <div class="flex justify-end gap-3 mt-6">
+            <button onclick="window.closeDeleteModal()" class="px-4 py-2 text-sm font-bold text-gray-400 hover:text-white transition-colors cursor-pointer">Cancel</button>
+            <button onclick="window.confirmDeleteProperty()" class="px-5 py-2 text-sm font-bold bg-brand-crimson hover:bg-red-500 text-white rounded-lg shadow-lg transition-all cursor-pointer">Confirm Deletion</button>
+        </div>
+    </div>
   </div>
 
   <!-- CANVAS BACKGROUND -->
@@ -154,13 +175,13 @@
             </div>
         </div>
         <div class="flex bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 overflow-x-auto max-w-full">
-            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md flex items-center gap-2 whitespace-nowrap">
+            <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md flex items-center gap-2 whitespace-nowrap">
                 <i class="fa-solid fa-layer-group"></i> Master Dashboard
             </button>
-            <button onclick="switchTab('tracker')" id="nav-tracker" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap">
+            <button onclick="window.switchTab('tracker')" id="nav-tracker" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap">
                 <i class="fa-solid fa-list-check"></i> Active Deal Tracker
             </button>
-            <button onclick="switchTab('sop')" id="nav-sop" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap">
+            <button onclick="window.switchTab('sop')" id="nav-sop" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap">
                 <i class="fa-solid fa-book-open"></i> SOP Reference
             </button>
         </div>
@@ -175,8 +196,8 @@
                 </h2>
                 <p class="text-sm text-gray-400 mt-1">Monitor real-time velocity and active agent assignments.</p>
             </div>
-            <button onclick="openAssetModal()" class="bg-brand-emerald/10 border border-brand-emerald hover:bg-brand-emerald text-brand-emerald hover:text-white font-bold py-2 px-4 rounded-xl transition-all cursor-pointer flex items-center gap-2 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                <i class="fa-solid fa-plus"></i> Deploy New Asset Tracker
+            <button onclick="window.openAssetModal()" class="bg-gradient-to-r from-brand-crimson to-brand-purple text-white font-bold py-2 px-4 rounded-xl transition-all cursor-pointer flex items-center gap-2 shadow-[0_0_15px_rgba(79,70,229,0.3)]">
+                <i class="fa-solid fa-plus text-brand-emerald"></i> Deploy New Asset Tracker
             </button>
         </div>
 
@@ -216,12 +237,12 @@
         <div class="glass-card p-4 rounded-2xl border border-gray-800 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3 w-full sm:w-auto">
                 <span class="text-xs font-bold text-gray-400 uppercase tracking-wider shrink-0"><i class="fa-solid fa-crosshairs mr-1"></i> Targeted Asset:</span>
-                <select id="globalAssetSelector" onchange="handleGlobalAssetSelection(this.value)" class="w-full sm:w-64 bg-gradient-to-r from-brand-crimson/20 to-brand-purple/20 border border-brand-purple/50 text-sm font-bold text-white rounded-lg px-3 py-2 focus:outline-none focus:border-brand-crimson cursor-pointer appearance-none">
+                <select id="globalAssetSelector" onchange="window.handleGlobalAssetSelection(this.value)" class="w-full sm:w-64 bg-gradient-to-r from-brand-crimson to-brand-purple border-transparent text-sm font-bold text-white rounded-lg px-3 py-2 focus:outline-none cursor-pointer appearance-none">
                     <option value="" class="bg-gray-900">-- Select an Active Deal --</option>
                     <!-- Options populated dynamically -->
                 </select>
             </div>
-            <button onclick="openAssetModal()" class="w-full sm:w-auto px-4 py-2 text-xs font-bold bg-gray-800 hover:bg-gray-700 text-white rounded-lg border border-gray-600 transition-colors flex items-center justify-center gap-2 cursor-pointer">
+            <button onclick="window.openAssetModal()" class="w-full sm:w-auto px-4 py-2 text-xs font-bold bg-gradient-to-r from-brand-crimson to-brand-purple text-white rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer">
                 <i class="fa-solid fa-plus text-brand-emerald"></i> Add New Asset
             </button>
         </div>
@@ -231,7 +252,7 @@
             <i class="fa-solid fa-magnifying-glass-location text-4xl text-gray-600 mb-4"></i>
             <h3 class="text-xl font-bold text-white mb-2">No Asset Selected</h3>
             <p class="text-sm text-gray-400 mb-6">Select a property from the dropdown above to view and manage its checklist.</p>
-            <button onclick="switchTab('dashboard')" class="bg-brand-purple hover:bg-indigo-500 text-white font-bold py-2 px-6 rounded-lg transition-colors cursor-pointer">
+            <button onclick="window.switchTab('dashboard')" class="bg-brand-purple hover:bg-indigo-500 text-white font-bold py-2 px-6 rounded-lg transition-colors cursor-pointer">
                 Return to Master Dashboard
             </button>
         </div>
@@ -269,7 +290,7 @@
             </div>
             
             <div class="flex justify-end pt-4 pb-12">
-                <button onclick="deleteCurrentProperty()" class="text-xs text-red-500 hover:text-red-400 font-semibold cursor-pointer border border-red-500/20 bg-red-500/5 px-4 py-2 rounded transition-colors flex items-center gap-2">
+                <button onclick="window.openDeleteModal()" class="text-xs text-red-500 hover:text-red-400 font-semibold cursor-pointer border border-red-500/20 bg-red-500/5 px-4 py-2 rounded transition-colors flex items-center gap-2">
                     <i class="fa-solid fa-trash-can"></i> Remove Asset from Pipeline
                 </button>
             </div>
@@ -321,23 +342,17 @@
                     </div>
                 </div>
 
-                <!-- Step 1 Card -->
+                <!-- Deal Intake Card -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-crimson border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">1</div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-crimson border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-calculator text-xs"></i></div>
                     <div class="glass-card rounded-xl p-6 border-brand-crimson/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] transition-all">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4 mb-4">
-                            <div class="flex items-center gap-2.5">
-                                <span class="text-xs font-extrabold tracking-widest text-brand-crimson bg-brand-crimson/10 border border-brand-crimson/30 px-2.5 py-1 rounded uppercase">Step 1</span>
-                                <h3 class="text-lg font-bold text-white">Underwriting & Verification</h3>
-                            </div>
-                            <span class="text-xs text-gray-300 bg-gray-900 border border-gray-700 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
-                                <i class="fa-solid fa-calculator text-brand-crimson"></i> Yield Integrity
-                            </span>
+                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                            <h3 class="text-lg font-bold text-white">Underwriting</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
                             <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Manually UW The Deal</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">6% (Carlos)</span></li>
                             <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> AI UW Tool To Confirm Manual UW</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">2% (Carlos)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Search Entire CRM For Seller Number(s) (DND Check)</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Search Entire CRM For Seller Number(s) (Disqualified or DND'd)</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
                         </ul>
                     </div>
                 </div>
@@ -352,91 +367,81 @@
                     </div>
                 </div>
 
-                <!-- Step 2 Card -->
+                <!-- Marketing Prep Card 1 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">2</div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-magnifying-glass text-xs"></i></div>
                     <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4 mb-4">
-                            <div class="flex items-center gap-2.5">
-                                <span class="text-xs font-extrabold tracking-widest text-brand-purple bg-brand-purple/10 border border-brand-purple/30 px-2.5 py-1 rounded uppercase">Step 2</span>
-                                <h3 class="text-lg font-bold text-white">Pull Local Hyper Qualified Buyers</h3>
-                            </div>
+                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                            <h3 class="text-lg font-bold text-white">Pull Local Hyper Qualified Buyers</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> 3 Investors that bought $10K - $15K from purchase price</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">3% (Carlos)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> 3 Local Investors for ARV Comps</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">3% (Carlos)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> 3-5 Local investors w/ Active Leases (Rentals)</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">2% (Carlos)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> At least 3 Local Investors that bought $10K - $15K from purchase price</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">3% (Carlos)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> At Least 3 Local Investors - for ARV Comps</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">3% (Carlos)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> At Least 3-5 Local investors w/ Active Leases in the area</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">2% (Carlos)</span></li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Step 3 Card -->
+                <!-- Marketing Prep Card 2 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">3</div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-database text-xs"></i></div>
                     <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4 mb-4">
-                            <div class="flex items-center gap-2.5">
-                                <span class="text-xs font-extrabold tracking-widest text-brand-purple bg-brand-purple/10 border border-brand-purple/30 px-2.5 py-1 rounded uppercase">Step 3</span>
-                                <h3 class="text-lg font-bold text-white">Investor Data Scraping</h3>
-                            </div>
+                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                            <h3 class="text-lg font-bold text-white">Investor Data Scraping</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Pull Core Data (Investorbase, etc.)</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">2% (Moe)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Format & Upload Data To CRM</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Create & Approve Text Blast Draft</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">4% (Sarah)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Pull The Data From (Investorbase - etc)</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">2% (Moe)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Format The Data</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">1% (Sarah)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Upload The Data To CRM</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">1% (Sarah)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Create Text Blast Draft</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Get The Text Blast Draft Approved</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Step 4 Card -->
+                <!-- Marketing Prep Card 3 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">4</div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-building text-xs"></i></div>
                     <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4 mb-4">
-                            <div class="flex items-center gap-2.5">
-                                <span class="text-xs font-extrabold tracking-widest text-brand-purple bg-brand-purple/10 border border-brand-purple/30 px-2.5 py-1 rounded uppercase">Step 4</span>
-                                <h3 class="text-lg font-bold text-white">Realtor Data Scraping</h3>
-                            </div>
+                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                            <h3 class="text-lg font-bold text-white">Realtor Data Scraping</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Pull Data (Zillow, Realtor.com)</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">2% (Moe)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Format & Upload Data to CRM</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Create & Approve Text Blast Draft</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">4% (Sarah)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Pull The Data From (Zillow - realtor.com - etc.)</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">2% (Moe)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Format The Data</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">1% (Sarah)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Upload The Data to CRM</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">1% (Sarah)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Create Text Blast Draft</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Get The Text Blast Draft Approved</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Step 5 Card -->
+                <!-- Marketing Prep Card 4 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">5</div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-brands fa-facebook-f text-xs"></i></div>
                     <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4 mb-4">
-                            <div class="flex items-center gap-2.5">
-                                <span class="text-xs font-extrabold tracking-widest text-brand-purple bg-brand-purple/10 border border-brand-purple/30 px-2.5 py-1 rounded uppercase">Step 5</span>
-                                <h3 class="text-lg font-bold text-white">Facebook Groups Hunt</h3>
-                            </div>
+                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                            <h3 class="text-lg font-bold text-white">Facebook Groups Hunt</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
                             <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Join All Relevant FB Groups</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">6% (Moe)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Create & Approve FB Post Draft</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">2% (Moe)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Create FB Post Draft</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">1% (Moe)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Get The FB Post Draft Approved</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">1% (Moe)</span></li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Step 6 Card -->
+                <!-- Marketing Prep Card 5 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">6</div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-cloud-arrow-up text-xs"></i></div>
                     <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4 mb-4">
-                            <div class="flex items-center gap-2.5">
-                                <span class="text-xs font-extrabold tracking-widest text-brand-purple bg-brand-purple/10 border border-brand-purple/30 px-2.5 py-1 rounded uppercase">Step 6</span>
-                                <h3 class="text-lg font-bold text-white">Create InvestorLift Draft</h3>
-                            </div>
+                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                            <h3 class="text-lg font-bold text-white">Create InvestorLift Draft</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Marketing Description</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">3% (Yanna)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Upload Photos & Videos</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">2% (Yanna)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Prepare Verified Comps</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">3% (Yanna)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Description</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">3% (Yanna)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Photos & Videos (if applicable)</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">2% (Yanna)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Comps</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">3% (Yanna)</span></li>
                         </ul>
                     </div>
                 </div>
@@ -451,69 +456,69 @@
                     </div>
                 </div>
 
-                <!-- Step 7 Card -->
+                <!-- Marketing Execution Card 1 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">7</div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-phone text-xs"></i></div>
                     <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4 mb-4">
-                            <div class="flex items-center gap-2.5">
-                                <span class="text-xs font-extrabold tracking-widest text-brand-emerald bg-brand-emerald/10 border border-brand-emerald/30 px-2.5 py-1 rounded uppercase">Step 7</span>
-                                <h3 class="text-lg font-bold text-white">Call & Market Leads</h3>
-                            </div>
+                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                            <h3 class="text-lg font-bold text-white">Call & Market To Buyers / Realtors</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-phone text-brand-emerald"></i> Execute Outbound (Buyers / Realtors)</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">10% (Carlos)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Execute Calling & Marketing</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">10% (Carlos)</span></li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Step 8 Card -->
+                <!-- Marketing Execution Card 2 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">8</div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-comment-sms text-xs"></i></div>
                     <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4 mb-4">
-                            <div class="flex items-center gap-2.5">
-                                <span class="text-xs font-extrabold tracking-widest text-brand-emerald bg-brand-emerald/10 border border-brand-emerald/30 px-2.5 py-1 rounded uppercase">Step 8</span>
-                                <h3 class="text-lg font-bold text-white">SMS Broadcast Deployment</h3>
-                            </div>
+                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                            <h3 class="text-lg font-bold text-white">Investor Text Blast</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-paper-plane text-brand-emerald"></i> Execute Investor Bulk/Individual Blasts</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">10% (Sarah)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-paper-plane text-brand-emerald"></i> Execute Realtor Bulk/Individual Blasts</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">10% (Sarah)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Execute Investor Bulk/Individual Blasts</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">10% (Sarah)</span></li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Step 9 Card -->
+                <!-- Marketing Execution Card 3 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">9</div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-comment-sms text-xs"></i></div>
                     <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4 mb-4">
-                            <div class="flex items-center gap-2.5">
-                                <span class="text-xs font-extrabold tracking-widest text-brand-emerald bg-brand-emerald/10 border border-brand-emerald/30 px-2.5 py-1 rounded uppercase">Step 9</span>
-                                <h3 class="text-lg font-bold text-white">InvestorLift Active Outreach</h3>
-                            </div>
+                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                            <h3 class="text-lg font-bold text-white">Realtor Text Blast</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-globe text-brand-emerald"></i> Calling Inquiries / Subject Deal Interest</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">5% (Yanna)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-globe text-brand-emerald"></i> Calling ALL Artemis Mode Buyers</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">5% (Yanna)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Execute Realtor Bulk/Individual Blasts</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">10% (Sarah)</span></li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Step 10 Card -->
+                <!-- Marketing Execution Card 4 -->
                 <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">10</div>
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-globe text-xs"></i></div>
                     <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4 mb-4">
-                            <div class="flex items-center gap-2.5">
-                                <span class="text-xs font-extrabold tracking-widest text-brand-emerald bg-brand-emerald/10 border border-brand-emerald/30 px-2.5 py-1 rounded uppercase">Step 10</span>
-                                <h3 class="text-lg font-bold text-white">Facebook Outreach & Syndication</h3>
-                            </div>
+                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                            <h3 class="text-lg font-bold text-white">Post On InvestorLift</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-brands fa-facebook text-brand-emerald"></i> Reach Out To Interested Group Investors</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">10% (Moe)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-brands fa-facebook text-brand-emerald"></i> Boost the Post (If Needed)</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">0% (Moe)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Calling Inquiries / Interest On Subject Deal</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">5% (Yanna)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Calling ALL Artemis Mode Buyers</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">5% (Yanna)</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Marketing Execution Card 5 -->
+                <div class="relative group">
+                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform"><i class="fa-brands fa-facebook-f text-xs"></i></div>
+                    <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
+                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                            <h3 class="text-lg font-bold text-white">Post On Facebook</h3>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Reach Out To Investors That Expressed Interest</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">10% (Moe)</span></li>
+                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Boost the Post (If Needed)</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">0% (Moe)</span></li>
                         </ul>
                     </div>
                 </div>
@@ -524,15 +529,108 @@
 
     <!-- Footer -->
     <footer class="mt-auto pt-6 pb-6 relative z-10 flex justify-center">
-        <img src="logo.svg" alt="TCHB Logo" class="h-8 opacity-50" onerror="this.src='https://placehold.co/120x40/0b0f19/ffffff?text=TCHB'">
+        <img src="logo.svg" alt="TCHB Logo" class="h-16 opacity-50" onerror="this.src='https://placehold.co/180x60/0b0f19/ffffff?text=TCHB'">
     </footer>
 
   </div>
 
-  <!-- JAVASCRIPT LOGIC -->
-  <script>
-    // --- 1. AUTHENTICATION LOGIC ---
-    function handleLogin() {
+  <!-- JAVASCRIPT LOGIC WITH FIRESTORE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    let db;
+    let auth;
+    let appId;
+    let currentUser = null;
+    let isGatewayUnlocked = false;
+    let propertiesData = [];
+    let activePropertyId = null;
+
+    // --- 1. FIREBASE INITIALIZATION & SYNC ---
+    async function initFirebase() {
+        try {
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+            if (!firebaseConfig) {
+                console.warn("No Firebase config found. Falling back to local storage.");
+                initLocalApp();
+                return;
+            }
+            appId = typeof __app_id !== 'undefined' ? __app_id : 'tchb-dispo-default';
+            const app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+            
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                if (user && isGatewayUnlocked) {
+                    listenToProperties();
+                }
+            });
+        } catch (e) {
+            console.error("Firebase init failed", e);
+            initLocalApp();
+        }
+    }
+
+    function initLocalApp() {
+        const stored = localStorage.getItem('tchb_dispo_app_data_v4');
+        if (stored) propertiesData = JSON.parse(stored);
+        renderDashboard();
+        updateGlobalAssetSelector();
+    }
+
+    let unsubscribe = null;
+    function listenToProperties() {
+        if (!currentUser) return;
+        const propsRef = collection(db, 'artifacts', appId, 'public', 'data', 'properties');
+        unsubscribe = onSnapshot(propsRef, (snapshot) => {
+            propertiesData = [];
+            snapshot.forEach(doc => propertiesData.push(doc.data()));
+            propertiesData.sort((a, b) => b.dateStarted - a.dateStarted);
+            renderDashboard();
+            updateGlobalAssetSelector();
+            if (activePropertyId) renderTrackerView();
+        }, (error) => {
+            console.error("Snapshot error", error);
+        });
+    }
+
+    async function savePropertyData(prop) {
+        if (currentUser && db) {
+            prop.dateLastEdited = Date.now();
+            const propRef = doc(db, 'artifacts', appId, 'public', 'data', 'properties', prop.id);
+            await setDoc(propRef, prop);
+        } else {
+            prop.dateLastEdited = Date.now();
+            localStorage.setItem('tchb_dispo_app_data_v4', JSON.stringify(propertiesData));
+            renderDashboard();
+        }
+    }
+
+    async function removePropertyData(id) {
+        if (currentUser && db) {
+            const propRef = doc(db, 'artifacts', appId, 'public', 'data', 'properties', id);
+            await deleteDoc(propRef);
+        } else {
+            propertiesData = propertiesData.filter(p => p.id !== id);
+            localStorage.setItem('tchb_dispo_app_data_v4', JSON.stringify(propertiesData));
+            renderDashboard();
+        }
+    }
+
+    // Initialize environment early
+    initFirebase();
+
+    // --- 2. AUTHENTICATION LOGIC ---
+    window.handleLogin = function() {
         const emailInput = document.getElementById('gateEmailInput').value.trim();
         const keyInput = document.getElementById('gateAccessKeyInput').value.trim();
         const errorMsg = document.getElementById('gateErrorMessage');
@@ -566,21 +664,22 @@
             document.documentElement.classList.add('gate-unlocked');
             document.getElementById('mainContent').classList.remove('hidden');
             document.getElementById('mainContent').classList.add('flex');
-            initApp();
+            
+            isGatewayUnlocked = true;
+            if (currentUser && db) listenToProperties();
+            else renderDashboard();
+            
         }, 1200);
     }
 
-    // --- 2. DATA MODEL & STATE ---
+    // --- 3. DATA MODEL & STATE ---
     const agentsList = ["Carlos", "Yanna", "Moe", "Sarah"];
     
-    // Updated SOP Task Blueprint with Main Task grouping
     const sopBlueprint = [
-        // PHASE I: INTAKE (10%)
         { id: "p1_1", phase: "Deal Intake Section (10%)", mainTask: "Underwriting", title: "Manually UW The Deal", weight: 6, defaultAssignee: "Carlos" },
         { id: "p1_2", phase: "Deal Intake Section (10%)", mainTask: "Underwriting", title: "AI UW Tool To Confirm Manual UW", weight: 2, defaultAssignee: "Carlos" },
         { id: "p1_3", phase: "Deal Intake Section (10%)", mainTask: "Underwriting", title: "Search Entire CRM For Seller Number(s) (Disqualified or DND'd)", weight: 2, defaultAssignee: "Sarah" },
         
-        // PHASE II: MARKETING PREP (40%)
         { id: "p2_1", phase: "Marketing Prep Section (40%)", mainTask: "Pull Local Hyper Qualified Buyers", title: "At least 3 Local Investors that bought $10K - $15K from purchase price", weight: 3, defaultAssignee: "Carlos" },
         { id: "p2_2", phase: "Marketing Prep Section (40%)", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3 Local Investors - for ARV Comps", weight: 3, defaultAssignee: "Carlos" },
         { id: "p2_3", phase: "Marketing Prep Section (40%)", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3-5 Local investors w/ Active Leases in the area", weight: 2, defaultAssignee: "Carlos" },
@@ -605,7 +704,6 @@
         { id: "p2_18", phase: "Marketing Prep Section (40%)", mainTask: "Create InvestorLift Draft", title: "Photos & Videos (if applicable)", weight: 2, defaultAssignee: "Yanna" },
         { id: "p2_19", phase: "Marketing Prep Section (40%)", mainTask: "Create InvestorLift Draft", title: "Comps", weight: 3, defaultAssignee: "Yanna" },
 
-        // PHASE III: MARKETING (50%)
         { id: "p3_1", phase: "Marketing Section (50%)", mainTask: "Call & Market To The Hyper Local Buyers / Realtors", title: "Execute Calls & Marketing (Buyers / Realtors)", weight: 10, defaultAssignee: "Carlos" },
         { id: "p3_2", phase: "Marketing Section (50%)", mainTask: "Investor Bulk Text Blast / Individual Text Blast", title: "Execute SMS Deployment (Investors)", weight: 10, defaultAssignee: "Sarah" },
         { id: "p3_3", phase: "Marketing Section (50%)", mainTask: "Realtor Bulk Text Blast / Individual Text Blast", title: "Execute SMS Deployment (Realtors)", weight: 10, defaultAssignee: "Sarah" },
@@ -617,23 +715,6 @@
         { id: "p3_7", phase: "Marketing Section (50%)", mainTask: "Post On Facebook", title: "Boost the Post (If Needed)", weight: 0, defaultAssignee: "Moe" }
     ];
 
-    let propertiesData = [];
-    let activePropertyId = null;
-
-    function initApp() {
-        const stored = localStorage.getItem('tchb_dispo_app_data_v3'); // Increment key to ensure fresh schema
-        if (stored) {
-            propertiesData = JSON.parse(stored);
-        }
-        renderDashboard();
-        updateGlobalAssetSelector();
-    }
-
-    function saveState() {
-        localStorage.setItem('tchb_dispo_app_data_v3', JSON.stringify(propertiesData));
-    }
-
-    // Agent Color Logic
     function getAgentColorClass(name, type = 'text') {
         const colors = {
             "Carlos": { text: "text-yellow-500", border: "border-yellow-500/50", bg: "bg-yellow-500/10" },
@@ -647,18 +728,15 @@
         return selected[type];
     }
 
-    // Mathematical Color Interpolation: Crimson -> Indigo -> Emerald
     function getProgressColorRGB(percent) {
         let r, g, b;
         if (percent < 50) {
             const pct = percent / 50;
-            // Crimson: 220, 38, 38 to Indigo: 79, 70, 229
             r = Math.round(220 + pct * (79 - 220));
             g = Math.round(38 + pct * (70 - 38));
             b = Math.round(38 + pct * (229 - 38));
         } else {
             const pct = (percent - 50) / 50;
-            // Indigo: 79, 70, 229 to Emerald: 16, 185, 129
             r = Math.round(79 + pct * (16 - 79));
             g = Math.round(70 + pct * (185 - 70));
             b = Math.round(229 + pct * (129 - 229));
@@ -666,15 +744,13 @@
         return `rgb(${r}, ${g}, ${b})`;
     }
 
-    // --- 3. UI RENDERING & LOGIC ---
-
-    function switchTab(tab) {
+    // --- 4. UI RENDERING & INTERACTIVITY ---
+    window.switchTab = function(tab) {
         document.getElementById('tab-dashboard').classList.add('hidden');
         document.getElementById('tab-tracker').classList.add('hidden');
         document.getElementById('tab-tracker').classList.remove('flex');
         document.getElementById('tab-sop').classList.add('hidden');
         
-        // Reset Nav Buttons
         const defaultNavClasses = "px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap";
         document.getElementById('nav-dashboard').className = defaultNavClasses;
         document.getElementById('nav-tracker').className = defaultNavClasses;
@@ -715,19 +791,19 @@
         }));
     }
 
-    function openAssetModal() {
+    window.openAssetModal = function() {
         document.getElementById('newAssetAddressInput').value = '';
         document.getElementById('newAssetModal').classList.remove('hidden');
         document.getElementById('newAssetModal').classList.add('flex');
         document.getElementById('newAssetAddressInput').focus();
     }
 
-    function closeAssetModal() {
+    window.closeAssetModal = function() {
         document.getElementById('newAssetModal').classList.add('hidden');
         document.getElementById('newAssetModal').classList.remove('flex');
     }
 
-    function confirmNewAsset() {
+    window.confirmNewAsset = async function() {
         const input = document.getElementById('newAssetAddressInput');
         const address = input.value;
         if (!address || address.trim() === '') {
@@ -736,23 +812,53 @@
         }
         
         const newProp = {
-            id: 'prop_' + Date.now(),
+            id: 'prop_' + Date.now() + Math.random().toString(36).substr(2, 5),
             address: address.trim(),
             dateStarted: Date.now(),
             dateLastEdited: Date.now(),
             tasks: generateTaskInstances()
         };
         
-        propertiesData.unshift(newProp);
-        saveState();
-        closeAssetModal();
+        if (!currentUser) { propertiesData.unshift(newProp); }
+        await savePropertyData(newProp);
+        
+        window.closeAssetModal();
         
         if(document.getElementById('tab-tracker').classList.contains('hidden')) {
             renderDashboard();
         } else {
-            openTracker(newProp.id);
+            window.openTracker(newProp.id);
         }
         updateGlobalAssetSelector();
+    }
+
+    window.openDeleteModal = function() {
+        document.getElementById('deleteAuthInput').value = '';
+        document.getElementById('deleteErrorMessage').classList.add('hidden');
+        document.getElementById('deleteAuthModal').classList.remove('hidden');
+        document.getElementById('deleteAuthModal').classList.add('flex');
+        document.getElementById('deleteAuthInput').focus();
+    }
+
+    window.closeDeleteModal = function() {
+        document.getElementById('deleteAuthModal').classList.add('hidden');
+        document.getElementById('deleteAuthModal').classList.remove('flex');
+    }
+
+    window.confirmDeleteProperty = async function() {
+        const pass = document.getElementById('deleteAuthInput').value;
+        if (pass === 'Remove@2026') {
+            if (activePropertyId) {
+                await removePropertyData(activePropertyId);
+                window.closeDeleteModal();
+                window.switchTab('dashboard');
+            }
+        } else {
+            document.getElementById('deleteErrorMessage').classList.remove('hidden');
+            const modal = document.getElementById('deleteAuthModal').querySelector('.bg-gray-900');
+            modal.classList.add('shake-element');
+            setTimeout(() => modal.classList.remove('shake-element'), 400);
+        }
     }
 
     function getPropStats(prop) {
@@ -780,15 +886,10 @@
         return { percent, nextStep, nextAgent };
     }
 
-    function formatEST(ms, includeTime = true) {
+    function formatEST(ms) {
         if (!ms) return '-';
         const d = new Date(ms);
-        const options = { timeZone: 'America/New_York', month: 'numeric', day: 'numeric', year: '2-digit' };
-        if (includeTime) {
-            options.hour = 'numeric';
-            options.minute = '2-digit';
-            options.hour12 = true;
-        }
+        const options = { timeZone: 'America/New_York', month: '2-digit', day: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true };
         return d.toLocaleString('en-US', options);
     }
 
@@ -816,12 +917,12 @@
         });
     }
 
-    function handleGlobalAssetSelection(propId) {
+    window.handleGlobalAssetSelection = function(propId) {
         if (!propId || propId === '') {
             activePropertyId = null;
             renderTrackerView();
         } else {
-            openTracker(propId);
+            window.openTracker(propId);
         }
     }
 
@@ -843,12 +944,12 @@
                 
                 const tr = document.createElement('tr');
                 tr.className = "cursor-pointer group";
-                tr.onclick = () => openTracker(prop.id);
+                tr.onclick = () => window.openTracker(prop.id);
                 
                 tr.innerHTML = `
                     <td class="p-4 font-bold text-white group-hover:text-brand-purple transition-colors">${prop.address}</td>
-                    <td class="p-4">${formatEST(prop.dateStarted, false)}</td>
-                    <td class="p-4">${formatEST(prop.dateLastEdited, false)}</td>
+                    <td class="p-4">${formatEST(prop.dateStarted)}</td>
+                    <td class="p-4">${formatEST(prop.dateLastEdited)}</td>
                     <td class="p-4 text-brand-emerald text-xs font-mono">${timeSince(prop.dateLastEdited)}</td>
                     <td class="p-4">
                         <span class="${agentBgColor} ${agentTxtColor} px-2.5 py-1 rounded text-xs font-extrabold border ${agentBorderColor}">${stats.nextAgent}</span>
@@ -865,10 +966,10 @@
         }
     }
 
-    function openTracker(propId) {
+    window.openTracker = function(propId) {
         activePropertyId = propId;
         if(document.getElementById('tab-tracker').classList.contains('hidden')) {
-            switchTab('tracker');
+            window.switchTab('tracker');
         } else {
             renderTrackerView();
             updateGlobalAssetSelector();
@@ -927,7 +1028,7 @@
 
             for (const [mainTaskName, tasks] of Object.entries(mainTasksMap)) {
                 
-                // Subheader for Main Task (if it holds multiple checklist items, OR if the title doesn't match exactly)
+                // Subheader for Main Task
                 if (tasks.length > 1 || tasks[0].title !== mainTaskName) {
                     const mainTaskHeader = document.createElement('div');
                     mainTaskHeader.className = "bg-gray-800/40 px-4 py-3 border-b border-gray-800/60";
@@ -939,24 +1040,20 @@
                     const row = document.createElement('div');
                     row.className = `p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors hover:bg-gray-800/30 ${t.completed ? 'opacity-60' : ''}`;
                     
-                    const agentOpts = agentsList.map(a => `<option value="${a}" ${t.assignee === a ? 'selected' : ''} class="bg-gray-900 text-white">${a}</option>`).join('');
-                    const agentColor = getAgentColorClass(t.assignee, 'text');
-                    const agentBorder = getAgentColorClass(t.assignee, 'border');
-
-                    const weightColor = t.completed ? 'text-brand-emerald' : 'text-brand-crimson';
-
-                    // If it's a standalone task and doesn't need a subheader, prefix it slightly for alignment
+                    const agentOpts = agentsList.map(a => `<option value="${a}" ${t.assignee === a ? 'selected' : ''}>${a}</option>`).join('');
+                    
+                    const weightColor = t.completed ? 'text-brand-purple' : 'text-brand-crimson';
                     const paddingAdjust = (tasks.length === 1 && tasks[0].title === mainTaskName) ? "" : "pl-6 sm:pl-8";
 
                     row.innerHTML = `
                         <div class="flex items-start gap-4 flex-1 ${paddingAdjust}">
-                            <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTask(${t.originalIndex}, this.checked)" class="w-5 h-5 mt-0.5 rounded bg-gray-900 border-gray-600 text-brand-emerald focus:ring-brand-emerald focus:ring-offset-0 focus:ring-1 cursor-pointer">
+                            <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="window.toggleTask(${t.originalIndex}, this.checked)" class="w-5 h-5 mt-0.5 rounded bg-gray-900 border-gray-600 text-brand-purple focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer">
                             <div>
                                 <p class="text-sm font-bold ${t.completed ? 'text-gray-500 line-through' : 'text-gray-100'} leading-tight">${t.title}</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-3 shrink-0">
-                            <select onchange="changeAssignee(${t.originalIndex}, this.value)" class="bg-gradient-to-r from-brand-crimson/20 to-brand-purple/20 border ${agentBorder} ${agentColor} text-white text-xs font-bold rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-purple cursor-pointer appearance-none text-center min-w-[80px]">
+                            <select onchange="window.changeAssignee(${t.originalIndex}, this.value)" class="bg-gray-900 border border-gray-700 text-gray-300 text-xs font-bold rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-purple cursor-pointer appearance-none text-center min-w-[80px]">
                                 ${agentOpts}
                             </select>
                             <span class="bg-gray-900 border border-gray-700 ${weightColor} text-xs font-black px-2 py-1 rounded w-12 text-center transition-colors">+${t.weight}%</span>
@@ -971,36 +1068,23 @@
         }
     }
 
-    function toggleTask(taskIndex, isCompleted) {
+    window.toggleTask = async function(taskIndex, isCompleted) {
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
-        
         prop.tasks[taskIndex].completed = isCompleted;
-        prop.dateLastEdited = Date.now();
-        saveState();
+        await savePropertyData(prop);
         renderTrackerView();
     }
 
-    function changeAssignee(taskIndex, newAssignee) {
+    window.changeAssignee = async function(taskIndex, newAssignee) {
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
-        
         prop.tasks[taskIndex].assignee = newAssignee;
-        prop.dateLastEdited = Date.now();
-        saveState();
+        await savePropertyData(prop);
         renderTrackerView();
     }
 
-    function deleteCurrentProperty() {
-        if (!activePropertyId) return;
-        if (confirm("Are you sure you want to completely remove this active deal from the Dispo Tracker?")) {
-            propertiesData = propertiesData.filter(p => p.id !== activePropertyId);
-            saveState();
-            switchTab('dashboard');
-        }
-    }
-
-    // --- 4. CURSOR & CANVAS ANIMATION LOGIC ---
+    // --- 5. CURSOR & CANVAS ANIMATION LOGIC ---
     const canvas = document.getElementById('gridCanvas');
     const ctx = canvas.getContext('2d');
     let gridSize = 55; let sparks = []; let lastSpanSpawn = 0;
@@ -1126,7 +1210,6 @@
         requestAnimationFrame(animateGrid);
     }
 
-    // Initialize Canvas on load
     window.addEventListener('DOMContentLoaded', () => {
         resizeCanvas();
         requestAnimationFrame(animateGrid);
