@@ -207,6 +207,27 @@
     </div>
   </div>
 
+  <!-- CONFIRM REMOVE SOW TASK MODAL -->
+  <div id="removeSOWModal" class="fixed inset-0 z-[120] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+      <div class="bg-gray-900 border border-brand-crimson/50 shadow-[0_0_30px_rgba(220,38,38,0.2)] rounded-2xl w-full max-w-md p-6 transform transition-all relative overflow-hidden">
+          <div class="absolute -right-20 -top-20 w-48 h-48 bg-brand-crimson/10 rounded-full blur-3xl pointer-events-none"></div>
+          <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-triangle-exclamation text-brand-crimson"></i> Confirm Removal
+          </h3>
+          <p class="text-xs text-gray-400 mb-4">This will permanently delete this SOW task and recalculate the percentages for the remaining tasks.</p>
+          
+          <div class="space-y-4">
+              <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Type "Confirm" below to verify</label>
+              <input type="text" id="removeSOWConfirmInput" placeholder="Confirm" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-brand-crimson transition-colors cursor-pointer" oninput="window.validateRemoveSOWInput()">
+          </div>
+          
+          <div class="flex justify-end gap-3 mt-6">
+              <button onclick="window.closeRemoveSOWModal()" class="px-4 py-2 text-sm font-bold text-gray-400 hover:text-white transition-colors cursor-pointer">Cancel</button>
+              <button id="removeSOWBtn" onclick="window.executeRemoveSOWSubtask()" class="px-5 py-2 text-sm font-bold bg-gray-700 text-gray-500 rounded-lg shadow-lg cursor-not-allowed transition-all" disabled>Remove Task</button>
+          </div>
+      </div>
+  </div>
+
   <!-- CANVAS BACKGROUND -->
   <canvas id="gridCanvas" class="fixed inset-0 w-full h-full -z-10" style="pointer-events: none;"></canvas>
 
@@ -935,7 +956,8 @@
             const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.trim().replace(/^"|"$/g, ''));
             const task = cols[0] || `SOW Item ${i+1}`;
             const detail = cols[1] ? ` - ${cols[1]}` : '';
-            return task + detail;
+            const price = cols[2] ? ` - ${cols[2]}` : '';
+            return task + detail + price;
         });
     }
 
@@ -974,9 +996,9 @@
                     isDefault: true
                 }));
                 
-                // Adjust weights: SOW gets 20%, take 10% from Rough-In and 10% from Finishes
+                // Adjust weights: SOW gets 30%, take 10% from Rough-In, Finishes, and Final Polish
                 tasks.forEach(t => {
-                    if (t.mainTask === "Rough-In & Trades" || t.mainTask === "Finishes") {
+                    if (t.mainTask === "Rough-In & Trades" || t.mainTask === "Finishes" || t.mainTask === "Final Polish") {
                         t.weight = Math.max(5, t.weight - 10);
                     }
                 });
@@ -986,10 +1008,11 @@
                     phase: "Phase II: Rehab Execution",
                     mainTask: "SOW Execution (Imported)",
                     title: "Execute Uploaded Statement of Work",
-                    weight: 20,
+                    weight: 30,
                     assignee: "Moe",
                     completed: false,
-                    subtasks: subtasks
+                    subtasks: subtasks,
+                    isSOW: true
                 });
             }
         }
@@ -1086,23 +1109,41 @@
         let foundNext = false;
 
         prop.tasks.forEach(t => {
-            const isTaskFullyCompleted = t.completed && (!t.subtasks || t.subtasks.every(s => s.completed));
-            if (isTaskFullyCompleted) {
-                percent += t.weight;
-            } else if (!foundNext) {
-                nextStep = t.phase;
-                nextTaskDetail = t.title;
-                if (t.completed && t.subtasks) {
+            if (t.isSOW && t.subtasks && t.subtasks.length > 0) {
+                const completedCount = t.subtasks.filter(s => s.completed).length;
+                percent += (completedCount / t.subtasks.length) * t.weight;
+                
+                const isTaskFullyCompleted = completedCount === t.subtasks.length;
+                if (!isTaskFullyCompleted && !foundNext) {
+                    nextStep = t.phase;
+                    nextTaskDetail = t.title;
                     const pendingSub = t.subtasks.find(s => !s.completed);
                     if (pendingSub) nextTaskDetail = `Subtask: ${pendingSub.title}`;
+                    nextAgent = t.assignee;
+                    nextTaskId = t.id;
+                    nextSectionKey = btoa(encodeURIComponent(t.phase + "_" + t.mainTask)).replace(/=/g, '');
+                    foundNext = true;
                 }
-                nextAgent = t.assignee;
-                nextTaskId = t.id;
-                nextSectionKey = btoa(encodeURIComponent(t.phase + "_" + t.mainTask)).replace(/=/g, '');
-                foundNext = true;
+            } else {
+                const isTaskFullyCompleted = t.completed && (!t.subtasks || t.subtasks.every(s => s.completed));
+                if (isTaskFullyCompleted) {
+                    percent += t.weight;
+                } else if (!foundNext) {
+                    nextStep = t.phase;
+                    nextTaskDetail = t.title;
+                    if (t.completed && t.subtasks) {
+                        const pendingSub = t.subtasks.find(s => !s.completed);
+                        if (pendingSub) nextTaskDetail = `Subtask: ${pendingSub.title}`;
+                    }
+                    nextAgent = t.assignee;
+                    nextTaskId = t.id;
+                    nextSectionKey = btoa(encodeURIComponent(t.phase + "_" + t.mainTask)).replace(/=/g, '');
+                    foundNext = true;
+                }
             }
         });
         
+        percent = Math.round(percent);
         if (percent >= 100) { percent = 100; nextAgent = "Completed"; }
         return { percent, nextStep, nextTaskDetail, nextAgent, nextTaskId, nextSectionKey };
     }
@@ -1545,17 +1586,47 @@
                     let subtasksHtml = '';
                     if (t.subtasks && t.subtasks.length > 0) {
                         subtasksHtml = t.subtasks.map((st, sIdx) => {
-                            const isDefaultSub = st.isDefault || (t.id === 'p3_6' && st.title.includes('Boost the Post'));
-                            const deleteBtn = isDefaultSub ? '' : `<button onclick="window.deleteSubtask(${t.originalIndex}, ${sIdx})" class="text-gray-600 hover:text-brand-crimson opacity-0 group-hover/sub:opacity-100 transition-opacity cursor-pointer px-2" title="Delete Subtask"><i class="fa-solid fa-xmark"></i></button>`;
-                            return `
-                            <div class="flex items-center justify-between gap-3 pl-8 sm:pl-14 py-1 group/sub">
-                                <div class="flex items-center gap-3 flex-1">
-                                    <input type="checkbox" ${st.completed ? 'checked' : ''} onchange="window.toggleSubtask(${t.originalIndex}, ${sIdx}, this.checked)" class="w-4 h-4 rounded accent-brand-purple bg-gray-900 border-gray-600 focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer">
-                                    <span class="text-xs font-medium ${st.completed ? 'text-gray-500 line-through' : 'text-gray-300'}">${st.title}</span>
+                            if (t.isSOW) {
+                                const subWeight = (t.weight / t.subtasks.length).toFixed(1).replace(/\.0$/, '');
+                                return `
+                                <div class="flex flex-col gap-2 pl-8 sm:pl-14 py-2 group/sub border-b border-gray-800/30 last:border-0" id="sow_sub_row_${t.originalIndex}_${sIdx}">
+                                    <!-- View Mode -->
+                                    <div id="sow_sub_view_${t.originalIndex}_${sIdx}" class="flex items-start justify-between gap-3">
+                                        <div class="flex items-start gap-3 flex-1">
+                                            <input type="checkbox" ${st.completed ? 'checked' : ''} onchange="window.toggleSubtask(${t.originalIndex}, ${sIdx}, this.checked)" class="w-4 h-4 mt-0.5 rounded accent-brand-purple bg-gray-900 border-gray-600 focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer shrink-0">
+                                            <span class="text-xs font-medium ${st.completed ? 'text-gray-500 line-through' : 'text-gray-300'} leading-relaxed break-words">${escapeHtml(st.title)}</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 shrink-0">
+                                            <span class="text-[9px] font-bold text-brand-cyan bg-brand-cyan/10 border border-brand-cyan/30 px-1.5 py-0.5 rounded shadow-sm">+${subWeight}%</span>
+                                            <button onclick="window.editSOWSubtask(${t.originalIndex}, ${sIdx})" class="text-gray-500 hover:text-brand-cyan transition-colors cursor-pointer px-1" title="Edit SOW Item"><i class="fa-solid fa-pen"></i></button>
+                                        </div>
+                                    </div>
+                                    <!-- Edit Mode -->
+                                    <div id="sow_sub_edit_${t.originalIndex}_${sIdx}" class="hidden flex-col gap-2 bg-gray-900/50 p-3 rounded-lg border border-brand-cyan/30 mt-1">
+                                        <textarea id="sow_sub_input_${t.originalIndex}_${sIdx}" class="w-full bg-gray-950 border border-gray-700 rounded p-2 text-xs text-white focus:outline-none focus:border-brand-cyan transition-colors resize-y min-h-[50px] custom-scrollbar">${escapeHtml(st.title)}</textarea>
+                                        <div class="flex justify-between items-center mt-1">
+                                            <button onclick="window.promptRemoveSOWSubtask(${t.originalIndex}, ${sIdx})" class="text-xs font-bold text-red-500 hover:text-red-400 flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-trash-can"></i> Remove</button>
+                                            <div class="flex gap-2">
+                                                <button onclick="window.cancelEditSOWSubtask(${t.originalIndex}, ${sIdx})" class="text-xs font-bold text-gray-400 hover:text-white px-3 py-1.5 transition-colors">Cancel</button>
+                                                <button onclick="window.saveSOWSubtask(${t.originalIndex}, ${sIdx})" class="text-xs font-bold bg-brand-cyan hover:bg-cyan-400 text-gray-900 px-4 py-1.5 rounded-lg shadow-md transition-colors">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                ${deleteBtn}
-                            </div>
-                            `;
+                                `;
+                            } else {
+                                const isDefaultSub = st.isDefault || (t.id === 'p3_6' && st.title.includes('Boost the Post'));
+                                const deleteBtn = isDefaultSub ? '' : `<button onclick="window.deleteSubtask(${t.originalIndex}, ${sIdx})" class="text-gray-600 hover:text-brand-crimson opacity-0 group-hover/sub:opacity-100 transition-opacity cursor-pointer px-2" title="Delete Subtask"><i class="fa-solid fa-xmark"></i></button>`;
+                                return `
+                                <div class="flex items-center justify-between gap-3 pl-8 sm:pl-14 py-1 group/sub">
+                                    <div class="flex items-center gap-3 flex-1">
+                                        <input type="checkbox" ${st.completed ? 'checked' : ''} onchange="window.toggleSubtask(${t.originalIndex}, ${sIdx}, this.checked)" class="w-4 h-4 rounded accent-brand-purple bg-gray-900 border-gray-600 focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer">
+                                        <span class="text-xs font-medium ${st.completed ? 'text-gray-500 line-through' : 'text-gray-300'}">${escapeHtml(st.title)}</span>
+                                    </div>
+                                    ${deleteBtn}
+                                </div>
+                                `;
+                            }
                         }).join('');
                     }
 
@@ -1788,6 +1859,82 @@
         await window.savePropertyData(prop); 
     }
 
+    let pendingSOWRemove = null;
+
+    window.editSOWSubtask = function(taskIndex, subIndex) {
+        document.getElementById(`sow_sub_view_${taskIndex}_${subIndex}`).classList.add('hidden');
+        document.getElementById(`sow_sub_edit_${taskIndex}_${subIndex}`).classList.remove('hidden');
+        document.getElementById(`sow_sub_edit_${taskIndex}_${subIndex}`).classList.add('flex');
+    }
+
+    window.cancelEditSOWSubtask = function(taskIndex, subIndex) {
+        document.getElementById(`sow_sub_view_${taskIndex}_${subIndex}`).classList.remove('hidden');
+        document.getElementById(`sow_sub_edit_${taskIndex}_${subIndex}`).classList.add('hidden');
+        document.getElementById(`sow_sub_edit_${taskIndex}_${subIndex}`).classList.remove('flex');
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (prop) document.getElementById(`sow_sub_input_${taskIndex}_${subIndex}`).value = prop.tasks[taskIndex].subtasks[subIndex].title;
+    }
+
+    window.saveSOWSubtask = async function(taskIndex, subIndex) {
+        const input = document.getElementById(`sow_sub_input_${taskIndex}_${subIndex}`).value.trim();
+        if (!input) return;
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        prop.tasks[taskIndex].subtasks[subIndex].title = input;
+        await window.savePropertyData(prop);
+    }
+
+    window.promptRemoveSOWSubtask = function(taskIndex, subIndex) {
+        pendingSOWRemove = { taskIndex, subIndex };
+        document.getElementById('removeSOWConfirmInput').value = '';
+        document.getElementById('removeSOWBtn').disabled = true;
+        document.getElementById('removeSOWBtn').className = "px-5 py-2 text-sm font-bold bg-gray-700 text-gray-500 rounded-lg shadow-lg cursor-not-allowed transition-all";
+        document.getElementById('removeSOWModal').classList.remove('hidden');
+        document.getElementById('removeSOWModal').classList.add('flex');
+        document.getElementById('removeSOWConfirmInput').focus();
+    }
+
+    window.validateRemoveSOWInput = function() {
+        const val = document.getElementById('removeSOWConfirmInput').value;
+        const btn = document.getElementById('removeSOWBtn');
+        if (val === 'Confirm') {
+            btn.disabled = false;
+            btn.className = "px-5 py-2 text-sm font-bold bg-brand-crimson hover:bg-red-500 text-white rounded-lg shadow-lg cursor-pointer transition-all";
+        } else {
+            btn.disabled = true;
+            btn.className = "px-5 py-2 text-sm font-bold bg-gray-700 text-gray-500 rounded-lg shadow-lg cursor-not-allowed transition-all";
+        }
+    }
+
+    window.closeRemoveSOWModal = function() {
+        document.getElementById('removeSOWModal').classList.add('hidden');
+        document.getElementById('removeSOWModal').classList.remove('flex');
+        pendingSOWRemove = null;
+    }
+
+    window.executeRemoveSOWSubtask = async function() {
+        if (!pendingSOWRemove) return;
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        const { taskIndex, subIndex } = pendingSOWRemove;
+        
+        prop.tasks[taskIndex].subtasks.splice(subIndex, 1);
+        
+        if (prop.tasks[taskIndex].subtasks.length > 0) {
+            const allDone = prop.tasks[taskIndex].subtasks.every(s => s.completed);
+            if (allDone) {
+                prop.tasks[taskIndex].completed = true;
+                const sectionKey = btoa(encodeURIComponent(prop.tasks[taskIndex].phase + "_" + prop.tasks[taskIndex].mainTask)).replace(/=/g, '');
+                if (window.sectionToggleState) window.sectionToggleState[sectionKey] = 'closed';
+            }
+        } else {
+            prop.tasks[taskIndex].completed = false;
+        }
+
+        await window.savePropertyData(prop);
+        window.closeRemoveSOWModal();
+    }
+
     window.toggleSection = function(sectionKey) {
         if (!window.sectionToggleState) window.sectionToggleState = {};
         window.sectionToggleState[sectionKey] = window.sectionToggleState[sectionKey] === 'open' ? 'closed' : 'open';
@@ -1831,6 +1978,11 @@
             title: title,
             completed: false
         });
+        
+        if (prop.tasks[taskIndex].isSOW) {
+            prop.tasks[taskIndex].completed = false; 
+        }
+        
         await window.savePropertyData(prop);
     }
 
@@ -1838,6 +1990,18 @@
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
         prop.tasks[taskIndex].subtasks[subtaskIndex].completed = isCompleted;
+        
+        if (prop.tasks[taskIndex].isSOW) {
+            const allDone = prop.tasks[taskIndex].subtasks.every(s => s.completed);
+            if (allDone) {
+                prop.tasks[taskIndex].completed = true;
+                const sectionKey = btoa(encodeURIComponent(prop.tasks[taskIndex].phase + "_" + prop.tasks[taskIndex].mainTask)).replace(/=/g, '');
+                if (window.sectionToggleState) window.sectionToggleState[sectionKey] = 'closed';
+            } else {
+                prop.tasks[taskIndex].completed = false;
+            }
+        }
+        
         await window.savePropertyData(prop);
     }
 
