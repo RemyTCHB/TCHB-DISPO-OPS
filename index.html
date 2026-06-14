@@ -1030,9 +1030,9 @@
             // Phase Header with dynamic icons matching SOP
             let phaseIcon = "fa-layer-group";
             let phaseIconColor = "text-brand-purple";
-            if (phaseName.includes("Phase I")) { phaseIcon = "fa-clipboard-check"; phaseIconColor = "text-brand-crimson"; }
-            else if (phaseName.includes("Phase II")) { phaseIcon = "fa-bullseye"; phaseIconColor = "text-brand-purple"; }
-            else if (phaseName.includes("Phase III")) { phaseIcon = "fa-rocket"; phaseIconColor = "text-brand-emerald"; }
+            if (phaseName.includes("Phase I:")) { phaseIcon = "fa-clipboard-check"; phaseIconColor = "text-brand-crimson"; }
+            else if (phaseName.includes("Phase II:")) { phaseIcon = "fa-bullseye"; phaseIconColor = "text-brand-purple"; }
+            else if (phaseName.includes("Phase III:")) { phaseIcon = "fa-rocket"; phaseIconColor = "text-brand-emerald"; }
 
             const phaseHeader = document.createElement('div');
             phaseHeader.className = "bg-gray-900/60 p-4 border-b border-gray-800 flex items-center justify-between";
