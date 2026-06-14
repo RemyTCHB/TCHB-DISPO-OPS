@@ -1,1313 +1,716 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TCHB DISPO SOP</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TCHB DISPO PORTAL</title>
+  
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+          colors: {
+            brand: { purple: '#4f46e5', crimson: '#dc2626', emerald: '#10b981', gold: '#f59e0b', cyan: '#06b6d4', bgDark: '#0b0f19', cardBg: '#111827' }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body { background-color: #0b0f19; color: #f3f4f6; overflow-x: hidden; }
+
+    /* ========================================= */
+    /* CUSTOM CURSOR & GLOW STYLES               */
+    /* ========================================= */
+    body, a, button, input, select, [onclick], .cursor-pointer, .cursor-not-allowed { cursor: none !important; }
     
-    <!-- Favicon Integration using your TCHB Icon -->
-    <link rel="icon" type="image/png" href="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png">
+    #mouseGlow {
+        position: fixed; left: 0; top: 0; pointer-events: none; z-index: 1;
+        width: 220px; height: 220px;
+        transform: translate(calc(var(--mouse-x, 50vw) - 110px), calc(var(--mouse-y, 50vh) - 110px));
+        opacity: 0; transition: opacity 0.5s ease; mix-blend-mode: screen;
+    }
+    #mouseGlow::before {
+        content: ""; position: absolute; inset: 0; border-radius: 50%;
+        background: radial-gradient(circle at center, transparent 15%, rgba(16, 185, 129, 0.25) 35%, rgba(79, 70, 229, 0.25) 60%, rgba(220, 38, 38, 0.25) 85%, transparent 100%);
+        filter: blur(16px); opacity: 0.7; animation: color-cycle 5s linear infinite;
+    }
+    @keyframes color-cycle { 0% { filter: blur(16px) hue-rotate(0deg); } 100% { filter: blur(16px) hue-rotate(360deg); } }
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    #cursor-dot { position: fixed; top: 0; left: 0; width: 6px; height: 6px; background: white; border-radius: 50%; pointer-events: none; z-index: 999999; transform: translate(-50%, -50%); transition: transform 0.15s ease-out, background-color 0.2s; opacity: 0; }
+    #cursor-ring { position: fixed; top: 0; left: 0; width: 36px; height: 36px; border: 1.5px solid rgba(79, 70, 229, 0.6); border-radius: 50%; pointer-events: none; z-index: 999998; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s; opacity: 0; }
     
-    <!-- ChartJS for interactive statistics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    body.mouse-active #cursor-dot, body.mouse-active #cursor-ring { opacity: 1; }
     
-    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    body.cursor-hover #cursor-ring { width: 56px; height: 56px; background-color: rgba(220, 38, 38, 0.1); border-color: rgba(220, 38, 38, 0.8); }
+    body.cursor-hover #cursor-dot { transform: translate(-50%, -50%) scale(1.5); background: #10b981; }
     
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    body.cursor-locked #cursor-ring { width: 44px; height: 44px; background-color: rgba(220, 38, 38, 0.1); border-color: rgba(220, 38, 38, 0.8); border-style: dashed; }
+    body.cursor-locked #cursor-dot { transform: translate(-50%, -50%) scale(1.2); background: #dc2626; }
+
+    /* ========================================= */
+    /* UI UTILITIES & ANIMATIONS                 */
+    /* ========================================= */
+    .gate-unlocked #secureGate { display: none !important; }
+    .hidden-module { display: none !important; }
+
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); } 20%, 40%, 60%, 80% { transform: translateX(6px); } }
+    .shake-element { animation: shake 0.4s ease-in-out; }
+
+    .glass-card {
+        background: rgba(17, 24, 39, 0.75);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    }
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        tchbPurple: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
-                            500: '#5a4fbd',
-                            600: '#483F8A',
-                            700: '#3c3475',
-                            900: '#26204c',
-                        },
-                        tchbRed: {
-                            50: '#fef2f2',
-                            100: '#fee2e2',
-                            500: '#e12b3c',
-                            600: '#D12335',
-                            700: '#b01c2a',
-                            950: '#450a0a',
-                        },
-                        tchbGreen: {
-                            50: '#f0fdf4',
-                            500: '#00A859',
-                            600: '#00904c',
-                        },
-                        darkSlate: '#0a0d1a',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        heading: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
     
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #05070f;
-            color: #f1f5f9;
-            overflow-x: hidden;
-        }
-
-        /* Ambient proposals backdrop blur glowing spots */
-        .glow-sphere-purple {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(72,63,138,0.18) 0%, rgba(72,63,138,0) 70%);
-            filter: blur(80px);
-            pointer-events: none;
-            animation: driftPurple 25s infinite alternate ease-in-out;
-        }
-
-        .glow-sphere-red {
-            position: absolute;
-            width: 450px;
-            height: 450px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(209,35,53,0.15) 0%, rgba(209,35,53,0) 70%);
-            filter: blur(80px);
-            pointer-events: none;
-            animation: driftRed 20s infinite alternate ease-in-out;
-        }
-
-        @keyframes driftPurple {
-            0% { transform: translate(-10%, -20%) scale(1); }
-            100% { transform: translate(30%, 20%) scale(1.2); }
-        }
-
-        @keyframes driftRed {
-            0% { transform: translate(20%, 40%) scale(1.1); }
-            100% { transform: translate(-20%, -10%) scale(0.9); }
-        }
-
-        /* Glassmorphic border design */
-        .glass-card {
-            background: rgba(13, 17, 34, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-        }
-
-        .glass-card-interactive {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card-interactive:hover {
-            border-color: rgba(72, 63, 138, 0.4);
-            box-shadow: 0 0 25px rgba(72, 63, 138, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .glass-card-red {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card-red:hover {
-            border-color: rgba(209, 35, 53, 0.45);
-            box-shadow: 0 0 25px rgba(209, 35, 53, 0.25);
-            transform: translateY(-2px);
-        }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #05070f;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1b1f38;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #2b3154;
-        }
-    </style>
+    table tbody tr { transition: all 0.2s ease-in-out; }
+    table tbody tr:hover { background-color: rgba(79, 70, 229, 0.1); }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-tchbRed-600 selection:text-white relative antialiased">
+<body class="font-sans antialiased relative selection:bg-brand-crimson selection:text-white">
 
-    <!-- Interactive Grid Canvas (Matches Proposal Project Physics) -->
-    <canvas id="gridCanvas" class="fixed inset-0 w-full h-full -z-10" style="pointer-events: none;"></canvas>
+  <!-- CURSOR OVERLAYS -->
+  <div id="mouseGlow"></div>
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
 
-    <!-- Glowing Background Mesh Spheres -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div class="glow-sphere-purple top-10 left-10"></div>
-        <div class="glow-sphere-red top-[40%] right-10"></div>
-        <div class="glow-sphere-purple bottom-10 left-[30%]"></div>
+  <!-- SECURE GATE MODAL -->
+  <div id="secureGate" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md">
+    <div class="bg-[#0f0f1f] border border-indigo-500/30 rounded-2xl w-full max-w-md p-8 relative shadow-2xl" id="gateModalBox">
+        <div class="text-center mb-6">
+            <img src="logo.svg" alt="TCHB Logo" class="h-12 mx-auto mb-6 opacity-90" onerror="this.src='https://placehold.co/180x60/241a45/ffffff?text=TCHB+LOGO'">
+            <div class="mx-auto w-14 h-14 rounded-full bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 mb-4" id="gateLockIconContainer">
+                <svg id="gateLockIcon" class="w-6 h-6 text-indigo-400 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-1">Restricted Dispo Portal</h3>
+            <p class="text-xs text-gray-400">Authorized personnel login required</p>
+        </div>
+        
+        <div class="space-y-4">
+            <input type="email" id="gateEmailInput" placeholder="name@totalchb.com" class="w-full bg-[#18182d] border border-white/10 rounded-lg px-4 py-3 text-center text-white focus:outline-none focus:border-brand-purple transition-all cursor-pointer">
+            <input type="password" id="gateAccessKeyInput" placeholder="Master Key" class="w-full bg-[#18182d] border border-white/10 rounded-lg px-4 py-3 text-center text-white tracking-widest focus:outline-none focus:border-brand-purple transition-all cursor-pointer" onkeydown="if(event.key === 'Enter') handleLogin()">
+        </div>
+
+        <p id="gateErrorMessage" class="text-xs text-brand-crimson font-medium text-center hidden mt-4">Invalid Access Protocol.</p>
+        <button id="gateAuthButton" onclick="handleLogin()" class="w-full bg-brand-purple hover:bg-indigo-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 mt-6 cursor-pointer shadow-[0_0_15px_rgba(79,70,229,0.3)]">
+            Initialize Workspace <i class="fa-solid fa-arrow-right-to-bracket text-sm ml-1"></i>
+        </button>
     </div>
+  </div>
 
-    <!-- Header Block -->
-    <header class="border-b border-slate-800/80 bg-[#070a16]/90 sticky top-0 z-50 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            
-            <!-- Brand Logo & Responsive Titles -->
-            <div class="flex items-center gap-4">
-                <div class="relative bg-[#0d1122]/90 p-2 rounded-xl border border-slate-800/60 flex items-center justify-center h-16 w-48">
-                    <img src="https://i.postimg.cc/9zn5PrgX/TCHB-LOGO.png" alt="TCHB Logo" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/180x60/241a45/ffffff?text=Total+Cash+Buyers'">
-                </div>
-                <div class="h-8 w-px bg-slate-800/60 hidden sm:block"></div>
-                <div>
-                    <span class="text-xs uppercase tracking-widest text-tchbRed-500 font-bold block">Internal Blueprint</span>
-                    <h1 class="text-xl font-heading font-extrabold text-white tracking-tight flex items-center gap-2">
-                        TCHB DISPO SOP
-                    </h1>
-                </div>
+  <!-- CANVAS BACKGROUND -->
+  <canvas id="gridCanvas" class="fixed inset-0 w-full h-full -z-10" style="pointer-events: none;"></canvas>
+
+  <!-- MAIN CONTENT -->
+  <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 relative z-10 hidden flex-col min-h-screen" id="mainContent">
+    
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8 bg-brand-cardBg/60 p-4 rounded-2xl border border-gray-800/80 backdrop-blur-md">
+        <div class="flex items-center gap-4">
+            <img src="icon.svg" alt="TCHB Icon" class="h-10 w-10 object-contain" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
+            <div class="h-8 w-px bg-gray-700 hidden md:block"></div>
+            <div>
+                <h1 class="text-lg font-bold text-white tracking-tight">DISPO Operations Dashboard</h1>
+                <p class="text-xs text-gray-400 font-mono">INTERNAL // SYNDICATION PROTOCOL</p>
             </div>
-
-            <!-- Global Target Window Indicator -->
-            <div class="flex items-center gap-3 bg-[#0d1122]/80 p-1.5 rounded-xl border border-slate-800/80">
-                <div class="flex items-center gap-2 px-3 py-1">
-                    <div class="h-2.5 w-2.5 rounded-full bg-tchbGreen-500 animate-ping"></div>
-                    <span class="text-xs font-semibold text-slate-300">Action Window:</span>
-                    <span class="bg-tchbRed-600 text-white font-extrabold text-xs px-2.5 py-0.5 rounded-md tracking-wider shadow">24 HOURS</span>
-                </div>
-                <div class="h-6 w-px bg-slate-800"></div>
-                <div class="flex items-center gap-2 px-3 py-1 text-xs">
-                    <img src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon Badge" class="h-5 w-5 object-contain" onerror="this.src='https://placehold.co/20x20/D12335/ffffff?text=T'">
-                    <span class="text-slate-400 font-medium">Compliance Certified</span>
-                </div>
-            </div>
-
+        </div>
+        <div class="flex bg-[#0b0f19] p-1 rounded-xl border border-gray-800">
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all bg-brand-purple text-white shadow-md flex items-center gap-2">
+                <i class="fa-solid fa-layer-group"></i> Master Dashboard
+            </button>
+            <button onclick="switchTab('tracker')" id="nav-tracker" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-400 hover:text-white flex items-center gap-2">
+                <i class="fa-solid fa-list-check"></i> Active Deal Tracker
+            </button>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
-        
-        <!-- Interactive Welcome Banner -->
-        <div class="relative glass-card rounded-2xl border border-slate-800/80 p-6 md:p-8 overflow-hidden mb-8">
-            <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-tchbPurple-600/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -left-20 -top-20 w-80 h-80 bg-tchbRed-600/10 rounded-full blur-3xl pointer-events-none"></div>
-            
-            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                <div class="max-w-2xl">
-                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tchbRed-950/60 border border-tchbRed-700/50 text-tchbRed-100 text-xs font-bold mb-3 uppercase tracking-wider">
-                        <i class="fa-solid fa-bolt text-tchbRed-500"></i> Speed & Yield Maximizer
-                    </div>
-                    <h2 class="text-2xl md:text-3xl font-heading font-extrabold text-white tracking-tight">The 10-Step Disposition Workflow</h2>
-                    <p class="text-slate-400 mt-2 text-sm md:text-base leading-relaxed">
-                        To guarantee high contract velocity and optimal exit yields, this strategy must be executed continuously within the first <span class="text-white font-semibold">24 hours</span> of securing a contract. Follow the system meticulously.
-                    </p>
-                </div>
-                <!-- Interactive Action Tabs -->
-                <div class="flex flex-wrap gap-2.5">
-                    <button onclick="switchTab('sop-timeline')" class="tab-btn active-tab px-4 py-3 rounded-xl font-heading text-xs font-bold tracking-wider uppercase transition-all duration-300 border border-tchbPurple-500 bg-tchbPurple-600/80 hover:bg-tchbPurple-600 text-white shadow-lg" id="tab-sop-timeline">
-                        <i class="fa-solid fa-sitemap mr-2"></i>Interactive Flow
-                    </button>
-                    <button onclick="switchTab('checklist')" class="tab-btn px-4 py-3 rounded-xl font-heading text-xs font-bold tracking-wider uppercase transition-all duration-300 border border-slate-800 text-slate-400 hover:text-white hover:bg-[#0f1424]/60" id="tab-checklist">
-                        <i class="fa-solid fa-list-check mr-2"></i>Tracker
-                    </button>
-                    <button onclick="switchTab('analytics')" class="tab-btn px-4 py-3 rounded-xl font-heading text-xs font-bold tracking-wider uppercase transition-all duration-300 border border-slate-800 text-slate-400 hover:text-white hover:bg-[#0f1424]/60" id="tab-analytics">
-                        <i class="fa-solid fa-chart-line mr-2"></i>Templates & Data
-                    </button>
-                </div>
+    <!-- TAB: DASHBOARD -->
+    <div id="tab-dashboard" class="flex-1 space-y-6">
+        <div class="flex justify-between items-end mb-4">
+            <div>
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-satellite-dish text-brand-emerald"></i> Live Pipeline
+                </h2>
+                <p class="text-sm text-gray-400 mt-1">Monitor real-time velocity and active agent assignments.</p>
             </div>
+            <button onclick="promptNewProperty()" class="bg-brand-emerald/10 border border-brand-emerald hover:bg-brand-emerald text-brand-emerald hover:text-white font-bold py-2 px-4 rounded-xl transition-all cursor-pointer flex items-center gap-2 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                <i class="fa-solid fa-plus"></i> Deploy New Asset Tracker
+            </button>
         </div>
 
-        <!-- Content Container -->
-        <div id="content-container">
+        <div class="glass-card rounded-2xl overflow-hidden border border-gray-800">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-900/80 border-b border-gray-800 text-xs uppercase tracking-wider text-gray-400">
+                            <th class="p-4 font-bold">Address</th>
+                            <th class="p-4 font-bold">Date Started</th>
+                            <th class="p-4 font-bold">Last Edited</th>
+                            <th class="p-4 font-bold">Time Since Edit</th>
+                            <th class="p-4 font-bold">Next Agent</th>
+                            <th class="p-4 font-bold">Next Step</th>
+                            <th class="p-4 font-bold text-center">% Completion</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboard-tbody" class="text-sm text-gray-300 divide-y divide-gray-800">
+                        <!-- Rendered dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="empty-state" class="hidden p-12 text-center">
+                <div class="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mx-auto mb-4 border border-gray-700">
+                    <i class="fa-solid fa-house-circle-xmark text-2xl text-gray-500"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">No Active Deals</h3>
+                <p class="text-sm text-gray-400">Deploy a new asset tracker to begin monitoring the disposition flow.</p>
+            </div>
+        </div>
+    </div>
 
-            <!-- TAB 1: INTERACTIVE TIMELINE -->
-            <div id="view-sop-timeline" class="tab-view block space-y-8">
+    <!-- TAB: ACTIVE DEAL TRACKER -->
+    <div id="tab-tracker" class="flex-1 hidden flex-col">
+        <div id="tracker-empty" class="flex-1 flex flex-col items-center justify-center p-12 text-center glass-card rounded-2xl border border-gray-800">
+            <i class="fa-solid fa-magnifying-glass-location text-4xl text-gray-600 mb-4"></i>
+            <h3 class="text-xl font-bold text-white mb-2">No Asset Selected</h3>
+            <p class="text-sm text-gray-400 mb-6">Select a property from the Master Dashboard to view its checklist.</p>
+            <button onclick="switchTab('dashboard')" class="bg-brand-purple hover:bg-indigo-500 text-white font-bold py-2 px-6 rounded-lg transition-colors cursor-pointer">
+                Return to Dashboard
+            </button>
+        </div>
+
+        <div id="tracker-content" class="hidden space-y-6">
+            <!-- Tracker Header -->
+            <div class="glass-card p-6 rounded-2xl border border-gray-800 flex flex-col md:flex-row justify-between md:items-end gap-6 relative overflow-hidden">
+                <div class="absolute -right-20 -top-20 w-64 h-64 bg-brand-purple/10 rounded-full blur-3xl pointer-events-none"></div>
                 
-                <!-- Quick Navigation Shortcuts -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <a href="#phase-1" class="flex items-center gap-3 bg-[#0d1122]/60 hover:bg-[#0d1122]/90 p-4 rounded-xl border border-slate-800/80 transition-all hover:border-tchbRed-600/50">
-                        <span class="w-8 h-8 rounded-lg bg-tchbRed-950/80 border border-tchbRed-700 flex items-center justify-center text-tchbRed-100 font-extrabold text-sm shadow">I</span>
-                        <div>
-                            <span class="text-slate-500 text-[9px] uppercase font-bold tracking-wider block">Phase One</span>
-                            <span class="text-xs font-bold text-white block">CRM Integrity</span>
-                        </div>
-                    </a>
-                    <a href="#phase-2" class="flex items-center gap-3 bg-[#0d1122]/60 hover:bg-[#0d1122]/90 p-4 rounded-xl border border-slate-800/80 transition-all hover:border-tchbPurple-600/50">
-                        <span class="w-8 h-8 rounded-lg bg-tchbPurple-900/80 border border-tchbPurple-600 flex items-center justify-center text-tchbPurple-100 font-extrabold text-sm shadow">II</span>
-                        <div>
-                            <span class="text-slate-500 text-[9px] uppercase font-bold tracking-wider block">Phase Two</span>
-                            <span class="text-xs font-bold text-white block">Hyper-Sourcing</span>
-                        </div>
-                    </a>
-                    <a href="#phase-3" class="flex items-center gap-3 bg-[#0d1122]/60 hover:bg-[#0d1122]/90 p-4 rounded-xl border border-slate-800/80 transition-all hover:border-purple-500/50">
-                        <span class="w-8 h-8 rounded-lg bg-purple-950/80 border border-purple-800 flex items-center justify-center text-purple-200 font-extrabold text-sm shadow">III</span>
-                        <div>
-                            <span class="text-slate-500 text-[9px] uppercase font-bold tracking-wider block">Phase Three</span>
-                            <span class="text-xs font-bold text-white block">Asset Upload</span>
-                        </div>
-                    </a>
-                    <a href="#phase-4" class="flex items-center gap-3 bg-[#0d1122]/60 hover:bg-[#0d1122]/90 p-4 rounded-xl border border-slate-800/80 transition-all hover:border-tchbGreen-500/50">
-                        <span class="w-8 h-8 rounded-lg bg-green-950/80 border border-green-800 flex items-center justify-center text-tchbGreen-500 font-extrabold text-sm shadow">IV</span>
-                        <div>
-                            <span class="text-slate-500 text-[9px] uppercase font-bold tracking-wider block">Phase Four</span>
-                            <span class="text-xs font-bold text-white block">Multi-Channel</span>
-                        </div>
-                    </a>
+                <div class="relative z-10 flex-1">
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-emerald border border-brand-emerald/30 bg-brand-emerald/10 px-2.5 py-1 rounded inline-block mb-3">Active Workflow Tracker</span>
+                    <h2 id="tracker-address" class="text-2xl md:text-3xl font-extrabold text-white">123 Example Street</h2>
+                    <p class="text-sm text-gray-400 mt-2">Execute tasks to maximize yield within the standard 24-hour velocity window.</p>
                 </div>
 
-                <!-- Vertical Process Line Map -->
-                <div class="relative pl-6 sm:pl-10 border-l border-slate-800/80 space-y-12 py-4">
-
-                    <!-- Anchors and Floating line colors -->
-                    <div id="phase-1" class="absolute -top-10"></div>
-                    <div class="absolute left-0 top-0 w-1 bg-gradient-to-b from-tchbRed-600 via-tchbPurple-600 to-tchbGreen-500 h-full pointer-events-none -ml-px rounded-full opacity-60"></div>
-
-                    <!-- PHASE 1 TITLE CARD -->
-                    <div class="relative -ml-[31px] sm:-ml-[47px] mb-8">
-                        <div class="inline-flex items-center gap-3">
-                            <span class="bg-tchbRed-600 text-white font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4 border-[#05070f] shadow-lg">
-                                <i class="fa-solid fa-shield-halved"></i> PHASE I: INTEGRITY & INTAKE Verification
-                            </span>
-                        </div>
+                <div class="relative z-10 w-full md:w-64 bg-gray-900/80 p-4 rounded-xl border border-gray-800">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-gray-400 uppercase">Total Progress</span>
+                        <span id="tracker-percent-text" class="text-sm font-black text-brand-emerald">0%</span>
                     </div>
-
-                    <!-- STEP 1 CARD -->
-                    <div class="relative group">
-                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbRed-600 border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">1</div>
-                        <div class="glass-card rounded-xl p-6 glass-card-red">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="text-xs font-extrabold tracking-widest text-tchbRed-500 bg-tchbRed-950/50 border border-tchbRed-600/30 px-2.5 py-1 rounded uppercase">Step 1</span>
-                                    <h3 class="text-lg font-heading font-bold text-white">Underwrite (UW) the Deal</h3>
-                                </div>
-                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
-                                    <i class="fa-solid fa-cube text-tchbRed-500"></i> AI Underwriting Engine
-                                </span>
-                            </div>
-                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                                Run complete subject property metrics and comp profiles directly through the **AI UW Tool** to evaluate and confirm wholesale purchase margins. Double check calculations to prevent faulty deploy rates.
-                            </p>
-                            <div class="p-3 bg-slate-950/80 rounded-lg border border-slate-800/50 flex items-center gap-3">
-                                <i class="fa-solid fa-circle-info text-tchbRed-500 text-sm shrink-0"></i>
-                                <span class="text-xs text-slate-400 leading-relaxed">Underwritten stats must be locked in to establish verified parameters for Step 6 (InvestorLift Assets).</span>
-                            </div>
-                        </div>
+                    <div class="w-full bg-gray-800 rounded-full h-2.5 overflow-hidden">
+                        <div id="tracker-progress-bar" class="bg-gradient-to-r from-brand-crimson via-brand-purple to-brand-emerald h-full transition-all duration-500" style="width: 0%"></div>
                     </div>
-
-                    <!-- STEP 2 CARD -->
-                    <div class="relative group">
-                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbRed-600 border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">2</div>
-                        <div class="glass-card rounded-xl p-6 glass-card-red">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="text-xs font-extrabold tracking-widest text-tchbRed-500 bg-tchbRed-950/50 border border-tchbRed-600/30 px-2.5 py-1 rounded uppercase">Step 2</span>
-                                    <h3 class="text-lg font-heading font-bold text-white">Search Entire CRM Database</h3>
-                                </div>
-                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
-                                    <i class="fa-solid fa-shield-halved text-tchbRed-500"></i> DND Safety Scrubbing
-                                </span>
-                            </div>
-                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                                Search the seller's active mobile and landline numbers across our unified CRM. Immediately verify and configure the seller profile to either **Disqualified (DQ'd)** or **Do Not Disturb (DND)**.
-                            </p>
-                            <div class="p-4 bg-tchbRed-950/20 rounded-xl border border-tchbRed-900/30 flex items-start gap-3">
-                                <img src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="Compliance Check" class="h-6 w-6 object-contain mt-0.5 shrink-0" onerror="this.src='https://placehold.co/24x24/D12335/ffffff?text=T'">
-                                <div>
-                                    <h4 class="text-xs font-bold text-tchbRed-100 uppercase tracking-wide">Critical Seller Guardrail Protocol</h4>
-                                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-                                        This compliance step is mandatory to ensure our home seller is never targeted with automated buyer marketing blasts or text notifications referring directly to their own house.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PHASE 2 TITLE CARD -->
-                    <div id="phase-2" class="absolute pt-12"></div>
-                    <div class="relative -ml-[31px] sm:-ml-[47px] mb-8 pt-8">
-                        <div class="inline-flex items-center gap-3">
-                            <span class="bg-tchbPurple-600 text-white font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4 border-[#05070f] shadow-lg">
-                                <i class="fa-solid fa-magnifying-glass-chart"></i> PHASE II: HYPER-LOCAL BUYER SOURCING
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- STEP 3 CARD -->
-                    <div class="relative group">
-                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbPurple-600 border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">3</div>
-                        <div class="glass-card rounded-xl p-6 glass-card-interactive animate-card">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="text-xs font-extrabold tracking-widest text-tchbPurple-500 bg-tchbPurple-950/50 border border-tchbPurple-600/30 px-2.5 py-1 rounded uppercase">Step 3</span>
-                                    <h3 class="text-lg font-heading font-bold text-white">Pull Local Hyper-Qualified Buyers</h3>
-                                </div>
-                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
-                                    <i class="fa-solid fa-magnifying-glass text-tchbPurple-500"></i> Local Data Mining
-                                </span>
-                            </div>
-                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                                Target and extract information on local cash buyers active inside the property's sub-market. Construct a buyer spreadsheet matching precise localized parameters:
-                            </p>
-                            
-                            <!-- Sub-nested Sourcing parameters -->
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-                                <div class="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
-                                    <div>
-                                        <div class="text-tchbPurple-500 font-extrabold text-xs uppercase tracking-wide mb-1"><i class="fa-solid fa-tag mr-1"></i> Target Pricing Delta</div>
-                                        <p class="text-xs text-slate-400 leading-normal">Query cash properties sold within <span class="text-white font-semibold">+/- $10,000 to $15,000</span> of our target asking rate.</p>
-                                    </div>
-                                    <span class="text-[10px] text-slate-500 mt-2 font-bold uppercase">Budget Alignment</span>
-                                </div>
-                                <div class="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
-                                    <div>
-                                        <div class="text-tchbPurple-500 font-extrabold text-xs uppercase tracking-wide mb-1"><i class="fa-solid fa-building mr-1"></i> Corporate Intelligence</div>
-                                        <p class="text-xs text-slate-400 leading-normal">Pull purchasing LLC details, then extract their direct <span class="text-white font-semibold">Point of Contact (POC)</span> using OpenCorporates.</p>
-                                    </div>
-                                    <span class="text-[10px] text-slate-500 mt-2 font-bold uppercase">Owner Tracing</span>
-                                </div>
-                                <div class="p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex flex-col justify-between">
-                                    <div>
-                                        <div class="text-tchbPurple-500 font-extrabold text-xs uppercase tracking-wide mb-1"><i class="fa-solid fa-address-book mr-1"></i> Agent Mobile Digging</div>
-                                        <p class="text-xs text-slate-400 leading-normal">Isolate and log direct contact info of representing agents for those transactions.</p>
-                                    </div>
-                                    <span class="text-[10px] text-tchbRed-500 mt-2 font-bold uppercase">Mobile Numbers Only</span>
-                                </div>
-                            </div>
-
-                            <div class="mt-4 p-3 bg-tchbPurple-950/20 border border-tchbPurple-900/30 rounded-lg flex items-start gap-2.5 text-xs text-slate-400 leading-relaxed">
-                                <i class="fa-solid fa-mobile-screen-button text-tchbPurple-500 mt-0.5 shrink-0 text-sm"></i>
-                                <span><strong>Zillow Extraction Note:</strong> Many interfaces hide real estate agents' phone numbers behind central brokerage desk lines. Click into biography listings or query local agent registers to obtain their true <strong>personal mobile number</strong>.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- STEP 4 CARD -->
-                    <div class="relative group">
-                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbPurple-600 border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">4</div>
-                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="text-xs font-extrabold tracking-widest text-tchbPurple-500 bg-tchbPurple-950/50 border border-tchbPurple-600/30 px-2.5 py-1 rounded uppercase">Step 4</span>
-                                    <h3 class="text-lg font-heading font-bold text-white">Join Local Facebook Groups</h3>
-                                </div>
-                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
-                                    <i class="fa-brands fa-facebook text-tchbPurple-500"></i> Social Planting
-                                </span>
-                            </div>
-                            <p class="text-slate-300 text-sm leading-relaxed">
-                                Request access to localized Real Estate Investing (REI), wholesale, and county-specific cash buyer groups on Facebook. Doing this in advance ensures you are approved and ready to post when the syndication drafts are signed off.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- STEP 5 CARD -->
-                    <div class="relative group">
-                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbPurple-600 border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">5</div>
-                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="text-xs font-extrabold tracking-widest text-tchbPurple-500 bg-tchbPurple-950/50 border border-tchbPurple-600/30 px-2.5 py-1 rounded uppercase">Step 5</span>
-                                    <h3 class="text-lg font-heading font-bold text-white">Immediately Begin Investor Scraping</h3>
-                                </div>
-                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
-                                    <i class="fa-solid fa-server text-tchbPurple-500"></i> Investorbase Mining
-                                </span>
-                            </div>
-                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                                Extract active regional buyer cohorts directly using our specialized **Investorbase** scraping credentials. Filter searches to target active cash buyers in the property's sub-market.
-                            </p>
-                            <!-- Smart List Feature Grid -->
-                            <div class="p-4 bg-slate-950/80 rounded-xl border border-slate-800 flex items-start gap-4">
-                                <div class="p-3 bg-tchbPurple-950 border border-tchbPurple-600/30 rounded-lg text-tchbPurple-100 font-extrabold text-xs tracking-wider shrink-0 uppercase">
-                                    <i class="fa-solid fa-location-crosshairs text-tchbPurple-500"></i> 1-Hour Proximity Rule
-                                </div>
-                                <div>
-                                    <h4 class="text-xs font-bold text-white uppercase tracking-wider">Historical Lead Mapping</h4>
-                                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-                                        If our newly acquired property is located within **1 hour** of any previously marketed or closed deals, instantly query those past transactions to assemble highly relevant Smart Lists for our SMS outreach database.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PHASE 3 TITLE CARD -->
-                    <div id="phase-3" class="absolute pt-12"></div>
-                    <div class="relative -ml-[31px] sm:-ml-[47px] mb-8 pt-8">
-                        <div class="inline-flex items-center gap-3">
-                            <span class="bg-purple-600 text-white font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4 border-[#05070f] shadow-lg">
-                                <i class="fa-solid fa-folder-open"></i> PHASE III: PLATFORM DEPLOYMENT & DIGITAL DRAFTS
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- STEP 6 CARD -->
-                    <div class="relative group">
-                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-purple-600 border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">6</div>
-                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="text-xs font-extrabold tracking-widest text-purple-400 bg-purple-950/50 border border-purple-500/30 px-2.5 py-1 rounded uppercase">Step 6</span>
-                                    <h3 class="text-lg font-heading font-bold text-white">Create InvestorLift Draft</h3>
-                                </div>
-                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
-                                    <i class="fa-solid fa-cloud-arrow-up text-purple-400"></i> InvestorLift Profile
-                                </span>
-                            </div>
-                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                                Create an optimized public landing page profile inside **InvestorLift**. Compile and input complete underwriting details, maintaining the listing strictly in **Draft** mode until checked by a supervisor.
-                            </p>
-                            <!-- Investorlift component checkboxes -->
-                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                                <div class="p-3 bg-slate-950 rounded-lg border border-slate-800/80 flex items-center gap-2.5">
-                                    <i class="fa-solid fa-file-signature text-tchbGreen-500 text-sm"></i>
-                                    <span class="text-[11px] font-semibold text-slate-300">Description Copy</span>
-                                </div>
-                                <div class="p-3 bg-slate-950 rounded-lg border border-slate-800/80 flex items-center gap-2.5">
-                                    <i class="fa-solid fa-images text-tchbGreen-500 text-sm"></i>
-                                    <span class="text-[11px] font-semibold text-slate-300">Categorized Photos</span>
-                                </div>
-                                <div class="p-3 bg-slate-950 rounded-lg border border-slate-800/80 flex items-center gap-2.5">
-                                    <i class="fa-solid fa-video text-tchbGreen-500 text-sm"></i>
-                                    <span class="text-[11px] font-semibold text-slate-300">Walkthrough Video</span>
-                                </div>
-                                <div class="p-3 bg-slate-950 rounded-lg border border-slate-800/80 flex items-center gap-2.5">
-                                    <i class="fa-solid fa-chart-line text-tchbGreen-500 text-sm"></i>
-                                    <span class="text-[11px] font-semibold text-slate-300">Verified Comps</span>
-                                </div>
-                            </div>
-                            <!-- Pro Tip box -->
-                            <div class="mt-4 p-3 bg-purple-950/20 border border-purple-900/30 rounded-lg text-xs text-slate-400">
-                                <span class="font-bold text-slate-300"><i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-1.5"></i>Status Guardrail:</span> Once fully checked and approved by the supervisor, the page should immediately be switched to **Active** mode to start collecting inquiries.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PHASE 4 TITLE CARD -->
-                    <div id="phase-4" class="absolute pt-12"></div>
-                    <div class="relative -ml-[31px] sm:-ml-[47px] mb-8 pt-8">
-                        <div class="inline-flex items-center gap-3">
-                            <span class="bg-tchbGreen-500 text-slate-950 font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4 border-[#05070f] shadow-lg">
-                                <i class="fa-solid fa-paper-plane"></i> PHASE IV: SYNDICATION & BROADCAST outreach
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- STEP 7 CARD -->
-                    <div class="relative group">
-                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbGreen-500 border-4 border-[#05070f] flex items-center justify-center text-slate-950 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">7</div>
-                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="text-xs font-extrabold tracking-widest text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-1 rounded uppercase">Step 7</span>
-                                    <h3 class="text-lg font-heading font-bold text-white">Prepare Realtor Outreach Database</h3>
-                                </div>
-                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
-                                    <i class="fa-solid fa-users-viewfinder text-tchbGreen-500"></i> Outreach Logistics
-                                </span>
-                            </div>
-                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                                Build an active list of localized buyer's agents operating within the property's sub-market. Execute this extraction using our dual-track logistics workflow:
-                            </p>
-                            <!-- Realtor list strategy steps -->
-                            <div class="space-y-3">
-                                <div class="flex items-start gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800/80">
-                                    <span class="text-xs font-extrabold text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-0.5 rounded">7.1</span>
-                                    <div>
-                                        <h5 class="text-xs font-bold text-white uppercase">Individual Search</h5>
-                                        <p class="text-xs text-slate-400 mt-0.5 leading-normal">Manually search agent directories on Zillow, Realtor.com, and local MLS resources representing transactions near our subject asset.</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800/80">
-                                    <span class="text-xs font-extrabold text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-0.5 rounded">7.2</span>
-                                    <div>
-                                        <h5 class="text-xs font-bold text-white uppercase">Macro Scraping Extraction</h5>
-                                        <p class="text-xs text-slate-400 mt-0.5 leading-normal">Deploy local scraping tools to automatically extract details of active registered agents operating within the targets ZIP codes.</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800/80">
-                                    <span class="text-xs font-extrabold text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-0.5 rounded">7.3</span>
-                                    <div>
-                                        <h5 class="text-xs font-bold text-white uppercase">Format List & Import</h5>
-                                        <p class="text-xs text-slate-400 mt-0.5 leading-normal">Clean, organize, and format the harvested lists (First Name, Last Name, Mobile, Email, Brokerage) and import them directly into our CRM under target tags.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- STEP 8 CARD -->
-                    <div class="relative group">
-                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbGreen-500 border-4 border-[#05070f] flex items-center justify-center text-slate-950 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">8</div>
-                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="text-xs font-extrabold tracking-widest text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-1 rounded uppercase">Step 8</span>
-                                    <h3 class="text-lg font-heading font-bold text-white">Create Investor Text Blast Draft</h3>
-                                </div>
-                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
-                                    <i class="fa-solid fa-comment-sms text-tchbGreen-500"></i> SMS Broadcast
-                                </span>
-                            </div>
-                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                                Draft the investor SMS campaign using your compiled Hyper-Qualified Smart Lists. Optimize the text to feature: **Property Address/Submarket, Price, ARV, Rehab Estimate, and direct link to photos**. Keep on standby in Draft status, and dispatch immediately once approved.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- STEP 9 CARD -->
-                    <div class="relative group">
-                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbGreen-500 border-4 border-[#05070f] flex items-center justify-center text-slate-950 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">9</div>
-                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="text-xs font-extrabold tracking-widest text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-1 rounded uppercase">Step 9</span>
-                                    <h3 class="text-lg font-heading font-bold text-white">Create Realtor Text Blast Draft</h3>
-                                </div>
-                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
-                                    <i class="fa-solid fa-comment-sms text-tchbGreen-500"></i> SMS Broadcast
-                                </span>
-                            </div>
-                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                                Tailor an SMS sequence focused on buyer's agents. Incentivize outreach by clearly highlighting broker-to-broker commission splits, flexible showing schedules, and direct access terms. Keep in Draft status, and dispatch immediately once authorized.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- STEP 10 CARD -->
-                    <div class="relative group">
-                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-tchbGreen-500 border-4 border-[#05070f] flex items-center justify-center text-slate-950 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">10</div>
-                        <div class="glass-card rounded-xl p-6 glass-card-interactive">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="text-xs font-extrabold tracking-widest text-tchbGreen-500 bg-green-950 border border-green-800/30 px-2.5 py-1 rounded uppercase">Step 10</span>
-                                    <h3 class="text-lg font-heading font-bold text-white">Create Facebook Post Draft</h3>
-                                </div>
-                                <span class="text-xs text-slate-300 bg-slate-950 border border-slate-800/80 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
-                                    <i class="fa-brands fa-square-facebook text-tchbGreen-500"></i> Social Syndication
-                                </span>
-                            </div>
-                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                                Compose an engaging post designed for local investing groups selected during Step 4. Format the call-to-action details clearly (asking price, visual files, direct PM instructions). Save as a draft, and share post immediately upon manager sign-off.
-                            </p>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
-            <!-- TAB 2: INTERACTIVE DEAL TRACKER -->
-            <div id="view-checklist" class="tab-view hidden space-y-6">
-                <div class="glass-card rounded-2xl p-6 border border-slate-800/80">
-                    
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-6 mb-6">
-                        <div>
-                            <h3 class="text-xl font-heading font-bold text-white flex items-center gap-2">
-                                <i class="fa-solid fa-list-check text-tchbPurple-500"></i> Active Campaign Log
-                            </h3>
-                            <p class="text-xs text-slate-400 mt-1 leading-relaxed">Systematically log your steps sequentially, track dispo velocity, and automatically save the state locally in real time.</p>
-                        </div>
-                        <!-- Controls -->
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="resetChecksheet()" class="px-3.5 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-900 border border-slate-800 text-xs font-bold text-slate-300 transition-all flex items-center gap-1.5">
-                                <i class="fa-solid fa-rotate-left"></i>Reset Progress
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Setup Active Deal Metadata Inputs -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Subject Property Address</label>
-                            <input type="text" id="deal-address" oninput="saveDealMeta()" placeholder="e.g. 123 Main Street, Orlando, FL" class="w-full bg-slate-950 border border-slate-800 focus:border-tchbPurple-500 rounded-lg py-2 px-3 text-sm text-white focus:outline-none transition-colors">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Target Asking Price</label>
-                            <input type="text" id="deal-price" oninput="saveDealMeta()" placeholder="e.g. $195,000" class="w-full bg-slate-950 border border-slate-800 focus:border-tchbPurple-500 rounded-lg py-2 px-3 text-sm text-white focus:outline-none transition-colors">
-                        </div>
-                    </div>
-
-                    <!-- Live progress indicator -->
-                    <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800/80 mb-8">
-                        <div class="flex items-center justify-between text-xs font-bold mb-2">
-                            <span class="text-slate-400">Campaign Completion Tracker:</span>
-                            <span id="completion-perc" class="text-tchbGreen-500 bg-green-950/50 border border-green-900/30 px-2 py-0.5 rounded font-black">0% Done</span>
-                        </div>
-                        <div class="w-full bg-slate-900 rounded-full h-3 overflow-hidden border border-slate-800">
-                            <div id="completion-bar" class="bg-gradient-to-r from-tchbRed-600 via-tchbPurple-600 to-tchbGreen-500 h-full w-0 transition-all duration-500"></div>
-                        </div>
-                    </div>
-
-                    <!-- Checklist Interactive Steps -->
-                    <div class="space-y-4">
-                        
-                        <!-- Check Step 1 -->
-                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
-                            <input type="checkbox" id="check-step1" onchange="toggleCheckStep(1)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
-                            <div class="flex-grow">
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-tchbRed-950 border border-tchbRed-800 text-tchbRed-100 px-1.5 py-0.5 rounded">Step 1</span>
-                                    <span class="text-sm font-bold text-white">Underwrite (UW) the Deal</span>
-                                </div>
-                                <p class="text-xs text-slate-400 mt-1">Check against our AI UW Tool to confirm wholesale purchase margins are accurate.</p>
-                            </div>
-                        </div>
-
-                        <!-- Check Step 2 -->
-                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
-                            <input type="checkbox" id="check-step2" onchange="toggleCheckStep(2)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
-                            <div class="flex-grow">
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-tchbRed-950 border border-tchbRed-800 text-tchbRed-100 px-1.5 py-0.5 rounded">Step 2</span>
-                                    <span class="text-sm font-bold text-white">CRM Database DND Check</span>
-                                </div>
-                                <p class="text-xs text-slate-400 mt-1">Search our internal records using the seller's mobile number. Mark the user profile as DND or Disqualified.</p>
-                            </div>
-                        </div>
-
-                        <!-- Check Step 3 -->
-                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
-                            <input type="checkbox" id="check-step3" onchange="toggleCheckStep(3)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
-                            <div class="flex-grow">
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-tchbPurple-950 border border-tchbPurple-800 text-tchbPurple-100 px-1.5 py-0.5 rounded">Step 3</span>
-                                    <span class="text-sm font-bold text-white">Sourcing Hyper-Qualified Buyers</span>
-                                </div>
-                                <p class="text-xs text-slate-400 mt-1">Isolate cash buyers who purchased homes within a $10K-$15K price delta. Track LLC name, POC details, and buying agent's mobile phone numbers via Zillow profiles.</p>
-                            </div>
-                        </div>
-
-                        <!-- Check Step 4 -->
-                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
-                            <input type="checkbox" id="check-step4" onchange="toggleCheckStep(4)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
-                            <div class="flex-grow">
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-tchbPurple-950 border border-tchbPurple-800 text-tchbPurple-100 px-1.5 py-0.5 rounded">Step 4</span>
-                                    <span class="text-sm font-bold text-white">Join Local Facebook Groups</span>
-                                </div>
-                                <p class="text-xs text-slate-400 mt-1">Identify and join active local wholesaling and investing networks on Facebook.</p>
-                            </div>
-                        </div>
-
-                        <!-- Check Step 5 -->
-                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
-                            <input type="checkbox" id="check-step5" onchange="toggleCheckStep(5)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
-                            <div class="flex-grow">
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-tchbPurple-950 border border-tchbPurple-800 text-tchbPurple-100 px-1.5 py-0.5 rounded">Step 5</span>
-                                    <span class="text-sm font-bold text-white">Investorbase Extraction & Proximity Check</span>
-                                </div>
-                                <p class="text-xs text-slate-400 mt-1">Extract direct emails/phones. Run the proximity search tool (within 1 hour) to auto-generate corresponding buyer segments.</p>
-                            </div>
-                        </div>
-
-                        <!-- Check Step 6 -->
-                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
-                            <input type="checkbox" id="check-step6" onchange="toggleCheckStep(6)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
-                            <div class="flex-grow">
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-purple-950 border border-purple-800 text-purple-200 px-1.5 py-0.5 rounded">Step 6</span>
-                                    <span class="text-sm font-bold text-white">Assemble InvestorLift Landing Page Draft</span>
-                                </div>
-                                <p class="text-xs text-slate-400 mt-1">Compile and input detailed marketing descriptions, folders of organized photos, videos, and comparable sales. Retain in Draft.</p>
-                            </div>
-                        </div>
-
-                        <!-- Check Step 7 -->
-                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
-                            <input type="checkbox" id="check-step7" onchange="toggleCheckStep(7)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
-                            <div class="flex-grow">
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-purple-950 border border-purple-800 text-purple-200 px-1.5 py-0.5 rounded">Step 7</span>
-                                    <span class="text-sm font-bold text-white">Prepare Realtor Outreach Database</span>
-                                </div>
-                                <p class="text-xs text-slate-400 mt-1">Uncover buyer's agents individually and compile lists using macro scrapers. Format listings cleanly and upload to your SMS marketing tool.</p>
-                            </div>
-                        </div>
-
-                        <!-- Check Step 8 -->
-                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
-                            <input type="checkbox" id="check-step8" onchange="toggleCheckStep(8)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
-                            <div class="flex-grow">
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-green-950 border border-green-800 text-tchbGreen-500 px-1.5 py-0.5 rounded">Step 8</span>
-                                    <span class="text-sm font-bold text-white">Investor Text Blast draft</span>
-                                </div>
-                                <p class="text-xs text-slate-400 mt-1">Compose highly targeted copy referencing asking rates and direct image links. Keep draft stored until approved, then send.</p>
-                            </div>
-                        </div>
-
-                        <!-- Check Step 9 -->
-                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
-                            <input type="checkbox" id="check-step9" onchange="toggleCheckStep(9)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
-                            <div class="flex-grow">
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-green-950 border border-green-800 text-tchbGreen-500 px-1.5 py-0.5 rounded">Step 9</span>
-                                    <span class="text-sm font-bold text-white">Realtor Text Blast draft</span>
-                                </div>
-                                <p class="text-xs text-slate-400 mt-1">Draft the realtor pitch emphasizing commission opportunities. Keep in draft until signed off, then send.</p>
-                            </div>
-                        </div>
-
-                        <!-- Check Step 10 -->
-                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700/50 transition-colors">
-                            <input type="checkbox" id="check-step10" onchange="toggleCheckStep(10)" class="w-5 h-5 mt-1 rounded bg-slate-900 border-slate-800 text-tchbPurple-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
-                            <div class="flex-grow">
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider bg-green-950 border border-green-800 text-tchbGreen-500 px-1.5 py-0.5 rounded">Step 10</span>
-                                    <span class="text-sm font-bold text-white">Facebook Post Draft</span>
-                                </div>
-                                <p class="text-xs text-slate-400 mt-1">Formulate copy customized for selected local investment groups. Keep saved in drafts, then share post immediately upon approval.</p>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
+            <!-- Task List Container -->
+            <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 pb-12" id="tracker-task-container">
+                <!-- Dynamically injected sections -->
             </div>
-
-            <!-- TAB 3: RESOURCE TEMPLATES & ANALYTICS -->
-            <div id="view-analytics" class="tab-view hidden space-y-8">
-                
-                <!-- Quick Copy Content Templates -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    
-                    <!-- Copy Template 1 -->
-                    <div class="glass-card border border-slate-800/80 p-6 rounded-2xl flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-                                <h4 class="font-heading font-bold text-white text-sm"><i class="fa-solid fa-comment-sms text-tchbGreen-500 mr-2"></i>Investor SMS Template</h4>
-                                <span class="text-[10px] bg-slate-950 border border-slate-800 px-2.5 py-0.5 rounded font-extrabold text-slate-400">Step 8</span>
-                            </div>
-                            <div class="p-3 bg-slate-950 text-slate-300 text-xs font-mono rounded-lg border border-slate-800/80 leading-relaxed mb-4" id="template-sms-investor">
-TCHB Hot Deal: [Address]
-Price: [Price] | Est Rehab: [Rehab]
-Estimated ARV: [ARV]
-Check out full property photos & specs: [InvestorLift Link]
-Reply to schedule showings or submit offers!
-                            </div>
-                        </div>
-                        <button onclick="copyToClipboard('template-sms-investor')" class="w-full py-2.5 bg-tchbPurple-600/80 hover:bg-tchbPurple-600 rounded-xl text-xs font-bold text-white transition-all flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-copy"></i>Copy SMS Block</button>
-                    </div>
-
-                    <!-- Copy Template 2 -->
-                    <div class="glass-card border border-slate-800/80 p-6 rounded-2xl flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-                                <h4 class="font-heading font-bold text-white text-sm"><i class="fa-solid fa-comment-sms text-tchbGreen-500 mr-2"></i>Realtor SMS Template</h4>
-                                <span class="text-[10px] bg-slate-950 border border-slate-800 px-2.5 py-0.5 rounded font-extrabold text-slate-400">Step 9</span>
-                            </div>
-                            <div class="p-3 bg-slate-950 text-slate-300 text-xs font-mono rounded-lg border border-slate-800/80 leading-relaxed mb-4" id="template-sms-realtor">
-Hey [Agent Name], noticed your recent buyer activity near [Submarket]. 
-We have a highly discounted asset locked up at [Address] asking [Price].
-Offering full broker compensation. Contact us for direct access or full comparable sheets: [Link]
-                            </div>
-                        </div>
-                        <button onclick="copyToClipboard('template-sms-realtor')" class="w-full py-2.5 bg-tchbPurple-600/80 hover:bg-tchbPurple-600 rounded-xl text-xs font-bold text-white transition-all flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-copy"></i>Copy SMS Block</button>
-                    </div>
-
-                    <!-- Copy Template 3 -->
-                    <div class="glass-card border border-slate-800/80 p-6 rounded-2xl flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-                                <h4 class="font-heading font-bold text-white text-sm"><i class="fa-brands fa-facebook text-tchbGreen-500 mr-2"></i>FB Post Template</h4>
-                                <span class="text-[10px] bg-slate-950 border border-slate-800 px-2.5 py-0.5 rounded font-extrabold text-slate-400">Step 10</span>
-                            </div>
-                            <div class="p-3 bg-slate-950 text-slate-300 text-xs font-mono rounded-lg border border-slate-800/80 leading-relaxed mb-4" id="template-post-fb">
-🔥 OFF-MARKET HANDYMAN SPECIAL IN [CITY] 🔥
-- Purchase Price: [Price]
-- Beds/Baths: [Beds/Baths]
-- Great rental property yield or flip potential.
-First come, first served. Access details & comps are locked in here: [InvestorLift Link]
-Comment or PM me directly for details!
-                            </div>
-                        </div>
-                        <button onclick="copyToClipboard('template-post-fb')" class="w-full py-2.5 bg-tchbPurple-600/80 hover:bg-tchbPurple-600 rounded-xl text-xs font-bold text-white transition-all flex items-center justify-center gap-1.5 shadow"><i class="fa-solid fa-copy"></i>Copy Post Block</button>
-                    </div>
-
-                </div>
-
-                <!-- Graphic Analytics Section -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    
-                    <!-- Chart 1 -->
-                    <div class="glass-card border border-slate-800/80 rounded-2xl p-6">
-                        <h4 class="font-heading font-bold text-white text-sm mb-1"><i class="fa-solid fa-chart-bar text-tchbPurple-500 mr-1.5"></i>Buyer Search Delta (Step 3 Criteria)</h4>
-                        <p class="text-xs text-slate-400 mb-6">Targeting properties closed within a precise ±$10k to $15k from asking price yields the highest conversion rates.</p>
-                        <div class="h-64 relative">
-                            <canvas id="chart-sourcing"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Chart 2 -->
-                    <div class="glass-card border border-slate-800/80 rounded-2xl p-6">
-                        <h4 class="font-heading font-bold text-white text-sm mb-1"><i class="fa-solid fa-chart-pie text-tchbRed-500 mr-1.5"></i>Workflow Resource Allocation</h4>
-                        <p class="text-xs text-slate-400 mb-6">Optimal operational effort distribution configured for our target 24-hour velocity window.</p>
-                        <div class="h-64 relative">
-                            <canvas id="chart-resources"></canvas>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </main>
-
-    <!-- Footer Section -->
-    <footer class="border-t border-slate-850 bg-[#03050c]/95 py-8 text-center mt-12 relative z-10">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col items-center gap-4">
-            <!-- Icon Image representing your white emblem badge -->
-            <img src="https://i.postimg.cc/47YwXN6z/TCHB-ICON-1-white.png" alt="TCHB Icon Emblem" class="h-10 w-10 object-contain opacity-80" onerror="this.src='https://placehold.co/32x32/D12335/ffffff?text=T'">
             
-            <p class="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
-                © 2026 Total Cash Home Buyers. All rights reserved. Under proprietary license agreement. Redistribution or modifications without certified supervisor authorization is strictly prohibited.
-            </p>
-            <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg text-[9px] uppercase tracking-wider text-tchbRed-500 font-extrabold">
-                <i class="fa-solid fa-lock animate-pulse"></i> strictly confidential internal access only
+            <div class="flex justify-end pt-4 pb-12">
+                <button onclick="deleteCurrentProperty()" class="text-xs text-red-500 hover:text-red-400 font-semibold cursor-pointer border border-red-500/20 bg-red-500/5 px-4 py-2 rounded transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-trash-can"></i> Remove Asset from Pipeline
+                </button>
             </div>
         </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto pt-6 pb-6 border-t border-gray-800/60 text-center relative z-10">
+        <p class="text-xs text-gray-500 font-mono">&copy; 2026 TOTAL CASH HOME BUYERS | Disposition Operations</p>
     </footer>
 
-    <!-- Application Engine -->
-    <script>
-        // Local state management dictionary
-        let activeCampaign = {
-            address: "",
-            price: "",
-            steps: [false, false, false, false, false, false, false, false, false, false]
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // --- 1. AUTHENTICATION LOGIC ---
+    function handleLogin() {
+        const emailInput = document.getElementById('gateEmailInput').value.trim();
+        const keyInput = document.getElementById('gateAccessKeyInput').value.trim();
+        const errorMsg = document.getElementById('gateErrorMessage');
+        const modalBox = document.getElementById('gateModalBox');
+        
+        if (emailInput.endsWith('@totalchb.com') && keyInput === 'Dispo@2026') {
+            errorMsg.classList.add('hidden');
+            grantAccess();
+        } else {
+            errorMsg.innerText = "Access Denied. Invalid Credentials.";
+            errorMsg.classList.remove('hidden');
+            modalBox.classList.add('shake-element');
+            setTimeout(() => { modalBox.classList.remove('shake-element'); }, 400);
+        }
+    }
+
+    function grantAccess() {
+        const btn = document.getElementById('gateAuthButton');
+        const lockIcon = document.getElementById('gateLockIcon');
+        const lockContainer = document.getElementById('gateLockIconContainer');
+        
+        lockIcon.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path>';
+        lockIcon.className = "w-6 h-6 text-brand-emerald transition-all duration-300 scale-110";
+        lockContainer.className = "mx-auto w-14 h-14 rounded-full bg-brand-emerald/10 flex items-center justify-center border border-brand-emerald/20 mb-4 animate-bounce";
+
+        btn.innerHTML = 'Authentication Valid <i class="fa-solid fa-check ml-1"></i>';
+        btn.className = "w-full bg-brand-emerald text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 mt-6 cursor-not-allowed opacity-90";
+
+        setTimeout(() => { 
+            document.getElementById('secureGate').classList.add('hidden');
+            document.documentElement.classList.add('gate-unlocked');
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('mainContent').classList.add('flex');
+            initApp();
+        }, 1200);
+    }
+
+    // --- 2. DATA MODEL & STATE ---
+    const agentsList = ["Carlos", "Yanna", "Moe", "Sarah"];
+    
+    // Master SOP Task Blueprint (Totals 100%)
+    const sopBlueprint = [
+        // PHASE I: INTAKE (10%)
+        { id: "p1_1", section: "Phase I: Deal Intake (10%)", title: "Manually Underwrite The Deal", weight: 6, defaultAssignee: "Carlos" },
+        { id: "p1_2", section: "Phase I: Deal Intake (10%)", title: "AI UW Tool To Confirm Manual UW", weight: 2, defaultAssignee: "Carlos" },
+        { id: "p1_3", section: "Phase I: Deal Intake (10%)", title: "Search Entire CRM For Seller Number(s) (DND/DQ Protocol)", weight: 2, defaultAssignee: "Sarah" },
+        
+        // PHASE II: MARKETING PREP (40%)
+        { id: "p2_1", section: "Phase II: Marketing Prep (40%)", title: "Pull Local Hyper Qualified buyers: 3 Investors $10K-$15K Delta", weight: 3, defaultAssignee: "Carlos" },
+        { id: "p2_2", section: "Phase II: Marketing Prep (40%)", title: "Pull Local Hyper Qualified buyers: 3 Investors for ARV Comps", weight: 3, defaultAssignee: "Carlos" },
+        { id: "p2_3", section: "Phase II: Marketing Prep (40%)", title: "Pull Local Hyper Qualified buyers: 3-5 Investors w/ Active Leases", weight: 2, defaultAssignee: "Carlos" },
+        
+        { id: "p2_4", section: "Phase II: Marketing Prep (40%)", title: "Investor Data Scraping: Pull Core Data (Investorbase, etc.)", weight: 2, defaultAssignee: "Moe" },
+        { id: "p2_5", section: "Phase II: Marketing Prep (40%)", title: "Investor Data Scraping: Format The Data", weight: 1, defaultAssignee: "Sarah" },
+        { id: "p2_6", section: "Phase II: Marketing Prep (40%)", title: "Investor Data Scraping: Upload The Data To CRM", weight: 1, defaultAssignee: "Sarah" },
+        { id: "p2_7", section: "Phase II: Marketing Prep (40%)", title: "Investor Data Scraping: Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah" },
+        { id: "p2_8", section: "Phase II: Marketing Prep (40%)", title: "Investor Data Scraping: Get Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah" },
+
+        { id: "p2_9", section: "Phase II: Marketing Prep (40%)", title: "Realtor Data Scraping: Pull Core Data (Zillow, realtor.com)", weight: 2, defaultAssignee: "Moe" },
+        { id: "p2_10", section: "Phase II: Marketing Prep (40%)", title: "Realtor Data Scraping: Format The Data", weight: 1, defaultAssignee: "Sarah" },
+        { id: "p2_11", section: "Phase II: Marketing Prep (40%)", title: "Realtor Data Scraping: Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah" },
+        { id: "p2_12", section: "Phase II: Marketing Prep (40%)", title: "Realtor Data Scraping: Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah" },
+        { id: "p2_13", section: "Phase II: Marketing Prep (40%)", title: "Realtor Data Scraping: Get Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah" },
+
+        { id: "p2_14", section: "Phase II: Marketing Prep (40%)", title: "Facebook Groups Hunt: Join All Relevant FB Groups", weight: 6, defaultAssignee: "Moe" },
+        { id: "p2_15", section: "Phase II: Marketing Prep (40%)", title: "Facebook Groups Hunt: Create FB Post Draft", weight: 1, defaultAssignee: "Moe" },
+        { id: "p2_16", section: "Phase II: Marketing Prep (40%)", title: "Facebook Groups Hunt: Get FB Post Draft Approved", weight: 1, defaultAssignee: "Moe" },
+
+        { id: "p2_17", section: "Phase II: Marketing Prep (40%)", title: "Create InvestorLift Draft: Description", weight: 3, defaultAssignee: "Yanna" },
+        { id: "p2_18", section: "Phase II: Marketing Prep (40%)", title: "Create InvestorLift Draft: Photos & Videos", weight: 2, defaultAssignee: "Yanna" },
+        { id: "p2_19", section: "Phase II: Marketing Prep (40%)", title: "Create InvestorLift Draft: Comps", weight: 3, defaultAssignee: "Yanna" },
+
+        // PHASE III: MARKETING (50%)
+        { id: "p3_1", section: "Phase III: Marketing Execution (50%)", title: "Call & Market To The Hyper Local Buyers / Realtors", weight: 10, defaultAssignee: "Carlos" },
+        { id: "p3_2", section: "Phase III: Marketing Execution (50%)", title: "Investor Bulk Text Blast / Individual Blast Deploy", weight: 10, defaultAssignee: "Sarah" },
+        { id: "p3_3", section: "Phase III: Marketing Execution (50%)", title: "Realtor Bulk Text Blast / Individual Blast Deploy", weight: 10, defaultAssignee: "Sarah" },
+        { id: "p3_4", section: "Phase III: Marketing Execution (50%)", title: "Post On InvestorLift: Calling Inquiries / Interest", weight: 5, defaultAssignee: "Yanna" },
+        { id: "p3_5", section: "Phase III: Marketing Execution (50%)", title: "Post On InvestorLift: Calling ALL Artemis Mode Buyers", weight: 5, defaultAssignee: "Yanna" },
+        { id: "p3_6", section: "Phase III: Marketing Execution (50%)", title: "Facebook: Reach Out To Investors Expressing Interest", weight: 10, defaultAssignee: "Moe" },
+        { id: "p3_7", section: "Phase III: Marketing Execution (50%)", title: "Facebook: Boost the Post (If Needed)", weight: 0, defaultAssignee: "Moe" }
+    ];
+
+    let propertiesData = [];
+    let activePropertyId = null;
+
+    function initApp() {
+        const stored = localStorage.getItem('tchb_dispo_app_data');
+        if (stored) {
+            propertiesData = JSON.parse(stored);
+        }
+        renderDashboard();
+    }
+
+    function saveState() {
+        localStorage.setItem('tchb_dispo_app_data', JSON.stringify(propertiesData));
+    }
+
+    // --- 3. UI RENDERING & LOGIC ---
+
+    function switchTab(tab) {
+        document.getElementById('tab-dashboard').classList.add('hidden');
+        document.getElementById('tab-tracker').classList.add('hidden');
+        document.getElementById('tab-tracker').classList.remove('flex');
+        
+        document.getElementById('nav-dashboard').className = "px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-400 hover:text-white flex items-center gap-2";
+        document.getElementById('nav-tracker').className = "px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-400 hover:text-white flex items-center gap-2";
+
+        if (tab === 'dashboard') {
+            document.getElementById('tab-dashboard').classList.remove('hidden');
+            document.getElementById('nav-dashboard').classList.add('bg-brand-purple', 'text-white', 'shadow-md');
+            document.getElementById('nav-dashboard').classList.remove('text-gray-400');
+            activePropertyId = null;
+            renderDashboard();
+        } else if (tab === 'tracker') {
+            document.getElementById('tab-tracker').classList.remove('hidden');
+            document.getElementById('tab-tracker').classList.add('flex');
+            document.getElementById('nav-tracker').classList.add('bg-brand-purple', 'text-white', 'shadow-md');
+            document.getElementById('nav-tracker').classList.remove('text-gray-400');
+            renderTrackerView();
+        }
+    }
+
+    function generateTaskInstances() {
+        return sopBlueprint.map(task => ({
+            id: task.id,
+            section: task.section,
+            title: task.title,
+            weight: task.weight,
+            assignee: task.defaultAssignee,
+            completed: false
+        }));
+    }
+
+    function promptNewProperty() {
+        const address = prompt("Enter Subject Property Address:");
+        if (!address || address.trim() === '') return;
+        
+        const newProp = {
+            id: 'prop_' + Date.now(),
+            address: address.trim(),
+            dateStarted: Date.now(),
+            dateLastEdited: Date.now(),
+            tasks: generateTaskInstances()
         };
+        
+        propertiesData.unshift(newProp);
+        saveState();
+        renderDashboard();
+    }
 
-        // Window Onload Event Initializations
-        window.onload = function() {
-            loadCampaignData();
-            initializeAnalytics();
-            resizeCanvas();
-            animateGrid();
-        };
+    function getPropStats(prop) {
+        let percent = 0;
+        let nextStep = "Fully Complete";
+        let nextAgent = "-";
+        let foundNext = false;
 
-        // Tab Switching Engine
-        function switchTab(tabId) {
-            // Update active menu buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-tchbPurple-600/80', 'bg-tchbPurple-600', 'text-white', 'shadow-lg', 'border-tchbPurple-500');
-                btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-[#0f1424]/60', 'border-slate-800');
-            });
-
-            const currentActiveBtn = document.getElementById(`tab-${tabId}`);
-            currentActiveBtn.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-[#0f1424]/60', 'border-slate-800');
-            currentActiveBtn.classList.add('bg-tchbPurple-600/80', 'text-white', 'shadow-lg', 'border-tchbPurple-500');
-
-            // Toggle view visibility
-            document.querySelectorAll('.tab-view').forEach(view => {
-                view.classList.add('hidden');
-                view.classList.remove('block');
-            });
-            
-            const targetView = document.getElementById(`view-${tabId}`);
-            targetView.classList.remove('hidden');
-            targetView.classList.add('block');
-        }
-
-        // Checklist State Persistence Functions
-        function saveDealMeta() {
-            activeCampaign.address = document.getElementById('deal-address').value;
-            activeCampaign.price = document.getElementById('deal-price').value;
-            persistCampaignState();
-        }
-
-        function toggleCheckStep(stepIdx) {
-            const checkControl = document.getElementById(`check-step${stepIdx}`);
-            activeCampaign.steps[stepIdx - 1] = checkControl.checked;
-            updateCompletionProgress();
-            persistCampaignState();
-        }
-
-        // Calculate progress percentage
-        function updateCompletionProgress() {
-            const checkedCount = activeCampaign.steps.filter(Boolean).length;
-            const computedPerc = Math.round((checkedCount / 10) * 100);
-            
-            document.getElementById('completion-perc').innerText = `${computedPerc}% Done`;
-            document.getElementById('completion-bar').style.width = `${computedPerc}%`;
-        }
-
-        function persistCampaignState() {
-            localStorage.setItem('tchb_dispo_campaign_state', JSON.stringify(activeCampaign));
-        }
-
-        function loadCampaignData() {
-            const loadedDataStr = localStorage.getItem('tchb_dispo_campaign_state');
-            if (loadedDataStr) {
-                activeCampaign = JSON.parse(loadedDataStr);
-                document.getElementById('deal-address').value = activeCampaign.address || "";
-                document.getElementById('deal-price').value = activeCampaign.price || "";
-                
-                for (let i = 1; i <= 10; i++) {
-                    const checkElement = document.getElementById(`check-step${i}`);
-                    if (checkElement) {
-                        checkElement.checked = activeCampaign.steps[i - 1] || false;
-                    }
-                }
-                updateCompletionProgress();
-            }
-        }
-
-        function resetChecksheet() {
-            activeCampaign = {
-                address: "",
-                price: "",
-                steps: [false, false, false, false, false, false, false, false, false, false]
-            };
-            document.getElementById('deal-address').value = "";
-            document.getElementById('deal-price').value = "";
-            for (let i = 1; i <= 10; i++) {
-                const checkElement = document.getElementById(`check-step${i}`);
-                if (checkElement) checkElement.checked = false;
-            }
-            updateCompletionProgress();
-            persistCampaignState();
-        }
-
-        // Clipboard Copy Action Helper
-        function copyToClipboard(elementId) {
-            const copyElement = document.getElementById(elementId);
-            const rangeInstance = document.createRange();
-            rangeInstance.selectNode(copyElement);
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(rangeInstance);
-            
-            try {
-                document.execCommand('copy');
-                const triggerBtn = event.currentTarget;
-                const origMarkup = triggerBtn.innerHTML;
-                triggerBtn.innerHTML = `<i class="fa-solid fa-check mr-1.5"></i>Copied!`;
-                setTimeout(() => {
-                    triggerBtn.innerHTML = origMarkup;
-                }, 2500);
-            } catch (err) {
-                console.error('Copy action failed:', err);
-            }
-            window.getSelection().removeAllRanges();
-        }
-
-        // ChartJS Graphical Data Renderer
-        function initializeAnalytics() {
-            // Sourcing bracket distribution graph logic
-            const deltaChartCtx = document.getElementById('chart-sourcing').getContext('2d');
-            new Chart(deltaChartCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['-$20k Range', '-$15k to -$10k (Target)', 'Subject Asking Rate', '+$10k to +$15k (Target)', '+$20k Range'],
-                    datasets: [{
-                        label: 'Qualified Buyers Density',
-                        data: [15, 95, 100, 85, 20],
-                        backgroundColor: [
-                            'rgba(241, 245, 249, 0.08)',
-                            'rgba(72, 63, 138, 0.85)',
-                            'rgba(209, 35, 53, 0.95)',
-                            'rgba(72, 63, 138, 0.85)',
-                            'rgba(241, 245, 249, 0.08)'
-                        ],
-                        borderColor: [
-                            '#334155',
-                            '#483F8A',
-                            '#D12335',
-                            '#483F8A',
-                            '#334155'
-                        ],
-                        borderWidth: 1.5,
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            grid: { color: 'rgba(255, 255, 255, 0.04)' },
-                            ticks: { color: '#94a3b8' }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#94a3b8' }
-                        }
-                    }
-                }
-            });
-
-            // Effort allocation pie chart logic
-            const resourcesChartCtx = document.getElementById('chart-resources').getContext('2d');
-            new Chart(resourcesChartCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Compliance Scrubbing', 'Hyper-Sourcing Data', 'InvestorLift Assets', 'Direct SMS Syndication'],
-                    datasets: [{
-                        data: [15, 35, 20, 30],
-                        backgroundColor: [
-                            'rgba(209, 35, 53, 0.85)',
-                            'rgba(72, 63, 138, 0.85)',
-                            'rgba(168, 85, 247, 0.85)',
-                            'rgba(0, 168, 89, 0.85)'
-                        ],
-                        borderColor: '#0a0d1a',
-                        borderWidth: 3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#94a3b8',
-                                font: { size: 10, family: 'Inter' },
-                                boxWidth: 12,
-                                padding: 15
-                            }
-                        }
-                    },
-                    cutout: '65%'
-                }
-            });
-        }
-
-        // =================================================================
-        // DYNAMIC COORDINATE INTERACTIVE CANVAS ENGINE (Matches Proposals Project)
-        // =================================================================
-        const canvas = document.getElementById('gridCanvas');
-        const ctx = canvas.getContext('2d');
-        let gridSize = 55;
-        let mouse = { x: -1000, y: -1000, active: false };
-        let sparks = [];
-        let fadingLines = []; 
-        let lastInteraction = Date.now();
-        let autoSparkInterval = 3500;
-        let lastAutoSpark = 0;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-
-        function registerInteraction(x, y, activeState) {
-            mouse.x = x;
-            mouse.y = y;
-            mouse.active = activeState;
-            lastInteraction = Date.now();
-        }
-
-        window.addEventListener('mousemove', (e) => registerInteraction(e.clientX, e.clientY, true));
-        window.addEventListener('mouseleave', () => mouse.active = false);
-
-        window.addEventListener('touchstart', (e) => {
-            if (e.touches.length > 0) {
-                registerInteraction(e.touches[0].clientX, e.touches[0].clientY, true);
-            }
-        }, { passive: true });
-
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) {
-                registerInteraction(e.touches[0].clientX, e.touches[0].clientY, true);
-            }
-        }, { passive: true });
-
-        window.addEventListener('touchend', () => mouse.active = false);
-
-        // Click detection avoiding interface buttons
-        window.addEventListener('click', (e) => {
-            lastInteraction = Date.now();
-            const isInteractive = e.target.closest('button, a, input, select, textarea, canvas, .glass-card, .bg-slate-950, table, tr, td, header, img');
-            if (!isInteractive) {
-                triggerUniformPulse(e.clientX, e.clientY);
+        prop.tasks.forEach(t => {
+            if (t.completed) {
+                percent += t.weight;
+            } else if (!foundNext) {
+                nextStep = t.title;
+                nextAgent = t.assignee;
+                foundNext = true;
             }
         });
+        
+        // Safety clamp just in case floating point weirdness
+        if (percent > 100) percent = 100;
+        
+        return { percent, nextStep, nextAgent };
+    }
 
-        // Pulse generation on coordinates
-        function triggerUniformPulse(clickX, clickY) {
-            const gridX = Math.round(clickX / gridSize) * gridSize;
-            const gridY = Math.round(clickY / gridSize) * gridSize;
+    function timeSince(ms) {
+        const diffInSeconds = Math.floor((Date.now() - ms) / 1000);
+        if (diffInSeconds < 60) return "Just now";
+        const diffInMins = Math.floor(diffInSeconds / 60);
+        if (diffInMins < 60) return `${diffInMins}m ago`;
+        const diffInHrs = Math.floor(diffInMins / 60);
+        if (diffInHrs < 24) return `${diffInHrs}h ago`;
+        const diffInDays = Math.floor(diffInHrs / 24);
+        return `${diffInDays}d ago`;
+    }
 
-            const directions = [
-                { x: 1, y: 0 },
-                { x: -1, y: 0 },
-                { x: 0, y: 1 },
-                { x: 0, y: -1 }
-            ];
+    function formatDate(ms) {
+        const d = new Date(ms);
+        return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear().toString().substr(-2)}`;
+    }
 
-            directions.forEach(dir => {
-                sparks.push({
-                    startX: gridX,
-                    startY: gridY,
-                    targetX: gridX + dir.x * gridSize,
-                    targetY: gridY + dir.y * gridSize,
-                    dirX: dir.x,
-                    dirY: dir.y,
-                    progress: 0,
-                    speed: 0.012, 
-                    life: 1.0,
-                    decay: 0.09
-                });
+    function renderDashboard() {
+        const tbody = document.getElementById('dashboard-tbody');
+        const emptyState = document.getElementById('empty-state');
+        tbody.innerHTML = '';
+
+        if (propertiesData.length === 0) {
+            emptyState.classList.remove('hidden');
+        } else {
+            emptyState.classList.add('hidden');
+            propertiesData.forEach(prop => {
+                const stats = getPropStats(prop);
+                
+                const tr = document.createElement('tr');
+                tr.className = "cursor-pointer group";
+                tr.onclick = () => openTracker(prop.id);
+                
+                tr.innerHTML = `
+                    <td class="p-4 font-bold text-white group-hover:text-brand-purple transition-colors">${prop.address}</td>
+                    <td class="p-4">${formatDate(prop.dateStarted)}</td>
+                    <td class="p-4">${formatDate(prop.dateLastEdited)}</td>
+                    <td class="p-4 text-brand-emerald text-xs font-mono">${timeSince(prop.dateLastEdited)}</td>
+                    <td class="p-4">
+                        <span class="bg-gray-800 text-gray-300 px-2.5 py-1 rounded text-xs font-bold border border-gray-700">${stats.nextAgent}</span>
+                    </td>
+                    <td class="p-4 text-xs truncate max-w-[200px]" title="${stats.nextStep}">${stats.nextStep}</td>
+                    <td class="p-4 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="font-black ${stats.percent === 100 ? 'text-brand-emerald' : 'text-white'}">${stats.percent}%</span>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
             });
         }
+    }
 
-        // Idle state automated branches
-        function checkIdleActivity() {
-            let now = Date.now();
-            if (now - lastInteraction > 5000) {
-                if (now - lastAutoSpark > autoSparkInterval) {
-                    const cols = Math.floor(canvas.width / gridSize);
-                    const rows = Math.floor(canvas.height / gridSize);
-                    if (cols > 0 && rows > 0) {
-                        const randX = Math.floor(Math.random() * cols) * gridSize;
-                        const randY = Math.floor(Math.random() * rows) * gridSize;
-                        triggerUniformPulse(randX, randY);
-                    }
-                    lastAutoSpark = now;
-                }
-            }
+    function openTracker(propId) {
+        activePropertyId = propId;
+        switchTab('tracker');
+    }
+
+    function renderTrackerView() {
+        const emptyView = document.getElementById('tracker-empty');
+        const contentView = document.getElementById('tracker-content');
+        
+        if (!activePropertyId) {
+            emptyView.classList.remove('hidden');
+            contentView.classList.add('hidden');
+            return;
         }
 
-        // Main animation canvas renderer loop
-        function animateGrid() {
-            checkIdleActivity();
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) { activePropertyId = null; renderTrackerView(); return; }
 
-            // Grid coordinates line drawing
-            ctx.strokeStyle = 'rgba(72, 63, 138, 0.04)'; 
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            for (let x = 0; x < canvas.width; x += gridSize) {
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
-            }
-            for (let y = 0; y < canvas.height; y += gridSize) {
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-            }
-            ctx.stroke();
+        emptyView.classList.add('hidden');
+        contentView.classList.remove('hidden');
 
-            // Interactive mouse follow flare
-            if (mouse.active) {
-                let haloGradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 180);
-                haloGradient.addColorStop(0, 'rgba(72, 63, 138, 0.08)'); 
-                haloGradient.addColorStop(0.5, 'rgba(209, 35, 53, 0.02)'); 
-                haloGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        document.getElementById('tracker-address').innerText = prop.address;
+        
+        const stats = getPropStats(prop);
+        document.getElementById('tracker-percent-text').innerText = `${stats.percent}%`;
+        document.getElementById('tracker-progress-bar').style.width = `${stats.percent}%`;
+
+        // Group tasks by section
+        const groups = {};
+        prop.tasks.forEach((t, i) => {
+            if (!groups[t.section]) groups[t.section] = [];
+            groups[t.section].push({ ...t, originalIndex: i });
+        });
+
+        const container = document.getElementById('tracker-task-container');
+        container.innerHTML = '';
+
+        for (const [sectionName, tasks] of Object.entries(groups)) {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = "glass-card rounded-xl border border-gray-800/80 overflow-hidden";
+            
+            const header = document.createElement('div');
+            header.className = "bg-gray-900/60 p-4 border-b border-gray-800 flex items-center justify-between";
+            
+            // Calc section progress
+            const sectionTotalW = tasks.reduce((sum, t) => sum + t.weight, 0);
+            const sectionDoneW = tasks.reduce((sum, t) => sum + (t.completed ? t.weight : 0), 0);
+            
+            header.innerHTML = `
+                <h3 class="font-bold text-white uppercase text-sm tracking-wider flex items-center gap-2"><i class="fa-solid fa-layer-group text-brand-purple"></i> ${sectionName}</h3>
+                <span class="text-xs font-bold text-gray-400 bg-gray-950 px-2 py-1 border border-gray-800 rounded">Section Yield: ${sectionTotalW}%</span>
+            `;
+            sectionDiv.appendChild(header);
+
+            const listDiv = document.createElement('div');
+            listDiv.className = "divide-y divide-gray-800/60";
+
+            tasks.forEach(t => {
+                const row = document.createElement('div');
+                row.className = `p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors hover:bg-gray-800/20 ${t.completed ? 'opacity-50' : ''}`;
                 
-                ctx.fillStyle = haloGradient;
-                ctx.beginPath();
-                ctx.arc(mouse.x, mouse.y, 180, 0, Math.PI * 2);
-                ctx.fill();
-            }
+                // Agent options HTML
+                const agentOpts = agentsList.map(a => `<option value="${a}" ${t.assignee === a ? 'selected' : ''}>${a}</option>`).join('');
 
-            // Laser Line coordinate render (Fades using customized TCHB Red -> Purple -> Cash Green color array)
-            for (let i = fadingLines.length - 1; i >= 0; i--) {
-                let line = fadingLines[i];
-                
-                ctx.beginPath();
-                ctx.moveTo(line.x1, line.y1);
-                ctx.lineTo(line.x2, line.y2);
-
-                let gradient = ctx.createLinearGradient(line.x1, line.y1, line.x2, line.y2);
-                gradient.addColorStop(0, `rgba(209, 35, 53, ${line.alpha * 0.95})`);   // TCHB Red
-                gradient.addColorStop(0.5, `rgba(72, 63, 138, ${line.alpha * 0.85})`); // TCHB Purple
-                gradient.addColorStop(1, `rgba(0, 168, 89, ${line.alpha * 0.75})`);    // TCHB Green
-
-                ctx.strokeStyle = gradient; 
-                ctx.lineWidth = 4;
-                ctx.stroke();
-
-                ctx.strokeStyle = `rgba(255, 255, 255, ${line.alpha})`;
-                ctx.lineWidth = 1.0;
-                ctx.stroke();
-
-                line.alpha -= line.decay;
-                if (line.alpha <= 0) {
-                    fadingLines.splice(i, 1);
-                }
-            }
-
-            // Laser particle calculation and splitting
-            for (let i = sparks.length - 1; i >= 0; i--) {
-                let spark = sparks[i];
-                spark.progress += spark.speed;
-
-                let currentX = spark.startX + (spark.targetX - spark.startX) * spark.progress;
-                let currentY = spark.startY + (spark.targetY - spark.startY) * spark.progress;
-
-                ctx.beginPath();
-                ctx.moveTo(spark.startX, spark.startY);
-                ctx.lineTo(currentX, currentY);
-                ctx.strokeStyle = 'rgba(168, 85, 247, 0.95)';
-                ctx.lineWidth = 2.5;
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.arc(currentX, currentY, 3.5, 0, Math.PI * 2);
-                ctx.fillStyle = '#ffffff';
-                ctx.shadowColor = '#483F8A';
-                ctx.shadowBlur = 10;
-                ctx.fill();
-                ctx.shadowBlur = 0; 
-
-                if (spark.progress >= 1.0) {
-                    fadingLines.push({
-                        x1: spark.startX,
-                        y1: spark.startY,
-                        x2: spark.targetX,
-                        y2: spark.targetY,
-                        alpha: 1.0,
-                        decay: 0.007 
-                    });
-
-                    spark.life -= spark.decay;
-
-                    if (spark.life > 0) {
-                        spark.startX = spark.targetX;
-                        spark.startY = spark.targetY;
-                        spark.progress = 0;
-
-                        // Coordinate branch-off split calculations
-                        if (Math.random() < 0.32 && sparks.length < 32) {
-                            let isHorizontal = spark.dirX !== 0;
-                            let branchDirX = isHorizontal ? 0 : (Math.random() > 0.5 ? 1 : -1);
-                            let branchDirY = isHorizontal ? (Math.random() > 0.5 ? 1 : -1) : 0;
-
-                            sparks.push({
-                                startX: spark.startX,
-                                startY: spark.startY,
-                                targetX: spark.startX + branchDirX * gridSize,
-                                targetY: spark.startY + branchDirY * gridSize,
-                                dirX: branchDirX,
-                                dirY: branchDirY,
-                                progress: 0,
-                                speed: spark.speed,
-                                life: spark.life * 0.75,
-                                decay: spark.decay
-                            });
-                        }
-
-                        spark.targetX = spark.startX + spark.dirX * gridSize;
-                        spark.targetY = spark.startY + spark.dirY * gridSize;
-                    } else {
-                        sparks.splice(i, 1);
-                    }
-                }
-            }
-
-            requestAnimationFrame(animateGrid);
+                row.innerHTML = `
+                    <div class="flex items-start gap-4 flex-1">
+                        <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTask(${t.originalIndex}, this.checked)" class="w-5 h-5 mt-0.5 rounded bg-gray-900 border-gray-700 text-brand-purple focus:ring-0 cursor-pointer">
+                        <div>
+                            <p class="text-sm font-bold ${t.completed ? 'text-gray-400 line-through' : 'text-white'} leading-tight">${t.title}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <select onchange="changeAssignee(${t.originalIndex}, this.value)" class="bg-gray-950 border border-gray-700 text-xs font-bold text-gray-300 rounded px-2 py-1.5 focus:outline-none focus:border-brand-purple cursor-pointer appearance-none text-center">
+                            ${agentOpts}
+                        </select>
+                        <span class="bg-brand-purple/10 border border-brand-purple/30 text-brand-purple text-xs font-black px-2 py-1 rounded w-12 text-center">+${t.weight}%</span>
+                    </div>
+                `;
+                listDiv.appendChild(row);
+            });
+            
+            sectionDiv.appendChild(listDiv);
+            container.appendChild(sectionDiv);
         }
-    </script>
+    }
+
+    function toggleTask(taskIndex, isCompleted) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        
+        prop.tasks[taskIndex].completed = isCompleted;
+        prop.dateLastEdited = Date.now();
+        saveState();
+        renderTrackerView(); // Re-render to update percentages and strike-throughs
+    }
+
+    function changeAssignee(taskIndex, newAssignee) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        
+        prop.tasks[taskIndex].assignee = newAssignee;
+        prop.dateLastEdited = Date.now();
+        saveState();
+        renderTrackerView();
+    }
+
+    function deleteCurrentProperty() {
+        if (!activePropertyId) return;
+        if (confirm("Are you sure you want to completely remove this active deal from the Dispo Tracker?")) {
+            propertiesData = propertiesData.filter(p => p.id !== activePropertyId);
+            saveState();
+            switchTab('dashboard');
+        }
+    }
+
+    // --- 4. CURSOR & CANVAS ANIMATION LOGIC ---
+    const canvas = document.getElementById('gridCanvas');
+    const ctx = canvas.getContext('2d');
+    let gridSize = 55; let sparks = []; let lastSpanSpawn = 0;
+    let lastInteractionTime = Date.now(); 
+    const brandColors = [{ r: 79, g: 70, b: 229 }, { r: 220, g: 38, b: 38 }, { r: 16, g: 185, b: 129 }]; // Purple, Crimson, Emerald
+
+    let customMouseX = window.innerWidth / 2; let customMouseY = window.innerHeight / 2;
+    let ringX = customMouseX; let ringY = customMouseY;
+
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
+
+    function createSpark(x = null, y = null, isClick = false) {
+        const isHorizontal = Math.random() > 0.5;
+        let startX, startY, dirX, dirY;
+        if (isClick && x !== null && y !== null) {
+            startX = Math.round(x / gridSize) * gridSize; startY = Math.round(y / gridSize) * gridSize;
+            dirX = isHorizontal ? (Math.random() > 0.5 ? 1 : -1) : 0; dirY = isHorizontal ? 0 : (Math.random() > 0.5 ? 1 : -1);
+        } else {
+            if (isHorizontal) {
+                startX = Math.random() < 0.5 ? 0 : canvas.width; startY = Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize;
+                dirX = startX === 0 ? 1 : -1; dirY = 0;
+            } else {
+                startX = Math.floor(Math.random() * (canvas.width / gridSize)) * gridSize; startY = Math.random() < 0.5 ? 0 : canvas.height;
+                dirX = 0; dirY = startY === 0 ? 1 : -1;
+            }
+        }
+        const color = brandColors[Math.floor(Math.random() * brandColors.length)];
+        sparks.push({ startX, startY, targetX: startX + dirX * gridSize, targetY: startY + dirY * gridSize, dirX, dirY, progress: 0, speed: 0.02 + Math.random() * 0.03, life: 1, decay: 0.005 + Math.random() * 0.01, history: [], color: color });
+    }
+
+    document.addEventListener('mousedown', (e) => { 
+        lastInteractionTime = Date.now();
+        for(let i=0; i<3; i++) createSpark(e.clientX, e.clientY, true); 
+        const ring = document.getElementById('cursor-ring');
+        if(ring) {
+            ring.style.transform = `translate(-50%, -50%) scale(0.7)`;
+            setTimeout(() => ring.style.transform = `translate(-50%, -50%) scale(1)`, 150);
+        }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        document.body.classList.add('mouse-active');
+        customMouseX = e.clientX; customMouseY = e.clientY;
+        const dot = document.getElementById('cursor-dot');
+        if(dot) { dot.style.left = `${customMouseX}px`; dot.style.top = `${customMouseY}px`; }
+        const glow = document.getElementById('mouseGlow');
+        if(glow) {
+            glow.style.setProperty('--mouse-x', `${e.clientX}px`);
+            glow.style.setProperty('--mouse-y', `${e.clientY}px`);
+            if (glow.style.opacity === '0' || glow.style.opacity === '') glow.style.opacity = '1';
+        }
+    });
+
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.closest('.cursor-not-allowed')) {
+            document.body.classList.add('cursor-locked');
+            document.body.classList.remove('cursor-hover');
+        } else if (e.target.closest('a, button, input, select, [onclick], .cursor-pointer, tr')) {
+            document.body.classList.add('cursor-hover');
+            document.body.classList.remove('cursor-locked');
+        } else {
+            document.body.classList.remove('cursor-hover', 'cursor-locked');
+        }
+    });
+
+    document.addEventListener('mouseleave', () => {
+        const glow = document.getElementById('mouseGlow');
+        if(glow) glow.style.opacity = '0';
+    });
+
+    function drawSparks() {
+        ctx.lineCap = 'round';
+        sparks.forEach(spark => {
+            const c = spark.color;
+            ctx.beginPath(); ctx.moveTo(spark.startX, spark.startY);
+            ctx.lineTo(spark.startX + (spark.targetX - spark.startX) * spark.progress, spark.startY + (spark.targetY - spark.startY) * spark.progress);
+            ctx.strokeStyle = `rgba(${c.r}, ${c.g}, ${c.b}, ${spark.life})`; ctx.lineWidth = 2; ctx.stroke();
+            spark.history.forEach((point, index) => {
+                ctx.beginPath(); ctx.moveTo(point.x, point.y); ctx.lineTo(point.nextX, point.nextY);
+                ctx.strokeStyle = `rgba(${c.r}, ${c.g}, ${c.b}, ${spark.life * (index / spark.history.length) * 0.5})`;
+                ctx.lineWidth = 2 * (index / spark.history.length); ctx.stroke();
+            });
+            ctx.shadowColor = `rgb(${c.r}, ${c.g}, ${c.b})`; ctx.shadowBlur = 10; ctx.beginPath();
+            const currentX = spark.startX + (spark.targetX - spark.startX) * spark.progress; const currentY = spark.startY + (spark.targetY - spark.startY) * spark.progress;
+            ctx.arc(currentX, currentY, 1.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${Math.min(c.r+40,255)}, ${Math.min(c.g+40,255)}, ${Math.min(c.b+40,255)}, ${spark.life})`;
+            ctx.fill(); ctx.shadowBlur = 0;
+        });
+    }
+
+    function animateGrid(timestamp) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = 'rgba(79, 70, 229, 0.07)'; ctx.lineWidth = 1; ctx.beginPath();
+        for (let x = 0; x < canvas.width; x += gridSize) { ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); }
+        for (let y = 0; y < canvas.height; y += gridSize) { ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); }
+        ctx.stroke();
+
+        ringX += (customMouseX - ringX) * 0.15; ringY += (customMouseY - ringY) * 0.15;
+        const ring = document.getElementById('cursor-ring');
+        if (ring) { ring.style.left = `${ringX}px`; ring.style.top = `${ringY}px`; }
+
+        drawSparks();
+        
+        if (Date.now() - lastInteractionTime > 5000) {
+            if (timestamp - lastSpanSpawn > 500 && sparks.length < 32) { createSpark(); lastSpanSpawn = timestamp; }
+        }
+
+        for (let i = sparks.length - 1; i >= 0; i--) {
+            let spark = sparks[i]; spark.progress += spark.speed; spark.life -= spark.decay;
+            if (spark.history.length > 5) spark.history.shift();
+            spark.history.push({ x: spark.startX + (spark.targetX - spark.startX) * spark.progress, y: spark.startY + (spark.targetY - spark.startY) * spark.progress, nextX: spark.startX + (spark.targetX - spark.startX) * (spark.progress + 0.1), nextY: spark.startY + (spark.targetY - spark.startY) * (spark.progress + 0.1) });
+            if (spark.life <= 0) { sparks.splice(i, 1); } 
+            else if (spark.progress >= 1) {
+                spark.startX = spark.targetX; spark.startY = spark.targetY; spark.progress = 0;
+                if (Math.random() < 0.3 && sparks.length < 32) {
+                    let isHorizontal = spark.dirX !== 0; let branchDirX = isHorizontal ? 0 : (Math.random() > 0.5 ? 1 : -1); let branchDirY = isHorizontal ? (Math.random() > 0.5 ? 1 : -1) : 0;
+                    sparks.push({ startX: spark.startX, startY: spark.startY, targetX: spark.startX + branchDirX * gridSize, targetY: spark.startY + branchDirY * gridSize, dirX: branchDirX, dirY: branchDirY, progress: 0, speed: spark.speed, life: spark.life * 0.75, decay: spark.decay, history: [], color: spark.color });
+                }
+                spark.targetX = spark.startX + spark.dirX * gridSize; spark.targetY = spark.startY + spark.dirY * gridSize;
+            }
+        }
+        requestAnimationFrame(animateGrid);
+    }
+
+    // Initialize Canvas on load
+    window.addEventListener('DOMContentLoaded', () => {
+        resizeCanvas();
+        requestAnimationFrame(animateGrid);
+    });
+  </script>
 </body>
 </html>
