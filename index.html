@@ -178,6 +178,25 @@
                 <button onclick="window.logOut()" class="text-xs font-bold text-gray-500 hover:text-brand-crimson transition-colors cursor-pointer ml-1" title="Sign Out">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
+                
+                <!-- ACTIVE USERS TOGGLE -->
+                <div class="relative ml-1 border-l border-gray-700 pl-3">
+                    <button onclick="window.toggleActiveUsers(event)" class="flex items-center gap-2 bg-gray-800/60 border border-gray-700/60 hover:bg-gray-700/60 rounded-lg px-2.5 py-1.5 cursor-pointer transition-colors shadow-sm">
+                        <i class="fa-solid fa-users text-brand-cyan text-[10px]"></i>
+                        <span class="text-[10px] font-bold text-gray-300 uppercase tracking-wider hidden sm:inline">Active Users</span>
+                    </button>
+                    <!-- DROPDOWN -->
+                    <div id="activeUsersDropdown" class="absolute left-0 top-full mt-2 w-52 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(6,182,212,0.15)] hidden flex-col z-[100] overflow-hidden">
+                        <div class="bg-gray-800/80 px-3 py-2 border-b border-gray-700 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
+                            <span>Personnel Online</span>
+                            <span id="activeUserCount" class="text-brand-cyan">0</span>
+                        </div>
+                        <div id="activeUsersList" class="flex flex-col max-h-48 overflow-y-auto p-1.5 gap-1">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="flex bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 overflow-x-auto max-w-full">
@@ -227,12 +246,6 @@
                 </table>
             </div>
             
-            <!-- External Floating Dashboard Tooltip -->
-            <div id="dashboard-tooltip" class="fixed hidden w-max max-w-[300px] bg-[#0f1423] border border-brand-emerald/40 text-white text-xs p-4 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] z-[9999] whitespace-normal text-left pointer-events-none transition-opacity duration-200 opacity-0">
-                <span class="text-brand-emerald font-bold block mb-1.5 uppercase tracking-wider text-[10px]"><i class="fa-solid fa-bolt mr-1"></i> Target Action</span>
-                <span id="dashboard-tooltip-text" class="leading-relaxed text-gray-200 font-medium"></span>
-            </div>
-
             <div id="empty-state" class="hidden p-12 text-center">
                 <div class="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mx-auto mb-4 border border-gray-700">
                     <i class="fa-solid fa-house-circle-xmark text-2xl text-gray-500"></i>
@@ -572,6 +585,12 @@
 
   </div>
 
+  <!-- External Floating Dashboard Tooltip (Moved strictly out of overflow containers) -->
+  <div id="dashboard-tooltip" class="fixed hidden w-max max-w-[300px] bg-[#0f1423] border border-brand-emerald/40 text-white text-xs p-4 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] z-[999999] whitespace-normal text-left pointer-events-none transition-opacity duration-200 opacity-0">
+      <span class="text-brand-emerald font-bold block mb-1.5 uppercase tracking-wider text-[10px]"><i class="fa-solid fa-bolt mr-1"></i> Target Action</span>
+      <span id="dashboard-tooltip-text" class="leading-relaxed text-gray-200 font-medium"></span>
+  </div>
+
   <!-- JAVASCRIPT LOGIC (DYNAMIC SYNC & FIREBASE) -->
   <script>
     // --- GLOBAL STATE & VARIABLES ---
@@ -619,6 +638,13 @@
     
     window.logOut = async function() {
         if (firebaseAuth) {
+            if (currentUser && db) {
+                try {
+                    const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+                    await firestoreModule.deleteDoc(firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'active_users', currentUser.uid));
+                } catch(e) {}
+            }
+            if (window.presenceInterval) { clearInterval(window.presenceInterval); window.presenceInterval = null; }
             await window.firebaseSignOut(firebaseAuth);
             window.location.reload(); // Refresh to reset state
         }
@@ -757,6 +783,42 @@
         }
         return `rgb(${r}, ${g}, ${b})`;
     }
+
+    // --- ACTIVE USERS UI CONTROLS ---
+    window.toggleActiveUsers = function(e) {
+        if(e) e.stopPropagation();
+        const dropdown = document.getElementById('activeUsersDropdown');
+        if (dropdown) dropdown.classList.toggle('hidden');
+        if(window.renderActiveUsersList) window.renderActiveUsersList();
+    }
+
+    document.addEventListener('click', (e) => {
+        const dropdown = document.getElementById('activeUsersDropdown');
+        if (dropdown && !dropdown.classList.contains('hidden') && !e.target.closest('#activeUsersDropdown')) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
+    window.renderActiveUsersList = function() {
+        const list = document.getElementById('activeUsersList');
+        const count = document.getElementById('activeUserCount');
+        if (!list || !count) return;
+
+        const users = window.activeUsersData || (currentUser ? [{ email: currentUser.email, lastActive: Date.now() }] : []);
+        count.innerText = users.length;
+
+        if (users.length === 0) {
+            list.innerHTML = `<div class="text-center p-3 text-[10px] text-gray-500 font-bold uppercase tracking-wider">Connecting...</div>`;
+            return;
+        }
+
+        list.innerHTML = users.map(u => `
+            <div class="flex items-center gap-2 px-2.5 py-1.5 rounded bg-gray-800/40 border border-gray-700/30">
+                <div class="w-1.5 h-1.5 rounded-full bg-brand-cyan ${Date.now() - u.lastActive < 60000 ? 'animate-pulse' : ''}"></div>
+                <span class="text-[10px] font-bold text-gray-300 lowercase tracking-wide truncate">${u.email}</span>
+            </div>
+        `).join('');
+    };
 
     // --- 3. UI RENDERING & INTERACTIVITY ---
     window.switchTab = function(tab) {
@@ -1001,6 +1063,7 @@
                 const agentBgColor = getAgentColorClass(stats.nextAgent, 'bg');
                 const agentBorderColor = getAgentColorClass(stats.nextAgent, 'border');
                 const progressColor = getProgressColorRGB(stats.percent);
+                const tooltipEscapedDetail = stats.nextTaskDetail.replace(/"/g, '&quot;');
                 
                 const tr = document.createElement('tr');
                 tr.className = "cursor-pointer group";
@@ -1015,7 +1078,7 @@
                         <span class="${agentBgColor} ${agentTxtColor} px-2.5 py-1 rounded text-xs font-extrabold border ${agentBorderColor}">${stats.nextAgent}</span>
                     </td>
                     <td class="p-4 text-center text-xs font-semibold text-gray-200 transition-colors hover:text-brand-emerald cursor-help"
-                        data-tooltip-text="${stats.nextTaskDetail.replace(/"/g, '&quot;')}"
+                        data-tooltip-text="${tooltipEscapedDetail}"
                         onmouseenter="window.showDashboardTooltip(event)"
                         onmouseleave="window.hideDashboardTooltip()"
                         onclick="event.stopPropagation(); window.openTracker('${prop.id}', '${stats.nextTaskId}', '${stats.nextSectionKey}')">
@@ -1033,8 +1096,8 @@
     }
 
     window.showDashboardTooltip = function(event) {
-        const tr = event.target.closest('tr');
-        const text = event.currentTarget.getAttribute('data-tooltip-text');
+        const td = event.currentTarget;
+        const text = td.getAttribute('data-tooltip-text');
         
         if (!text || text === 'All workflow tasks finished' || text === 'null') return;
         
@@ -1047,12 +1110,14 @@
         textEl.innerText = text;
         tooltip.classList.remove('hidden');
         
-        // Calculate exact horizontal position anchoring to the right of the table wrapper
-        const tableCard = tr.closest('.glass-card');
+        // Target the master table's parent card wrapper explicitly via document.querySelector
+        const tableCard = document.querySelector('#tab-dashboard .glass-card');
+        if (!tableCard) return;
+
         const cardRect = tableCard.getBoundingClientRect();
-        const trRect = tr.getBoundingClientRect();
+        const tdRect = td.getBoundingClientRect();
         
-        const topPos = trRect.top + (trRect.height / 2);
+        const topPos = tdRect.top + (tdRect.height / 2);
         let leftPos = cardRect.right + 20;
 
         tooltip.style.left = `${leftPos}px`;
@@ -1060,11 +1125,11 @@
         tooltip.style.top = `${topPos}px`;
         tooltip.style.transform = `translateY(-50%)`;
         
-        // Check bounds after placing, if it overflows off screen, anchor it securely to the right edge
+        // Check bounds after placing, if it overflows off screen, anchor it securely to the right edge of viewport
         const tooltipWidth = tooltip.offsetWidth || 250;
         if (leftPos + tooltipWidth > window.innerWidth) {
             tooltip.style.left = 'auto';
-            tooltip.style.right = '20px';
+            tooltip.style.right = '15px';
         }
         
         setTimeout(() => tooltip.classList.remove('opacity-0'), 10);
@@ -1460,11 +1525,42 @@
                     if (user.email && user.email.endsWith('@totalchb.com')) {
                         currentUser = user;
                         grantAccess(); // Automatically skip gate if already validly signed in
+                        
+                        // --- LIVE ACTIVE USER PRESENCE TRACKING ---
+                        if (!window.presenceInterval) {
+                            const updatePresence = () => {
+                                if (currentUser && db) {
+                                    firestoreModule.setDoc(
+                                        firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'active_users', currentUser.uid),
+                                        { email: currentUser.email, lastActive: Date.now() },
+                                        { merge: true }
+                                    ).catch(e => console.warn("Presence err", e));
+                                }
+                            };
+                            updatePresence();
+                            window.presenceInterval = setInterval(updatePresence, 60000); // 1-minute heartbeat
+
+                            const activeUsersRef = firestoreModule.collection(db, 'artifacts', appId, 'public', 'data', 'active_users');
+                            firestoreModule.onSnapshot(activeUsersRef, (snapshot) => {
+                                window.activeUsersData = [];
+                                const now = Date.now();
+                                snapshot.forEach(doc => {
+                                    const data = doc.data();
+                                    // Consider active if heartbeat logged within the last 5 minutes
+                                    if (now - data.lastActive < 300000) { 
+                                        window.activeUsersData.push(data);
+                                    }
+                                });
+                                if(window.renderActiveUsersList) window.renderActiveUsersList();
+                            });
+                        }
+                        
                     } else {
                         await authModule.signOut(firebaseAuth);
                         currentUser = null;
                     }
                 } else {
+                    if (window.presenceInterval) { clearInterval(window.presenceInterval); window.presenceInterval = null; }
                     currentUser = null;
                 }
             });
