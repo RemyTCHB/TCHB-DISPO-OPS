@@ -531,8 +531,15 @@
                             <h3 class="text-lg font-bold text-white">Post On Facebook</h3>
                         </div>
                         <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Reach Out To Investors That Expressed Interest In Other Deals</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">10% (Moe)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Boost the Post (If Needed)</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">0% (Moe)</span></li>
+                            <li class="flex flex-col bg-gray-900/50 p-2.5 rounded border border-gray-800/80">
+                                <div class="flex justify-between items-center">
+                                    <span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Reach Out To Investors That Expressed Interest In Other Deals</span> 
+                                    <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">10% (Moe)</span>
+                                </div>
+                                <div class="mt-2 pl-6 flex items-center gap-2 text-gray-400 border-l-2 border-gray-700 ml-2">
+                                    <i class="fa-solid fa-level-up-alt rotate-90 text-gray-500 text-[10px]"></i> <span class="text-xs font-medium italic">Subtask: Boost the Post (If Needed)</span>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -909,10 +916,10 @@
         days = days % 365;
         
         let parts = [];
-        if (yrs > 0) parts.push(`${yrs} yr`);
-        if (days > 0) parts.push(`${days} d`);
-        if (hrs > 0) parts.push(`${hrs} hr`);
-        if (mins > 0) parts.push(`${mins} min`);
+        if (yrs > 0) parts.push(`${yrs} ${yrs === 1 ? 'yr' : 'yrs'}`);
+        if (days > 0) parts.push(`${days} ${days === 1 ? 'day' : 'days'}`);
+        if (hrs > 0) parts.push(`${hrs} ${hrs === 1 ? 'hr' : 'hrs'}`);
+        if (mins > 0) parts.push(`${mins} ${mins === 1 ? 'min' : 'mins'}`);
         
         return parts.join(' - ') + ' Ago';
     }
@@ -974,7 +981,7 @@
                     </td>
                     <td class="p-4 text-center text-xs font-semibold text-gray-200 relative group/tooltip">
                         <div class="truncate max-w-[200px] mx-auto cursor-help">${stats.nextStep}</div>
-                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tooltip:block w-max max-w-[250px] bg-gray-800 text-white text-xs p-3 rounded shadow-xl z-50 border border-gray-700 whitespace-normal text-center leading-relaxed">
+                        <div class="absolute top-1/2 left-[calc(100%-10px)] -translate-y-1/2 hidden group-hover/tooltip:block w-max max-w-[250px] bg-gray-800 text-white text-xs p-3 rounded shadow-xl z-[100] border border-gray-700 whitespace-normal text-left leading-relaxed pointer-events-none">
                             <span class="text-brand-purple font-bold block mb-1">Upcoming Task:</span>
                             ${stats.nextTaskDetail}
                         </div>
