@@ -1675,9 +1675,9 @@
             const ui = getPhaseUI(phaseName);
             const phaseTotalWeight = Object.values(mainTasksMap).flat().reduce((sum, t) => sum + t.weight, 0);
 
+            // Replaced the broken absolute anchor with direct IDs and scroll-margins
             timelineHtml += `
-                <div id="${phaseId}" class="absolute -top-10"></div>
-                <div class="relative -ml-[31px] sm:-ml-[47px] mb-8 ${pIndex > 1 ? 'pt-8' : ''}">
+                <div id="${phaseId}" class="relative -ml-[31px] sm:-ml-[47px] mb-8 ${pIndex > 1 ? 'pt-8' : ''} scroll-mt-10 transition-all">
                     <div class="inline-flex items-center gap-3">
                         <span class="${ui.timelineHeader} font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4">
                             <i class="fa-solid ${ui.icon}"></i> ${phaseName.toUpperCase()} (${phaseTotalWeight}%)
