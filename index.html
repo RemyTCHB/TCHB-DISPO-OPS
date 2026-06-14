@@ -164,45 +164,51 @@
   <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 relative z-10 hidden flex-col min-h-screen" id="mainContent">
     
     <!-- Header -->
-    <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8 bg-brand-cardBg/60 p-4 rounded-2xl border border-gray-800/80 backdrop-blur-md">
-        <div class="flex items-center gap-4">
-            <img src="icon.svg" alt="TCHB Icon" class="h-10 w-10 object-contain" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
+    <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8 bg-brand-cardBg/60 p-4 rounded-2xl border border-gray-800/80 backdrop-blur-md overflow-hidden">
+        <div class="flex items-center gap-5 flex-wrap lg:flex-nowrap">
+            <img src="icon.svg" alt="TCHB Icon" class="h-10 w-10 object-contain shrink-0" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
+            
             <div class="h-8 w-px bg-gray-700 hidden md:block"></div>
-            <div class="flex items-center gap-5">
-                <h1 class="text-lg font-bold text-white tracking-tight mr-2">Dispositions Team Dashboard</h1>
-                
-                <div class="flex items-center gap-4">
-                    <!-- Logged In User Display Badge -->
-                    <div id="userBadge" class="hidden items-center gap-2 bg-gray-800/60 border border-gray-700/60 rounded-lg px-2.5 py-1">
-                        <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></div>
-                        <span id="userEmailDisplay" class="text-[10px] font-bold text-gray-300 lowercase tracking-wide"></span>
-                    </div>
-                    <button onclick="window.logOut()" class="text-sm font-bold text-gray-500 hover:text-brand-crimson transition-colors cursor-pointer" title="Sign Out">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    </button>
+            
+            <h1 class="text-lg font-bold text-white tracking-tight whitespace-nowrap">Dispositions Team Dashboard</h1>
+            
+            <div class="h-8 w-px bg-gray-700 hidden md:block"></div>
+            
+            <div class="flex items-center gap-4">
+                <!-- Logged In User Display Badge -->
+                <div id="userBadge" class="hidden items-center gap-2 bg-gray-800/60 border border-gray-700/60 rounded-lg px-2.5 py-1">
+                    <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></div>
+                    <span id="userEmailDisplay" class="text-[10px] font-bold text-gray-300 lowercase tracking-wide"></span>
                 </div>
-                
-                <!-- ACTIVE USERS TOGGLE -->
-                <div class="relative border-l border-gray-700 pl-5">
-                    <button onclick="window.toggleActiveUsers(event)" class="flex items-center gap-2 bg-gray-800/60 border border-gray-700/60 hover:bg-gray-700/60 rounded-lg px-3 py-1.5 cursor-pointer transition-colors shadow-sm">
-                        <i class="fa-solid fa-users text-brand-emerald text-[10px]"></i>
-                        <span class="text-[10px] font-bold text-gray-300 uppercase tracking-wider hidden sm:inline">Active Users</span>
-                    </button>
-                    <!-- DROPDOWN -->
-                    <div id="activeUsersDropdown" class="absolute left-0 top-full mt-2 w-52 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden">
-                        <div class="bg-gray-800/80 px-3 py-2 border-b border-gray-700 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
-                            <span>Personnel Online</span>
-                            <span id="activeUserCount" class="text-brand-emerald">0</span>
-                        </div>
-                        <div id="activeUsersList" class="flex flex-col max-h-48 overflow-y-auto p-1.5 gap-1">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-                </div>
-
+                <button onclick="window.logOut()" class="text-sm font-bold text-gray-500 hover:text-brand-crimson transition-colors cursor-pointer" title="Sign Out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
             </div>
+            
+            <div class="h-8 w-px bg-gray-700 hidden md:block"></div>
+            
+            <!-- ACTIVE USERS TOGGLE -->
+            <div class="relative shrink-0">
+                <button onclick="window.toggleActiveUsers(event)" class="flex items-center gap-2 bg-gray-800/60 border border-gray-700/60 hover:bg-gray-700/60 rounded-lg px-3 py-1.5 cursor-pointer transition-colors shadow-sm">
+                    <i class="fa-solid fa-users text-brand-emerald text-[10px]"></i>
+                    <span class="text-[10px] font-bold text-gray-300 uppercase tracking-wider hidden sm:inline">Active Users</span>
+                    <span id="activeUserCountBtn" class="bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/30 px-1.5 py-0.5 rounded text-[10px] font-black leading-none flex items-center justify-center">0</span>
+                </button>
+                <!-- DROPDOWN (Centered Relative to Button) -->
+                <div id="activeUsersDropdown" class="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-52 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden">
+                    <div class="bg-gray-800/80 px-3 py-2 border-b border-gray-700 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
+                        <span>Personnel Online</span>
+                        <span id="activeUserCount" class="text-brand-emerald">0</span>
+                    </div>
+                    <div id="activeUsersList" class="flex flex-col max-h-48 overflow-y-auto p-1.5 gap-1">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="h-8 w-px bg-gray-700 hidden xl:block"></div>
         </div>
-        <div class="flex bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 overflow-x-auto max-w-full">
+        <div class="flex shrink-0 bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 overflow-x-auto max-w-full">
             <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md flex items-center gap-2 whitespace-nowrap">
                 <i class="fa-solid fa-layer-group"></i> Master Dashboard
             </button>
@@ -804,10 +810,13 @@
     window.renderActiveUsersList = function() {
         const list = document.getElementById('activeUsersList');
         const count = document.getElementById('activeUserCount');
+        const countBtn = document.getElementById('activeUserCountBtn');
+        
         if (!list || !count) return;
 
         const users = window.activeUsersData || (currentUser ? [{ email: currentUser.email, lastActive: Date.now() }] : []);
         count.innerText = users.length;
+        if (countBtn) countBtn.innerText = users.length;
 
         if (users.length === 0) {
             list.innerHTML = `<div class="text-center p-3 text-[10px] text-gray-500 font-bold uppercase tracking-wider">Connecting...</div>`;
