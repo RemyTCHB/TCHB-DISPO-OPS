@@ -534,103 +534,20 @@
 
   </div>
 
-  <!-- JAVASCRIPT LOGIC WITH FIRESTORE -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    let db;
-    let auth;
-    let appId;
-    let currentUser = null;
-    let isGatewayUnlocked = false;
+  <!-- JAVASCRIPT LOGIC (DYNAMIC SYNC & FIREBASE) -->
+  <script>
+    // --- GLOBAL STATE & VARIABLES ---
     let propertiesData = [];
     let activePropertyId = null;
+    let isGatewayUnlocked = false;
 
-    // --- 1. FIREBASE INITIALIZATION & SYNC ---
-    async function initFirebase() {
-        try {
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-            if (!firebaseConfig) {
-                console.warn("No Firebase config found. Falling back to local storage.");
-                initLocalApp();
-                return;
-            }
-            appId = typeof __app_id !== 'undefined' ? __app_id : 'tchb-dispo-default';
-            const app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
+    let db = null;
+    let currentUser = null;
+    let appId = 'tchb-dispo-default';
+    let firebaseSavePropertyData = null;
+    let firebaseRemovePropertyData = null;
 
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
-                await signInAnonymously(auth);
-            }
-            
-            onAuthStateChanged(auth, (user) => {
-                currentUser = user;
-                if (user && isGatewayUnlocked) {
-                    listenToProperties();
-                }
-            });
-        } catch (e) {
-            console.error("Firebase init failed", e);
-            initLocalApp();
-        }
-    }
-
-    function initLocalApp() {
-        const stored = localStorage.getItem('tchb_dispo_app_data_v4');
-        if (stored) propertiesData = JSON.parse(stored);
-        renderDashboard();
-        updateGlobalAssetSelector();
-    }
-
-    let unsubscribe = null;
-    function listenToProperties() {
-        if (!currentUser) return;
-        const propsRef = collection(db, 'artifacts', appId, 'public', 'data', 'properties');
-        unsubscribe = onSnapshot(propsRef, (snapshot) => {
-            propertiesData = [];
-            snapshot.forEach(doc => propertiesData.push(doc.data()));
-            propertiesData.sort((a, b) => b.dateStarted - a.dateStarted);
-            renderDashboard();
-            updateGlobalAssetSelector();
-            if (activePropertyId) renderTrackerView();
-        }, (error) => {
-            console.error("Snapshot error", error);
-            renderDashboard(); // Safely render empty on error
-        });
-    }
-
-    async function savePropertyData(prop) {
-        if (currentUser && db) {
-            prop.dateLastEdited = Date.now();
-            const propRef = doc(db, 'artifacts', appId, 'public', 'data', 'properties', prop.id);
-            await setDoc(propRef, prop);
-        } else {
-            prop.dateLastEdited = Date.now();
-            localStorage.setItem('tchb_dispo_app_data_v4', JSON.stringify(propertiesData));
-            renderDashboard();
-        }
-    }
-
-    async function removePropertyData(id) {
-        if (currentUser && db) {
-            const propRef = doc(db, 'artifacts', appId, 'public', 'data', 'properties', id);
-            await deleteDoc(propRef);
-        } else {
-            propertiesData = propertiesData.filter(p => p.id !== id);
-            localStorage.setItem('tchb_dispo_app_data_v4', JSON.stringify(propertiesData));
-            renderDashboard();
-        }
-    }
-
-    // Initialize environment early
-    initFirebase();
-
-    // --- 2. AUTHENTICATION LOGIC ---
+    // --- 1. AUTHENTICATION LOGIC ---
     window.handleLogin = function() {
         // Enforce lowercase email processing to prevent mobile auto-caps from failing the check
         const emailInput = document.getElementById('gateEmailInput').value.trim().toLowerCase();
@@ -654,6 +571,7 @@
         const lockIcon = document.getElementById('gateLockIcon');
         const lockContainer = document.getElementById('gateLockIconContainer');
         
+        // Transform the lock into an Open, Emerald Green padlock
         lockIcon.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path>';
         lockIcon.className = "w-6 h-6 text-brand-emerald transition-all duration-300 scale-110";
         lockContainer.className = "mx-auto w-14 h-14 rounded-full bg-brand-emerald/10 flex items-center justify-center border border-brand-emerald/20 mb-4 animate-bounce";
@@ -663,7 +581,7 @@
 
         setTimeout(() => { 
             try {
-                // Bulletproof style display transition to avoid Tailwind `.flex` overrides
+                // Bulletproof style display transition to avoid CSS flex overrides
                 const gate = document.getElementById('secureGate');
                 if (gate) gate.style.display = 'none';
                 
@@ -674,8 +592,10 @@
                 }
                 
                 isGatewayUnlocked = true;
-                if (currentUser && db) {
-                    listenToProperties();
+                
+                // Init view, connect to live db if loaded
+                if (currentUser && db && window.listenToProperties) {
+                    window.listenToProperties();
                 } else {
                     renderDashboard();
                 }
@@ -686,7 +606,7 @@
         }, 1200);
     }
 
-    // --- 3. DATA MODEL & STATE ---
+    // --- 2. DATA MODEL & SOP BLUEPRINT ---
     const agentsList = ["Carlos", "Yanna", "Moe", "Sarah"];
     
     const sopBlueprint = [
@@ -758,7 +678,7 @@
         return `rgb(${r}, ${g}, ${b})`;
     }
 
-    // --- 4. UI RENDERING & INTERACTIVITY ---
+    // --- 3. UI RENDERING & INTERACTIVITY ---
     window.switchTab = function(tab) {
         document.getElementById('tab-dashboard').classList.add('hidden');
         document.getElementById('tab-tracker').classList.add('hidden');
@@ -833,8 +753,8 @@
             tasks: generateTaskInstances()
         };
         
-        if (!currentUser) { propertiesData.unshift(newProp); }
-        await savePropertyData(newProp);
+        propertiesData.unshift(newProp);
+        await window.savePropertyData(newProp);
         
         window.closeAssetModal();
         
@@ -863,7 +783,7 @@
         const pass = document.getElementById('deleteAuthInput').value;
         if (pass === 'Remove@2026') {
             if (activePropertyId) {
-                await removePropertyData(activePropertyId);
+                await window.removePropertyData(activePropertyId);
                 window.closeDeleteModal();
                 window.switchTab('dashboard');
             }
@@ -900,7 +820,6 @@
         return { percent, nextStep, nextAgent };
     }
 
-    // Safely format time to EST. In strict browsers fallback to default locale to avoid errors
     function formatEST(ms) {
         if (!ms) return '-';
         const d = new Date(ms);
@@ -1096,7 +1015,7 @@
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
         prop.tasks[taskIndex].completed = isCompleted;
-        await savePropertyData(prop);
+        await window.savePropertyData(prop);
         renderTrackerView();
     }
 
@@ -1104,9 +1023,114 @@
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
         prop.tasks[taskIndex].assignee = newAssignee;
-        await savePropertyData(prop);
+        await window.savePropertyData(prop);
         renderTrackerView();
     }
+
+
+    // --- 4. CLOUD FIREBASE SYNC ENGINE (DYNAMIC IMPORT) ---
+    async function initFirebase() {
+        try {
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+            if (!firebaseConfig) {
+                console.warn("No Firebase config found. Falling back to local storage.");
+                initLocalApp();
+                return;
+            }
+            appId = typeof __app_id !== 'undefined' ? __app_id : 'tchb-dispo-default';
+
+            // Dynamically import to prevent local browser file:// blocking
+            const appModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
+            const authModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
+            const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+
+            const app = appModule.initializeApp(firebaseConfig);
+            const auth = authModule.getAuth(app);
+            db = firestoreModule.getFirestore(app);
+
+            window.listenToProperties = function() {
+                if (!currentUser) return;
+                const propsRef = firestoreModule.collection(db, 'artifacts', appId, 'public', 'data', 'properties');
+                
+                firestoreModule.onSnapshot(propsRef, (snapshot) => {
+                    propertiesData = [];
+                    snapshot.forEach(doc => propertiesData.push(doc.data()));
+                    propertiesData.sort((a, b) => b.dateStarted - a.dateStarted);
+                    
+                    if (isGatewayUnlocked) {
+                        renderDashboard();
+                        updateGlobalAssetSelector();
+                        if (activePropertyId) renderTrackerView();
+                    }
+                }, (error) => {
+                    console.error("Snapshot error", error);
+                    if (isGatewayUnlocked) renderDashboard();
+                });
+            };
+
+            firebaseSavePropertyData = async function(prop) {
+                if (currentUser && db) {
+                    prop.dateLastEdited = Date.now();
+                    const propRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'properties', prop.id);
+                    await firestoreModule.setDoc(propRef, prop);
+                }
+            };
+
+            firebaseRemovePropertyData = async function(id) {
+                if (currentUser && db) {
+                    const propRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'properties', id);
+                    await firestoreModule.deleteDoc(propRef);
+                }
+            };
+
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await authModule.signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await authModule.signInAnonymously(auth);
+            }
+            
+            authModule.onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                if (user && isGatewayUnlocked) {
+                    window.listenToProperties();
+                }
+            });
+            
+        } catch (e) {
+            console.error("Firebase dynamic import failed:", e);
+            initLocalApp();
+        }
+    }
+
+    function initLocalApp() {
+        const stored = localStorage.getItem('tchb_dispo_app_data_v5');
+        if (stored) propertiesData = JSON.parse(stored);
+        if (isGatewayUnlocked) {
+            renderDashboard();
+            updateGlobalAssetSelector();
+        }
+    }
+
+    window.savePropertyData = async function(prop) {
+        if (firebaseSavePropertyData) {
+            await firebaseSavePropertyData(prop);
+        } else {
+            prop.dateLastEdited = Date.now();
+            localStorage.setItem('tchb_dispo_app_data_v5', JSON.stringify(propertiesData));
+            renderDashboard();
+        }
+    }
+
+    window.removePropertyData = async function(id) {
+        if (firebaseRemovePropertyData) {
+            await firebaseRemovePropertyData(id);
+        } else {
+            propertiesData = propertiesData.filter(p => p.id !== id);
+            localStorage.setItem('tchb_dispo_app_data_v5', JSON.stringify(propertiesData));
+            renderDashboard();
+        }
+    }
+
 
     // --- 5. CURSOR & CANVAS ANIMATION LOGIC ---
     const canvas = document.getElementById('gridCanvas');
@@ -1237,6 +1261,7 @@
     window.addEventListener('DOMContentLoaded', () => {
         resizeCanvas();
         requestAnimationFrame(animateGrid);
+        initFirebase(); // Kickoff database load safely
     });
   </script>
 </body>
