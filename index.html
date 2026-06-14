@@ -110,7 +110,7 @@
   <!-- TAILWIND SAFELIST (Forces compilation of dynamic phase & strategy classes once and for all) -->
   <div class="hidden bg-brand-crimson bg-brand-crimson/20 border-brand-crimson border-brand-crimson/30 text-brand-crimson shadow-[0_0_15px_rgba(220,38,38,0.4)] group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] bg-brand-purple bg-brand-purple/20 border-brand-purple border-brand-purple/30 text-brand-purple shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] bg-brand-emerald bg-brand-emerald/20 border-brand-emerald border-brand-emerald/30 border-brand-emerald/50 text-brand-emerald text-gray-900 shadow-[0_0_15px_rgba(16,185,129,0.4)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] bg-brand-cyan bg-brand-cyan/20 border-brand-cyan border-brand-cyan/30 border-brand-cyan/50 text-brand-cyan shadow-[0_0_15px_rgba(6,182,212,0.4)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.2)] bg-brand-gold bg-brand-gold/20 border-brand-gold border-brand-gold/30 border-brand-gold/50 text-brand-gold bg-pink-500/20 text-pink-400 border-pink-500/50"></div>
 
-  <!-- FOREGROUND PUSH TOAST (By-zhar law el user fate7 el web app w el notification gatlo) -->
+  <!-- FOREGROUND PUSH TOAST -->
   <div id="pushToast" class="fixed top-4 right-4 z-[9999] bg-[#0f1423]/95 backdrop-blur-xl border border-brand-emerald rounded-2xl shadow-[0_10px_40px_rgba(16,185,129,0.3)] p-4 hidden transform transition-all duration-500 translate-x-[150%] flex items-start gap-3 w-80 cursor-pointer" onclick="this.classList.add('translate-x-[150%]')">
       <div class="w-10 h-10 rounded-full bg-brand-emerald/20 flex items-center justify-center border border-brand-emerald shrink-0">
           <i class="fa-solid fa-bell text-brand-emerald text-lg animate-pulse"></i>
@@ -257,139 +257,130 @@
             
             <div class="h-8 w-px bg-gray-700 hidden md:block shrink-0"></div>
             
-            <div class="flex items-center gap-4 shrink-0">
-                <!-- Logged In User Display Badge -->
-                <div id="userBadge" class="hidden items-center gap-2 bg-gray-800/60 border border-gray-700/60 rounded-lg px-2.5 py-1">
-                    <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></div>
-                    <span id="userEmailDisplay" class="text-[10px] font-bold text-gray-300 lowercase tracking-wide"></span>
+            <div class="flex items-center gap-3 shrink-0">
+                
+                <div id="userBadge" class="hidden items-center gap-2 bg-gray-800/60 border border-gray-700/60 rounded-lg px-2.5 h-8">
+                    <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse shrink-0"></div>
+                    <span id="userEmailDisplay" class="text-[10px] font-bold text-gray-300 lowercase tracking-wide truncate max-w-[130px]"></span>
                 </div>
 
-                <!-- Notification Preferences Center -->
-                <div class="relative flex items-center shrink-0">
-                    <button onclick="window.toggleNotificationSettings(event)" class="text-sm font-bold text-gray-500 hover:text-brand-cyan transition-colors cursor-pointer relative" title="Alert Preferences">
-                        <i class="fa-solid fa-bell"></i>
-                    </button>
+                <div class="flex flex-col justify-between items-center h-8 shrink-0 py-0.5">
                     
-                    <!-- Notification Settings Dropdown -->
-                    <div id="notifSettingsDropdown" class="absolute right-0 top-full mt-4 w-72 sm:w-80 bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-right transition-all text-left">
-                        <div class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center">
-                            <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-sliders text-brand-cyan"></i> Alert Preferences</span>
-                            <button onclick="window.toggleNotificationSettings(event)" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-times"></i></button>
-                        </div>
+                    <div class="relative flex items-center justify-center shrink-0">
+                        <button onclick="window.toggleNotificationSettings(event)" class="text-[11px] text-gray-500 hover:text-brand-cyan transition-colors cursor-pointer leading-none block" title="Alert Preferences">
+                            <i class="fa-solid fa-bell"></i>
+                        </button>
                         
-                        <div class="p-4 space-y-5 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                        <div id="notifSettingsDropdown" class="absolute right-0 top-full mt-5 w-72 sm:w-80 bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-right transition-all text-left">
+                            <div class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center">
+                                <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-sliders text-brand-cyan"></i> Alert Preferences</span>
+                                <button onclick="window.toggleNotificationSettings(event)" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-times"></i></button>
+                            </div>
                             
-                            <!-- ZORAR EL PUSH ENABLE: By-request permission w y-save el token fel database -->
-                            <button id="enablePushBtn" onclick="window.enablePush()" class="w-full bg-gradient-to-r from-brand-purple to-brand-cyan hover:from-indigo-500 hover:to-cyan-400 text-white text-xs font-bold py-3 px-4 rounded-lg shadow-md transition-all cursor-pointer flex justify-center items-center gap-2">
-                                <i class="fa-regular fa-bell animate-shake"></i> Enable Device Push Notifications
-                            </button>
+                            <div class="p-4 space-y-5 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                                
+                                <button id="enablePushBtn" onclick="window.enablePush()" class="w-full bg-gradient-to-r from-brand-purple to-brand-cyan hover:from-indigo-500 hover:to-cyan-400 text-white text-xs font-bold py-3 px-4 rounded-lg shadow-md transition-all cursor-pointer flex justify-center items-center gap-2">
+                                    <i class="fa-regular fa-bell animate-shake"></i> Enable Device Push Notifications
+                                </button>
 
-                            <!-- Toggle Item -->
-                            <div class="flex items-center justify-between border-t border-gray-800 pt-4">
-                                <div class="pr-3">
-                                    <p class="text-xs font-bold text-gray-200">Offline Comment Alerts</p>
-                                    <p class="text-[9px] text-gray-500">Receive alerts for new unread property discussions.</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                  <input type="checkbox" id="pref_comments" class="sr-only peer" checked>
-                                  <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-cyan"></div>
-                                </label>
-                            </div>
-                            <!-- Toggle Item -->
-                            <div class="flex items-center justify-between">
-                                <div class="pr-3">
-                                    <p class="text-xs font-bold text-gray-200">New Asset Deployments</p>
-                                    <p class="text-[9px] text-gray-500">Alert when a new property tracker is initialized.</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                  <input type="checkbox" id="pref_new_assets" class="sr-only peer" checked>
-                                  <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-cyan"></div>
-                                </label>
-                            </div>
-                            <!-- Toggle Item -->
-                            <div class="flex items-center justify-between">
-                                <div class="pr-3">
-                                    <p class="text-xs font-bold text-gray-200">Phase Completions</p>
-                                    <p class="text-[9px] text-gray-500">Notify the team when major pipeline phases reach 100%.</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                  <input type="checkbox" id="pref_completions" class="sr-only peer" checked>
-                                  <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-cyan"></div>
-                                </label>
-                            </div>
-                            <!-- Toggle Item -->
-                            <div class="flex items-center justify-between">
-                                <div class="pr-3">
-                                    <p class="text-xs font-bold text-brand-emerald"><i class="fa-solid fa-arrow-turn-down rotate-90 mr-1"></i> Task Turn Alerts</p>
-                                    <p class="text-[9px] text-gray-500">Instant alert when the next workflow step is assigned to you.</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                  <input type="checkbox" id="pref_task_turns" class="sr-only peer" checked>
-                                  <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-emerald"></div>
-                                </label>
-                            </div>
-                            <!-- Toggle Item -->
-                            <div class="flex items-center justify-between border-t border-gray-800 pt-4">
-                                <div class="pr-3">
-                                    <p class="text-xs font-bold text-brand-gold"><i class="fa-regular fa-sun mr-1"></i> 10 AM Daily Briefing</p>
-                                    <p class="text-[9px] text-gray-500">Morning summary of your pending tasks for the day.</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                  <input type="checkbox" id="pref_daily_brief" class="sr-only peer" checked>
-                                  <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-gold"></div>
-                                </label>
-                            </div>
-                            <!-- Toggle Item w/ Sub Menu -->
-                            <div class="flex flex-col border-t border-gray-800 pt-4">
-                                <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center justify-between border-t border-gray-800 pt-4">
                                     <div class="pr-3">
-                                        <p class="text-xs font-bold text-brand-crimson"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Overdue Reminders</p>
-                                        <p class="text-[9px] text-gray-500">Recurring nudges for tasks sitting on your desk.</p>
+                                        <p class="text-xs font-bold text-gray-200">Offline Comment Alerts</p>
+                                        <p class="text-[9px] text-gray-500">Receive alerts for new unread property discussions.</p>
                                     </div>
                                     <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                      <input type="checkbox" id="pref_reminders" class="sr-only peer" checked onchange="document.getElementById('pref_reminder_interval').disabled = !this.checked">
-                                      <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-crimson"></div>
+                                      <input type="checkbox" id="pref_comments" class="sr-only peer" checked>
+                                      <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-cyan"></div>
                                     </label>
                                 </div>
-                                <select id="pref_reminder_interval" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-2 text-[10px] font-bold text-gray-300 focus:outline-none focus:border-brand-crimson transition-colors cursor-pointer appearance-none disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <option value="2">Every 2 Hours</option>
-                                    <option value="4" selected>Every 4 Hours</option>
-                                    <option value="8">Every 8 Hours</option>
-                                    <option value="24">Once a Day (24 Hours)</option>
-                                </select>
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-3">
+                                        <p class="text-xs font-bold text-gray-200">New Asset Deployments</p>
+                                        <p class="text-[9px] text-gray-500">Alert when a new property tracker is initialized.</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                      <input type="checkbox" id="pref_new_assets" class="sr-only peer" checked>
+                                      <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-cyan"></div>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-3">
+                                        <p class="text-xs font-bold text-gray-200">Phase Completions</p>
+                                        <p class="text-[9px] text-gray-500">Notify the team when major pipeline phases reach 100%.</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                      <input type="checkbox" id="pref_completions" class="sr-only peer" checked>
+                                      <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-cyan"></div>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-3">
+                                        <p class="text-xs font-bold text-brand-emerald"><i class="fa-solid fa-arrow-turn-down rotate-90 mr-1"></i> Task Turn Alerts</p>
+                                        <p class="text-[9px] text-gray-500">Instant alert when the next workflow step is assigned to you.</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                      <input type="checkbox" id="pref_task_turns" class="sr-only peer" checked>
+                                      <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-emerald"></div>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between border-t border-gray-800 pt-4">
+                                    <div class="pr-3">
+                                        <p class="text-xs font-bold text-brand-gold"><i class="fa-regular fa-sun mr-1"></i> 10 AM Daily Briefing</p>
+                                        <p class="text-[9px] text-gray-500">Morning summary of your pending tasks for the day.</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                      <input type="checkbox" id="pref_daily_brief" class="sr-only peer" checked>
+                                      <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-gold"></div>
+                                    </label>
+                                </div>
+                                <div class="flex flex-col border-t border-gray-800 pt-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="pr-3">
+                                            <p class="text-xs font-bold text-brand-crimson"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Overdue Reminders</p>
+                                            <p class="text-[9px] text-gray-500">Recurring nudges for tasks sitting on your desk.</p>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                          <input type="checkbox" id="pref_reminders" class="sr-only peer" checked onchange="document.getElementById('pref_reminder_interval').disabled = !this.checked">
+                                          <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-crimson"></div>
+                                        </label>
+                                    </div>
+                                    <select id="pref_reminder_interval" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-2 text-[10px] font-bold text-gray-300 focus:outline-none focus:border-brand-crimson transition-colors cursor-pointer appearance-none disabled:opacity-50 disabled:cursor-not-allowed">
+                                        <option value="2">Every 2 Hours</option>
+                                        <option value="4" selected>Every 4 Hours</option>
+                                        <option value="8">Every 8 Hours</option>
+                                        <option value="24">Once a Day (24 Hours)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="p-3 border-t border-gray-700 bg-gray-900/50 flex justify-end">
+                                <button id="savePrefsBtn" onclick="window.saveNotificationPreferences()" class="bg-brand-cyan hover:bg-cyan-400 text-gray-900 text-xs font-bold py-2 px-4 rounded-lg shadow-md transition-colors cursor-pointer w-full flex justify-center items-center gap-2">
+                                    Save Preferences
+                                </button>
                             </div>
                         </div>
-                        
-                        <div class="p-3 border-t border-gray-700 bg-gray-900/50 flex justify-end">
-                            <button id="savePrefsBtn" onclick="window.saveNotificationPreferences()" class="bg-brand-cyan hover:bg-cyan-400 text-gray-900 text-xs font-bold py-2 px-4 rounded-lg shadow-md transition-colors cursor-pointer w-full flex justify-center items-center gap-2">
-                                Save Preferences
-                            </button>
-                        </div>
                     </div>
-                </div>
 
-                <button onclick="window.logOut()" class="text-sm font-bold text-gray-500 hover:text-brand-crimson transition-colors cursor-pointer" title="Sign Out">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </button>
+                    <button onclick="window.logOut()" class="text-[11px] text-gray-500 hover:text-brand-crimson transition-colors cursor-pointer leading-none block" title="Sign Out">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </button>
+                </div>
             </div>
             
             <div class="h-8 w-px bg-gray-700 hidden md:block shrink-0"></div>
             
-            <!-- ACTIVE USERS TOGGLE -->
             <div class="relative shrink-0">
-                <button onclick="window.toggleActiveUsers(event)" class="flex items-center gap-2 bg-gray-800/60 border border-gray-700/60 hover:bg-gray-700/60 rounded-lg px-3 py-1.5 cursor-pointer transition-colors shadow-sm">
+                <button onclick="window.toggleActiveUsers(event)" class="flex items-center gap-2 bg-gray-800/60 border border-gray-700/60 hover:bg-gray-700/60 rounded-lg px-3 h-8 cursor-pointer transition-colors shadow-sm">
                     <i class="fa-solid fa-users text-brand-emerald text-[10px]"></i>
                     <span class="text-[10px] font-bold text-gray-300 uppercase tracking-wider hidden sm:inline">Active Users</span>
                     <span id="activeUserCountBtn" class="bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/30 px-1.5 py-0.5 rounded text-[10px] font-black leading-none flex items-center justify-center">0</span>
                 </button>
-                <!-- DROPDOWN -->
                 <div id="activeUsersDropdown" class="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-52 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden">
                     <div class="bg-gray-800/80 px-3 py-2 border-b border-gray-700 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
                         <span>Personnel Online</span>
                         <span id="activeUserCount" class="text-brand-emerald">0</span>
                     </div>
                     <div id="activeUsersList" class="flex flex-col max-h-48 overflow-y-auto p-1.5 gap-1">
-                        <!-- Populated by JS -->
                     </div>
                 </div>
             </div>
@@ -579,7 +570,7 @@
                 </div>
             </div>
             
-            <!-- FAB Button (Rebuilt to match requested design flawlessly) -->
+            <!-- FAB Button -->
             <button id="chatFabBtn" onclick="window.toggleChat()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-gray-800 to-gray-700 border border-gray-600 shadow-[0_0_20px_rgba(0,0,0,0.5)] flex items-center justify-center hover:scale-105 transition-transform group relative cursor-pointer z-50 p-1.5">
                 <div class="w-full h-full bg-white rounded-full flex items-center justify-center overflow-hidden border border-gray-300">
                     <img src="icon.svg" class="w-full h-full object-contain p-0.5 group-hover:opacity-80 transition-opacity" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
@@ -1847,7 +1838,7 @@
 
     // Dynamic SOP Reference Rendering
     window.renderSOPTimeline = function(strategyName) {
-        // Toggle Pills UI (like Main Tabs)
+        // Toggle Pills UI
         document.querySelectorAll('.sop-pill').forEach(btn => {
             btn.className = "px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap sop-pill";
         });
@@ -1868,7 +1859,7 @@
 
         // 1. Build Quick Navigation Shortcuts
         const phaseNames = Object.keys(structure);
-        let navHtml = `<div class="grid grid-cols-1 md:grid-cols-${Math.min(phaseNames.length, 4)} gap-4 mb-10">`;
+        let navHtml = `<div class="grid grid-cols-1 md:grid-cols-${Math.min(phaseNames.length, 4)} gap-4 mb-10 sticky top-[330px] md:top-[160px] z-[80] bg-[#0b0f19]/95 backdrop-blur-xl p-4 -mx-4 rounded-2xl border border-gray-800/60 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] transition-all">`;
         
         let pIndex = 1;
         for (const phaseName of phaseNames) {
@@ -1903,7 +1894,6 @@
             const ui = getPhaseUI(phaseName);
             const phaseTotalWeight = Object.values(mainTasksMap).flat().reduce((sum, t) => sum + t.weight, 0);
 
-            // Replaced the broken absolute anchor with direct IDs and scroll-margins
             timelineHtml += `
                 <div id="${phaseId}" class="relative -ml-[31px] sm:-ml-[47px] mb-8 ${pIndex > 1 ? 'pt-8' : ''} scroll-mt-10 transition-all">
                     <div class="inline-flex items-center gap-3">
@@ -2158,13 +2148,13 @@
             const appModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
             const authModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
             const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-            const messagingModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js"); // Import el messaging
+            const messagingModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js");
 
             const app = appModule.initializeApp(firebaseConfig);
             firebaseAuth = authModule.getAuth(app);
             db = firestoreModule.getFirestore(app);
 
-            // Initialize FCM w ne-handle el messages law el app maftoo7
+            // Initialize FCM for foreground pushes
             let messaging = null;
             try {
                 messaging = messagingModule.getMessaging(app);
@@ -2174,17 +2164,14 @@
                     document.getElementById('pushToastBody').innerText = payload.notification.body;
                     toast.classList.remove('hidden');
                     
-                    // Delay so3'ayar 3ashan el CSS transition yeshta3'al 
                     setTimeout(() => toast.classList.remove('translate-x-[150%]'), 50);
-                    
-                    // By-ekhtefi le wa7do ba3d 6 sawani
                     setTimeout(() => { toast.classList.add('translate-x-[150%]'); }, 6000);
                 });
             } catch (err) {
                 console.warn("Messaging not supported on this environment", err);
             }
 
-            // Function 3ashan te-request el VAPID token
+            // Function to request VAPID token
             window.requestPushToken = async function() {
                 if(!messaging) return null;
                 try {
@@ -2199,7 +2186,7 @@
                 return null;
             }
 
-            // Action bta3 zorar el "Enable Push Notifications"
+            // Action for Enable Push Notifications button
             window.enablePush = async function() {
                 const btn = document.getElementById('enablePushBtn');
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authorizing...';
@@ -2207,7 +2194,6 @@
                 const token = await window.requestPushToken();
                 if (token && currentUser && db) {
                     const docRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
-                    // By-zawed el token fel array bta3 el tokens 3ashan law el user fate7 men kaza browser/mobil
                     await firestoreModule.setDoc(docRef, {
                         fcmTokens: firestoreModule.arrayUnion(token)
                     }, { merge: true });
@@ -2219,12 +2205,6 @@
                     btn.className = "w-full bg-brand-crimson/20 text-brand-crimson border border-brand-crimson/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
                 }
             }
-
-            googleProvider = new authModule.GoogleAuthProvider();
-            googleProvider.setCustomParameters({ hd: 'totalchb.com' });
-            
-            window.firebaseSignInWithPopup = authModule.signInWithPopup;
-            window.firebaseSignOut = authModule.signOut;
 
             window.listenToProperties = function() {
                 if (!currentUser) return;
