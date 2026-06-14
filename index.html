@@ -31,7 +31,7 @@
     /* ========================================= */
     /* CUSTOM CURSOR & GLOW STYLES               */
     /* ========================================= */
-    body, a, button, input, select, [onclick], .cursor-pointer, .cursor-not-allowed { cursor: none !important; }
+    body, a, button, input, select, [onclick], .cursor-pointer, .cursor-not-allowed, label { cursor: none !important; }
     
     #mouseGlow {
         position: fixed; left: 0; top: 0; pointer-events: none; z-index: 1;
@@ -115,21 +115,41 @@
 
   <!-- DEPLOY ASSET MODAL -->
   <div id="newAssetModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div class="bg-gray-900 border border-brand-emerald/50 shadow-[0_0_30px_rgba(16,185,129,0.15)] rounded-2xl w-full max-w-md p-6 transform transition-all relative overflow-hidden">
+      <div class="bg-gray-900 border border-brand-emerald/50 shadow-[0_0_30px_rgba(16,185,129,0.15)] rounded-2xl w-full max-w-lg p-6 transform transition-all relative overflow-hidden">
           <div class="absolute -right-20 -top-20 w-48 h-48 bg-brand-emerald/10 rounded-full blur-3xl pointer-events-none"></div>
           <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
             <i class="fa-solid fa-satellite-dish text-brand-emerald"></i> Deploy Asset Tracker
           </h3>
           <p class="text-xs text-gray-400 mb-5">Initialize a new SOP pipeline for an incoming property.</p>
           
-          <div class="space-y-4">
+          <div class="space-y-5">
               <div>
                   <label class="block text-xs font-bold uppercase text-gray-400 mb-1.5">Subject Property Address</label>
-                  <input type="text" id="newAssetAddressInput" placeholder="e.g. 123 Example Street" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-brand-emerald transition-colors cursor-pointer" onkeydown="if(event.key === 'Enter') window.confirmNewAsset()">
+                  <input type="text" id="newAssetAddressInput" placeholder="e.g. 123 Example Street" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-brand-emerald transition-colors cursor-pointer">
+              </div>
+              
+              <div>
+                  <label class="block text-xs font-bold uppercase text-gray-400 mb-1.5">Exit Strategy Profile</label>
+                  <select id="newAssetStrategyInput" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-brand-emerald transition-colors cursor-pointer appearance-none" onchange="window.handleStrategyChange()">
+                      <option value="Wholesale">Wholesale</option>
+                      <option value="Fix & Flip">Fix & Flip</option>
+                      <option value="Creative">Creative</option>
+                      <option value="Novation">Novation</option>
+                  </select>
+              </div>
+
+              <!-- Dynamic F&F CSV Upload Field -->
+              <div id="csvUploadWrapper" class="hidden">
+                  <label class="block text-[10px] font-bold uppercase text-brand-cyan mb-1.5"><i class="fa-solid fa-file-csv mr-1"></i> SOW CSV Upload (Optional)</label>
+                  <div class="relative border-2 border-dashed border-gray-700 hover:border-brand-cyan bg-gray-950/50 rounded-lg p-4 text-center transition-colors cursor-pointer group" onclick="document.getElementById('sowCsvFile').click()">
+                      <input type="file" id="sowCsvFile" accept=".csv" class="hidden" onchange="window.handleCSVUpload(event)">
+                      <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-600 group-hover:text-brand-cyan mb-2 transition-colors"></i>
+                      <p id="csvFileNameDisplay" class="text-xs font-medium text-gray-400">Click to attach a CSV file (Task, Cost, Notes)</p>
+                  </div>
               </div>
           </div>
           
-          <div class="flex justify-end gap-3 mt-6">
+          <div class="flex justify-end gap-3 mt-8">
               <button onclick="window.closeAssetModal()" class="px-4 py-2 text-sm font-bold text-gray-400 hover:text-white transition-colors cursor-pointer">Cancel</button>
               <button onclick="window.confirmNewAsset()" class="px-5 py-2 text-sm font-bold bg-brand-emerald hover:bg-emerald-400 text-gray-900 rounded-lg shadow-lg transition-all cursor-pointer">Deploy Protocol</button>
           </div>
@@ -161,7 +181,7 @@
   <canvas id="gridCanvas" class="fixed inset-0 w-full h-full -z-10" style="pointer-events: none;"></canvas>
 
   <!-- MAIN CONTENT -->
-  <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 relative z-10 hidden flex-col min-h-screen" id="mainContent">
+  <div class="max-w-[95rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 relative z-10 hidden flex-col min-h-screen" id="mainContent">
     
     <!-- Header -->
     <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8 bg-brand-cardBg/60 p-4 rounded-2xl border border-gray-800/80 backdrop-blur-md shrink-0">
@@ -194,7 +214,7 @@
                     <span class="text-[10px] font-bold text-gray-300 uppercase tracking-wider hidden sm:inline">Active Users</span>
                     <span id="activeUserCountBtn" class="bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/30 px-1.5 py-0.5 rounded text-[10px] font-black leading-none flex items-center justify-center">0</span>
                 </button>
-                <!-- DROPDOWN (Centered Relative to Button) -->
+                <!-- DROPDOWN -->
                 <div id="activeUsersDropdown" class="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-52 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden">
                     <div class="bg-gray-800/80 px-3 py-2 border-b border-gray-700 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
                         <span>Personnel Online</span>
@@ -223,13 +243,40 @@
 
     <!-- TAB: DASHBOARD -->
     <div id="tab-dashboard" class="flex-1 space-y-6">
-        <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 mb-4">
-            <div>
-                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+        
+        <!-- Controls Bar -->
+        <div class="flex flex-col md:flex-row justify-between items-end gap-4 mb-2">
+            <div class="w-full md:w-auto">
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2 mb-3">
                     <i class="fa-solid fa-satellite-dish text-brand-emerald"></i> Live Pipeline
                 </h2>
+                
+                <!-- Dynamic Filters -->
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative">
+                        <select id="filterStrategy" onchange="window.updateDashboardFilters()" class="bg-gray-900 border border-gray-700 hover:border-gray-500 text-gray-300 text-xs font-bold rounded-lg px-3 py-2 focus:outline-none appearance-none cursor-pointer pr-8 shadow-sm">
+                            <option value="All">All Strategies</option>
+                            <option value="Wholesale">Wholesale</option>
+                            <option value="Fix & Flip">Fix & Flip</option>
+                            <option value="Creative">Creative</option>
+                            <option value="Novation">Novation</option>
+                        </select>
+                        <i class="fa-solid fa-filter absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none"></i>
+                    </div>
+                    
+                    <div class="relative">
+                        <select id="filterSort" onchange="window.updateDashboardFilters()" class="bg-gray-900 border border-gray-700 hover:border-gray-500 text-gray-300 text-xs font-bold rounded-lg px-3 py-2 focus:outline-none appearance-none cursor-pointer pr-8 shadow-sm">
+                            <option value="started_desc">Sort: Newest Added</option>
+                            <option value="started_asc">Sort: Oldest Added</option>
+                            <option value="edited_desc">Sort: Recently Edited</option>
+                            <option value="edited_asc">Sort: Oldest Edited</option>
+                        </select>
+                        <i class="fa-solid fa-sort absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none"></i>
+                    </div>
+                </div>
+
             </div>
-            <button onclick="window.openAssetModal()" class="bg-brand-emerald/10 border border-brand-emerald hover:bg-brand-emerald text-brand-emerald hover:text-gray-900 font-bold py-2 px-4 rounded-xl transition-all cursor-pointer flex items-center gap-2 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+            <button onclick="window.openAssetModal()" class="w-full md:w-auto bg-brand-emerald/10 border border-brand-emerald hover:bg-brand-emerald text-brand-emerald hover:text-gray-900 font-bold py-2.5 px-5 rounded-xl transition-all cursor-pointer flex justify-center items-center gap-2 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                 <i class="fa-solid fa-plus"></i> Deploy New Asset Tracker
             </button>
         </div>
@@ -240,8 +287,8 @@
                     <thead>
                         <tr class="bg-gray-900/80 border-b border-gray-800 text-xs uppercase tracking-wider text-gray-400">
                             <th class="p-4 font-bold text-center">Address</th>
+                            <th class="p-4 font-bold text-center">Exit Strategy</th>
                             <th class="p-4 font-bold text-center">Date Started</th>
-                            <th class="p-4 font-bold text-center">Last Edited</th>
                             <th class="p-4 font-bold text-center">Time Last Edited</th>
                             <th class="p-4 font-bold text-center">Next Agent</th>
                             <th class="p-4 font-bold text-center">Next Step</th>
@@ -258,8 +305,8 @@
                 <div class="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mx-auto mb-4 border border-gray-700">
                     <i class="fa-solid fa-house-circle-xmark text-2xl text-gray-500"></i>
                 </div>
-                <h3 class="text-lg font-bold text-white mb-2">No Active Deals</h3>
-                <p class="text-sm text-gray-400">Deploy a new asset tracker to begin monitoring the disposition flow.</p>
+                <h3 class="text-lg font-bold text-white mb-2">No Deals Match Filters</h3>
+                <p class="text-sm text-gray-400">Deploy a new asset tracker or clear your filters.</p>
             </div>
         </div>
     </div>
@@ -271,8 +318,7 @@
         <div class="glass-card p-4 rounded-2xl border border-gray-800 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-20">
             <div class="flex items-center gap-3 w-full sm:w-auto">
                 <span class="text-xs font-bold text-gray-400 uppercase tracking-wider shrink-0"><i class="fa-solid fa-crosshairs mr-1"></i> Targeted Asset:</span>
-                <!-- Dropdown cleanly styled like the unselected nav -->
-                <div class="w-full sm:w-64 bg-gradient-to-r from-brand-crimson/5 to-brand-purple/5 border border-brand-purple/20 hover:border-brand-purple/40 rounded-lg transition-all relative flex items-center">
+                <div class="w-full sm:w-80 bg-gradient-to-r from-brand-crimson/5 to-brand-purple/5 border border-brand-purple/20 hover:border-brand-purple/40 rounded-lg transition-all relative flex items-center">
                     <select id="globalAssetSelector" onchange="window.handleGlobalAssetSelection(this.value)" class="w-full bg-transparent text-sm font-bold text-gray-400 hover:text-gray-200 px-3 py-2 focus:outline-none cursor-pointer appearance-none z-10 relative">
                         <option value="" class="bg-gray-900 text-gray-300">-- Select an Active Deal --</option>
                         <!-- Options populated dynamically -->
@@ -282,7 +328,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Add New Asset keeps the hue as a primary action button here -->
             <button onclick="window.openAssetModal()" class="w-full sm:w-auto px-4 py-2 text-xs font-bold bg-gradient-to-r from-brand-crimson to-brand-purple text-white rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer">
                 <i class="fa-solid fa-plus text-brand-emerald"></i> Add New Asset
             </button>
@@ -305,6 +350,9 @@
                 <div class="absolute -right-20 -top-20 w-64 h-64 bg-brand-purple/10 rounded-full blur-3xl pointer-events-none"></div>
                 
                 <div class="relative z-10 flex-1">
+                    <div class="flex items-center gap-3 mb-1">
+                        <span id="tracker-strategy-badge" class="bg-gray-800 border border-gray-600 text-gray-300 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded">Strategy</span>
+                    </div>
                     <h2 id="tracker-address" class="text-2xl md:text-3xl font-extrabold text-white">123 Example Street</h2>
                     
                     <div class="mt-3 flex flex-wrap items-center gap-4 text-xs font-mono text-gray-400">
@@ -325,7 +373,7 @@
             </div>
 
             <!-- Task List Container -->
-            <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 pb-12 z-10 relative" id="tracker-task-container">
+            <div class="grid grid-cols-1 gap-6 pb-12 z-10 relative" id="tracker-task-container">
                 <!-- Dynamically injected sections -->
             </div>
             
@@ -372,250 +420,20 @@
     </div>
 
     <!-- TAB: SOP REFERENCE (VISUAL TIMELINE) -->
-    <div id="tab-sop" class="flex-1 hidden space-y-8 pb-12">
+    <div id="tab-sop" class="flex-1 hidden space-y-6 pb-12">
         <div class="max-w-4xl mx-auto mt-4">
             
-            <!-- Quick Navigation Shortcuts -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-                <div onclick="document.getElementById('phase-1').scrollIntoView({behavior: 'smooth'})" class="cursor-pointer flex items-center gap-3 bg-gray-900/60 hover:bg-gray-800/90 p-4 rounded-xl border border-brand-crimson/30 transition-all hover:-translate-y-1">
-                    <span class="w-8 h-8 rounded-lg bg-brand-crimson/20 border border-brand-crimson flex items-center justify-center text-brand-crimson font-extrabold text-sm shadow">I</span>
-                    <div>
-                        <span class="text-gray-400 text-[9px] uppercase font-bold tracking-wider block">Phase One</span>
-                        <span class="text-xs font-bold text-white block">Deal Intake (10%)</span>
-                    </div>
-                </div>
-                <div onclick="document.getElementById('phase-2').scrollIntoView({behavior: 'smooth'})" class="cursor-pointer flex items-center gap-3 bg-gray-900/60 hover:bg-gray-800/90 p-4 rounded-xl border border-brand-purple/30 transition-all hover:-translate-y-1">
-                    <span class="w-8 h-8 rounded-lg bg-brand-purple/20 border border-brand-purple flex items-center justify-center text-brand-purple font-extrabold text-sm shadow">II</span>
-                    <div>
-                        <span class="text-gray-400 text-[9px] uppercase font-bold tracking-wider block">Phase Two</span>
-                        <span class="text-xs font-bold text-white block">Marketing Prep (40%)</span>
-                    </div>
-                </div>
-                <div onclick="document.getElementById('phase-3').scrollIntoView({behavior: 'smooth'})" class="cursor-pointer flex items-center gap-3 bg-gray-900/60 hover:bg-gray-800/90 p-4 rounded-xl border border-brand-emerald/30 transition-all hover:-translate-y-1">
-                    <span class="w-8 h-8 rounded-lg bg-brand-emerald/20 border border-brand-emerald flex items-center justify-center text-brand-emerald font-extrabold text-sm shadow">III</span>
-                    <div>
-                        <span class="text-gray-400 text-[9px] uppercase font-bold tracking-wider block">Phase Three</span>
-                        <span class="text-xs font-bold text-white block">Marketing Execution (50%)</span>
-                    </div>
-                </div>
+            <!-- Strategy Pills -->
+            <div class="flex flex-wrap justify-center gap-3 mb-10">
+                <button onclick="window.renderSOPTimeline('Wholesale')" id="sopPill_Wholesale" class="px-5 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer sop-pill bg-brand-purple text-white border-brand-purple">Wholesale SOP</button>
+                <button onclick="window.renderSOPTimeline('Fix & Flip')" id="sopPill_Fix & Flip" class="px-5 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer sop-pill bg-gray-900 border-gray-700 text-gray-400 hover:text-white">Fix & Flip SOP</button>
+                <button onclick="window.renderSOPTimeline('Creative')" id="sopPill_Creative" class="px-5 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer sop-pill bg-gray-900 border-gray-700 text-gray-400 hover:text-white">Creative SOP</button>
+                <button onclick="window.renderSOPTimeline('Novation')" id="sopPill_Novation" class="px-5 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer sop-pill bg-gray-900 border-gray-700 text-gray-400 hover:text-white">Novation SOP</button>
             </div>
 
-            <!-- Vertical Process Line Map -->
-            <div class="relative pl-6 sm:pl-10 border-l border-gray-800 space-y-12 py-4">
-
-                <!-- Line gradient -->
-                <div class="absolute left-0 top-0 w-1 bg-gradient-to-b from-brand-crimson via-brand-purple to-brand-emerald h-full pointer-events-none -ml-px rounded-full opacity-60"></div>
-
-                <!-- PHASE 1 TITLE -->
-                <div id="phase-1" class="absolute -top-10"></div>
-                <div class="relative -ml-[31px] sm:-ml-[47px] mb-8">
-                    <div class="inline-flex items-center gap-3">
-                        <span class="bg-brand-crimson text-white font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4 border-[#05070f] shadow-[0_0_15px_rgba(220,38,38,0.4)]">
-                            <i class="fa-solid fa-clipboard-check"></i> PHASE I: DEAL INTAKE SECTION (10%)
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Card 1 -->
-                <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-crimson border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">1</div>
-                    <div class="glass-card rounded-xl p-6 border-brand-crimson/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] transition-all">
-                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Underwriting</h3>
-                        </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Manually UW The Deal</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">6% (Carlos)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> AI UW Tool To Confirm Manual UW</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">2% (Carlos)</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-crimson border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">2</div>
-                    <div class="glass-card rounded-xl p-6 border-brand-crimson/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] transition-all">
-                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Search Entire CRM</h3>
-                        </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Ensure Sellers Phone Number Is Either Disqualified or DND'd</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- PHASE 2 TITLE -->
-                <div id="phase-2" class="absolute pt-12"></div>
-                <div class="relative -ml-[31px] sm:-ml-[47px] mb-8 pt-8">
-                    <div class="inline-flex items-center gap-3">
-                        <span class="bg-brand-purple text-white font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4 border-[#05070f] shadow-[0_0_15px_rgba(79,70,229,0.4)]">
-                            <i class="fa-solid fa-bullseye"></i> PHASE II: MARKETING PREP SECTION (40%)
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">3</div>
-                    <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
-                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Pull Local Hyper Qualified Buyers</h3>
-                        </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> At least 3 Local Investors that bought $10K - $15K from purchase price</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">3% (Carlos)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> At Least 3 Local Investors - for ARV Comps</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">3% (Carlos)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> At Least 3-5 Local investors w/ Active Leases in the area</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">2% (Carlos)</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">4</div>
-                    <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
-                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Investor Data Scraping</h3>
-                        </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Pull The Data From (Investorbase - etc)</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">2% (Moe)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Format The Data</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">1% (Sarah)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Upload The Data To CRM</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">1% (Sarah)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Create Text Blast Draft</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Get The Text Blast Draft Approved</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">5</div>
-                    <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
-                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Realtor Data Scraping</h3>
-                        </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Pull The Data From (Zillow - realtor.com - etc.)</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">2% (Moe)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Format The Data</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">1% (Sarah)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Upload The Data to CRM</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">1% (Sarah)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Create Text Blast Draft</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Get The Text Blast Draft Approved</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">2% (Sarah)</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Card 6 -->
-                <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">6</div>
-                    <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
-                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Facebook Groups Hunt</h3>
-                        </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Join All Relevant FB Groups</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">6% (Moe)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Create FB Post Draft</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">1% (Moe)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Get The FB Post Draft Approved</span> <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">1% (Moe)</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Card 7 -->
-                <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-purple border-4 border-[#05070f] flex items-center justify-center text-white font-black text-xs shadow-lg group-hover:scale-110 transition-transform">7</div>
-                    <div class="glass-card rounded-xl p-6 border-brand-purple/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] transition-all">
-                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Create InvestorLift Draft</h3>
-                        </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Description</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">3% (Yanna)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Photos & Videos (if applicable)</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">2% (Yanna)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Comps</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">3% (Yanna)</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- PHASE 3 TITLE -->
-                <div id="phase-3" class="absolute pt-12"></div>
-                <div class="relative -ml-[31px] sm:-ml-[47px] mb-8 pt-8">
-                    <div class="inline-flex items-center gap-3">
-                        <span class="bg-brand-emerald text-gray-900 font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4 border-[#05070f] shadow-[0_0_15px_rgba(16,185,129,0.4)]">
-                            <i class="fa-solid fa-rocket"></i> PHASE III: MARKETING SECTION (50%)
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Card 8 -->
-                <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">8</div>
-                    <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
-                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Call & Market To Buyers / Realtors</h3>
-                        </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Execute Calls & Marketing (Buyers / Realtors)</span> <span class="text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded font-bold">10% (Carlos)</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Card 9 -->
-                <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">9</div>
-                    <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
-                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Investor Bulk/Individual Text Blast</h3>
-                        </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Execute SMS Deployment (Investors)</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">10% (Sarah)</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Card 10 -->
-                <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">10</div>
-                    <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
-                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Realtor Bulk/Individual Text Blast</h3>
-                        </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Execute SMS Deployment (Realtors)</span> <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-0.5 rounded font-bold">10% (Sarah)</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Card 11 -->
-                <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">11</div>
-                    <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
-                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Post On InvestorLift</h3>
-                        </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Calling Inquiries / Interest On Subject Deal</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">5% (Yanna)</span></li>
-                            <li class="flex justify-between items-center bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Calling ALL Artemis Mode Buyers</span> <span class="text-xs text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded font-bold">5% (Yanna)</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Card 12 -->
-                <div class="relative group">
-                    <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full bg-brand-emerald border-4 border-[#05070f] flex items-center justify-center text-gray-900 font-black text-xs shadow-lg group-hover:scale-110 transition-transform">12</div>
-                    <div class="glass-card rounded-xl p-6 border-brand-emerald/30 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] transition-all">
-                        <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
-                            <h3 class="text-lg font-bold text-white">Post On Facebook</h3>
-                        </div>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex flex-col bg-gray-900/50 p-2.5 rounded border border-gray-800/80">
-                                <div class="flex justify-between items-center">
-                                    <span class="flex items-center gap-2"><i class="fa-solid fa-angle-right text-gray-500"></i> Reach Out To Investors That Expressed Interest In Other Deals</span> 
-                                    <span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded font-bold">10% (Moe)</span>
-                                </div>
-                                <div class="mt-2 pl-6 flex items-center gap-2 text-gray-400 border-l-2 border-gray-700 ml-2">
-                                    <i class="fa-solid fa-level-up-alt rotate-90 text-gray-500 text-[10px]"></i> <span class="text-xs font-medium italic">Subtask: Boost the Post (If Needed)</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
+            <!-- Dynamic Timeline Container -->
+            <div id="sopTimelineContainer" class="relative pl-6 sm:pl-10 border-l border-gray-800 space-y-12 py-4">
+               <!-- Rendered by JS -->
             </div>
         </div>
     </div>
@@ -647,8 +465,11 @@
     let appId = 'tchb-dispo-default';
     let firebaseSavePropertyData = null;
     let firebaseRemovePropertyData = null;
+    
     window.isChatOpen = false;
-    if (!window.chatReadStates) window.chatReadStates = {};
+    window.pendingCSVContent = null;
+    window.currentDashboardStrategy = "All";
+    window.currentDashboardSort = "edited_desc";
 
     // --- 1. AUTHENTICATION LOGIC ---
     window.signInWithGoogle = async function() {
@@ -656,12 +477,9 @@
             showGateError("Authentication initializing, please wait...");
             return;
         }
-        
         try {
             const result = await window.firebaseSignInWithPopup(firebaseAuth, googleProvider);
             const user = result.user;
-            
-            // Check domain restriction
             if (user.email && user.email.endsWith('@totalchb.com')) {
                 document.getElementById('gateErrorMessage').classList.add('hidden');
                 grantAccess();
@@ -670,9 +488,7 @@
                 await window.firebaseSignOut(firebaseAuth);
             }
         } catch (error) {
-            console.error("Google Sign-In Error:", error);
             if (error.code === 'auth/unauthorized-domain') {
-                // Formatting for the dynamic canvas domain
                 showGateError(`<strong>Domain Not Authorized!</strong><br/>Please add this exact domain to your Firebase Authorized Domains:<br/><span class="select-all block mt-2 p-2 bg-gray-800 border border-gray-700 rounded text-[10px] break-all text-white font-mono">${window.location.hostname}</span>`, true);
             } else if (error.code !== 'auth/popup-closed-by-user') {
                 showGateError(error.message);
@@ -690,28 +506,21 @@
             }
             if (window.presenceInterval) { clearInterval(window.presenceInterval); window.presenceInterval = null; }
             await window.firebaseSignOut(firebaseAuth);
-            window.location.reload(); // Refresh to reset state
+            window.location.reload(); 
         }
     }
 
     function showGateError(msg, isHTML = false) {
         const errorMsg = document.getElementById('gateErrorMessage');
         const modalBox = document.getElementById('gateModalBox');
-        
-        if (isHTML) {
-            errorMsg.innerHTML = msg;
-        } else {
-            errorMsg.innerText = msg;
-        }
-        
+        if (isHTML) errorMsg.innerHTML = msg; else errorMsg.innerText = msg;
         errorMsg.classList.remove('hidden');
         modalBox.classList.add('shake-element');
-        setTimeout(() => { modalBox.classList.remove('shake-element'); }, 400);
+        setTimeout(() => modalBox.classList.remove('shake-element'), 400);
     }
 
     function grantAccess() {
-        if (isGatewayUnlocked) return; // Prevent double firing
-        
+        if (isGatewayUnlocked) return; 
         if (currentUser && currentUser.email) {
             document.getElementById('userEmailDisplay').innerText = currentUser.email;
             document.getElementById('userBadge').classList.remove('hidden');
@@ -751,53 +560,80 @@
                     renderDashboard();
                 }
             } catch (err) {
-                console.error("Critical transition error:", err);
                 renderDashboard();
             }
         }, 1200);
     }
 
-    // --- 2. DATA MODEL & SOP BLUEPRINT ---
+    // --- 2. MULTI-STRATEGY DATA MODELS & SOP BLUEPRINTS ---
     const agentsList = ["Carlos", "Yanna", "Moe", "Sarah"];
     
-    const sopBlueprint = [
-        { id: "p1_1", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "Manually UW The Deal", weight: 6, defaultAssignee: "Carlos" },
-        { id: "p1_2", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "AI UW Tool To Confirm Manual UW", weight: 2, defaultAssignee: "Carlos" },
-        { id: "p1_3", phase: "Phase I: Deal Intake", mainTask: "Search Entire CRM", title: "Search Entire CRM For Seller Number(s) (Disqualified or DND'd)", weight: 2, defaultAssignee: "Sarah" },
-        
-        { id: "p2_1", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At least 3 Local Investors that bought $10K - $15K from purchase price", weight: 3, defaultAssignee: "Carlos" },
-        { id: "p2_2", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3 Local Investors - for ARV Comps", weight: 3, defaultAssignee: "Carlos" },
-        { id: "p2_3", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3-5 Local investors w/ Active Leases in the area", weight: 2, defaultAssignee: "Carlos" },
-        
-        { id: "p2_4", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Pull The Data From (Investorbase - etc)", weight: 2, defaultAssignee: "Moe" },
-        { id: "p2_5", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah" },
-        { id: "p2_6", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Upload The Data To CRM", weight: 1, defaultAssignee: "Sarah" },
-        { id: "p2_7", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah" },
-        { id: "p2_8", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah" },
+    const sopBlueprints = {
+        "Wholesale": [
+            { id: "p1_1", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "Manually UW The Deal", weight: 6, defaultAssignee: "Carlos" },
+            { id: "p1_2", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "AI UW Tool To Confirm Manual UW", weight: 2, defaultAssignee: "Carlos" },
+            { id: "p1_3", phase: "Phase I: Deal Intake", mainTask: "Search Entire CRM", title: "Search Entire CRM For Seller Number(s) (Disqualified or DND'd)", weight: 2, defaultAssignee: "Sarah" },
+            
+            { id: "p2_1", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At least 3 Local Investors that bought $10K - $15K from purchase price", weight: 3, defaultAssignee: "Carlos" },
+            { id: "p2_2", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3 Local Investors - for ARV Comps", weight: 3, defaultAssignee: "Carlos" },
+            { id: "p2_3", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3-5 Local investors w/ Active Leases in the area", weight: 2, defaultAssignee: "Carlos" },
+            
+            { id: "p2_4", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Pull The Data From (Investorbase - etc)", weight: 2, defaultAssignee: "Moe" },
+            { id: "p2_5", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah" },
+            { id: "p2_6", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Upload The Data To CRM", weight: 1, defaultAssignee: "Sarah" },
+            { id: "p2_7", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah" },
+            { id: "p2_8", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah" },
 
-        { id: "p2_9", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Pull The Data From (Zillow - realtor.com - etc.)", weight: 2, defaultAssignee: "Moe" },
-        { id: "p2_10", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah" },
-        { id: "p2_11", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah" },
-        { id: "p2_12", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah" },
-        { id: "p2_13", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah" },
+            { id: "p2_9", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Pull The Data From (Zillow - realtor.com - etc.)", weight: 2, defaultAssignee: "Moe" },
+            { id: "p2_10", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah" },
+            { id: "p2_11", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah" },
+            { id: "p2_12", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah" },
+            { id: "p2_13", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah" },
 
-        { id: "p2_14", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Join All Relevant FB Groups", weight: 6, defaultAssignee: "Moe" },
-        { id: "p2_15", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Create FB Post Draft", weight: 1, defaultAssignee: "Moe" },
-        { id: "p2_16", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Get The FB Post Draft Approved", weight: 1, defaultAssignee: "Moe" },
+            { id: "p2_14", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Join All Relevant FB Groups", weight: 6, defaultAssignee: "Moe" },
+            { id: "p2_15", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Create FB Post Draft", weight: 1, defaultAssignee: "Moe" },
+            { id: "p2_16", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Get The FB Post Draft Approved", weight: 1, defaultAssignee: "Moe" },
 
-        { id: "p2_17", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Description", weight: 3, defaultAssignee: "Yanna" },
-        { id: "p2_18", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Photos & Videos (if applicable)", weight: 2, defaultAssignee: "Yanna" },
-        { id: "p2_19", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Comps", weight: 3, defaultAssignee: "Yanna" },
+            { id: "p2_17", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Description", weight: 3, defaultAssignee: "Yanna" },
+            { id: "p2_18", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Photos & Videos (if applicable)", weight: 2, defaultAssignee: "Yanna" },
+            { id: "p2_19", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Comps", weight: 3, defaultAssignee: "Yanna" },
 
-        { id: "p3_1", phase: "Phase III: Marketing Execution", mainTask: "Call & Market To Buyers / Realtors", title: "Execute Calls & Marketing (Buyers / Realtors)", weight: 10, defaultAssignee: "Carlos" },
-        { id: "p3_2", phase: "Phase III: Marketing Execution", mainTask: "Investor Bulk/Individual Text Blast", title: "Execute SMS Deployment (Investors)", weight: 10, defaultAssignee: "Sarah" },
-        { id: "p3_3", phase: "Phase III: Marketing Execution", mainTask: "Realtor Bulk/Individual Text Blast", title: "Execute SMS Deployment (Realtors)", weight: 10, defaultAssignee: "Sarah" },
-        
-        { id: "p3_4", phase: "Phase III: Marketing Execution", mainTask: "Post On InvestorLift", title: "Calling Inquiries / Interest On Subject Deal", weight: 5, defaultAssignee: "Yanna" },
-        { id: "p3_5", phase: "Phase III: Marketing Execution", mainTask: "Post On InvestorLift", title: "Calling ALL Artemis Mode Buyers", weight: 5, defaultAssignee: "Yanna" },
-        
-        { id: "p3_6", phase: "Phase III: Marketing Execution", mainTask: "Post On Facebook", title: "Reach Out To Investors That Expressed Interest In Other Deals", weight: 10, defaultAssignee: "Moe", defaultSubtasks: ["Boost the Post (If Needed)"] }
-    ];
+            { id: "p3_1", phase: "Phase III: Marketing Execution", mainTask: "Call & Market To Buyers / Realtors", title: "Execute Calls & Marketing (Buyers / Realtors)", weight: 10, defaultAssignee: "Carlos" },
+            { id: "p3_2", phase: "Phase III: Marketing Execution", mainTask: "Investor Bulk/Individual Text Blast", title: "Execute SMS Deployment (Investors)", weight: 10, defaultAssignee: "Sarah" },
+            { id: "p3_3", phase: "Phase III: Marketing Execution", mainTask: "Realtor Bulk/Individual Text Blast", title: "Execute SMS Deployment (Realtors)", weight: 10, defaultAssignee: "Sarah" },
+            
+            { id: "p3_4", phase: "Phase III: Marketing Execution", mainTask: "Post On InvestorLift", title: "Calling Inquiries / Interest On Subject Deal", weight: 5, defaultAssignee: "Yanna" },
+            { id: "p3_5", phase: "Phase III: Marketing Execution", mainTask: "Post On InvestorLift", title: "Calling ALL Artemis Mode Buyers", weight: 5, defaultAssignee: "Yanna" },
+            
+            { id: "p3_6", phase: "Phase III: Marketing Execution", mainTask: "Post On Facebook", title: "Reach Out To Investors That Expressed Interest In Other Deals", weight: 10, defaultAssignee: "Moe", defaultSubtasks: ["Boost the Post (If Needed)"] }
+        ],
+        "Fix & Flip": [
+            { id: "ff_1", phase: "Phase I: Scope & Acquisition", mainTask: "Closing & Utilities", title: "Finalize Purchase & Transfer Utilities", weight: 15, defaultAssignee: "Carlos" },
+            { id: "ff_2", phase: "Phase I: Scope & Acquisition", mainTask: "Permitting", title: "File Architectural Plans & Pull Permits", weight: 15, defaultAssignee: "Yanna" },
+            { id: "ff_3", phase: "Phase II: Rehab Execution", mainTask: "Demolition & Prep", title: "Complete Site Demo & Trash Removal", weight: 10, defaultAssignee: "Moe" },
+            { id: "ff_4", phase: "Phase II: Rehab Execution", mainTask: "Rough-In & Trades", title: "Plumbing, Electrical, & HVAC Rough-ins", weight: 15, defaultAssignee: "Moe" },
+            { id: "ff_5", phase: "Phase II: Rehab Execution", mainTask: "Finishes", title: "Drywall, Paint, Flooring, & Fixtures", weight: 15, defaultAssignee: "Sarah" },
+            { id: "ff_6", phase: "Phase III: Listing & Dispo", mainTask: "Final Polish", title: "Deep Clean, Landscaping & Staging", weight: 15, defaultAssignee: "Yanna" },
+            { id: "ff_7", phase: "Phase III: Listing & Dispo", mainTask: "Retail Listing", title: "List on MLS & Market to Retail Buyers", weight: 15, defaultAssignee: "Carlos" }
+        ],
+        "Creative": [
+            { id: "cr_1", phase: "Phase I: Terms Structuring", mainTask: "Seller Negotiation", title: "Finalize SubTo/Seller Finance Terms", weight: 20, defaultAssignee: "Carlos" },
+            { id: "cr_2", phase: "Phase I: Terms Structuring", mainTask: "Documentation", title: "Draft Creative Purchase Agreement", weight: 10, defaultAssignee: "Sarah" },
+            { id: "cr_3", phase: "Phase II: Buyer Marketing", mainTask: "Marketing Prep", title: "Compile Terms & Comps for Dispo", weight: 15, defaultAssignee: "Yanna" },
+            { id: "cr_4", phase: "Phase II: Buyer Marketing", mainTask: "Buyer Outreach", title: "Market to Creative Finance Buyers list", weight: 25, defaultAssignee: "Carlos" },
+            { id: "cr_5", phase: "Phase III: Closing & TC", mainTask: "Transaction Coordination", title: "Coordinate with Subject-To Friendly Title Co.", weight: 20, defaultAssignee: "Sarah" },
+            { id: "cr_6", phase: "Phase III: Closing & TC", mainTask: "Final Handoff", title: "Transfer Insurance & Servicing Setup", weight: 10, defaultAssignee: "Moe" }
+        ],
+        "Novation": [
+            { id: "nv_1", phase: "Phase I: Retail Viability", mainTask: "Retail Pricing", title: "Pull Retail Comps & Establish Novation Value", weight: 15, defaultAssignee: "Carlos" },
+            { id: "nv_2", phase: "Phase I: Retail Viability", mainTask: "Seller Agreement", title: "Sign Novation Agreement & Disclosures", weight: 15, defaultAssignee: "Carlos" },
+            { id: "nv_3", phase: "Phase II: Prep & Listing", mainTask: "Power of Attorney", title: "Execute Specific POA for Listing", weight: 10, defaultAssignee: "Sarah" },
+            { id: "nv_4", phase: "Phase II: Prep & Listing", mainTask: "Property Prep", title: "Light Clean, Photos, and Lockbox Setup", weight: 20, defaultAssignee: "Moe" },
+            { id: "nv_5", phase: "Phase II: Prep & Listing", mainTask: "MLS Activation", title: "List Property on MLS", weight: 20, defaultAssignee: "Yanna" },
+            { id: "nv_6", phase: "Phase III: Retail Closing", mainTask: "Retail Buyer Coordination", title: "Manage Showings & Offers", weight: 10, defaultAssignee: "Carlos" },
+            { id: "nv_7", phase: "Phase III: Retail Closing", mainTask: "Double Escrow/Payout", title: "Coordinate Title for Novation Payout", weight: 10, defaultAssignee: "Sarah" }
+        ]
+    };
 
     function getAgentColorClass(name, type = 'text') {
         const nameLower = (name || "").toLowerCase();
@@ -812,6 +648,16 @@
         const defaultColor = { text: "text-brand-emerald", border: "border-brand-emerald/50", bg: "bg-brand-emerald/10" };
         const selected = colors[nameLower] || defaultColor;
         return selected[type];
+    }
+
+    function getStrategyColorClass(strategy) {
+        const colors = {
+            "Wholesale": "bg-brand-purple/20 text-brand-purple border-brand-purple/50",
+            "Fix & Flip": "bg-brand-cyan/20 text-brand-cyan border-brand-cyan/50",
+            "Creative": "bg-brand-gold/20 text-brand-gold border-brand-gold/50",
+            "Novation": "bg-pink-500/20 text-pink-400 border-pink-500/50"
+        };
+        return colors[strategy] || "bg-gray-800 text-gray-300 border-gray-600";
     }
 
     function getProgressColorRGB(percent) {
@@ -844,8 +690,12 @@
         const badge = document.getElementById('chatUnreadBadge');
         if (!badge || !prop) return;
         
-        const lastRead = window.chatReadStates[prop.id] || 0;
-        const unreadCount = (prop.comments || []).filter(c => c.timestamp > lastRead).length;
+        const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
+        const readReceipts = prop.readBy || {};
+        const lastRead = readReceipts[myPrefix] || 0;
+        
+        // Count messages strictly sent BY OTHERS after my last read time
+        const unreadCount = (prop.comments || []).filter(c => c.timestamp > lastRead && c.author.toLowerCase() !== myPrefix).length;
         
         if (unreadCount > 0 && !window.isChatOpen) {
             badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
@@ -878,18 +728,14 @@
         const list = document.getElementById('activeUsersList');
         const count = document.getElementById('activeUserCount');
         const countBtn = document.getElementById('activeUserCountBtn');
-        
         if (!list || !count) return;
-
         const users = window.activeUsersData || (currentUser ? [{ email: currentUser.email, lastActive: Date.now() }] : []);
         count.innerText = users.length;
         if (countBtn) countBtn.innerText = users.length;
-
         if (users.length === 0) {
             list.innerHTML = `<div class="text-center p-3 text-[10px] text-gray-500 font-bold uppercase tracking-wider">Connecting...</div>`;
             return;
         }
-
         list.innerHTML = users.map(u => `
             <div class="flex items-center gap-2 px-2.5 py-1.5 rounded bg-gray-800/40 border border-gray-700/30">
                 <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald ${Date.now() - u.lastActive < 60000 ? 'animate-pulse' : ''}"></div>
@@ -919,10 +765,7 @@
             activePropertyId = null;
             window.sectionToggleState = {};
             window.sectionCompletionState = {};
-            
-            // Auto close Chat bubble on leaving Tracker tab
             if(window.isChatOpen) window.toggleChat();
-            
             renderDashboard();
             updateGlobalAssetSelector();
         } else if (tab === 'tracker') {
@@ -936,21 +779,58 @@
             document.getElementById('tab-sop').classList.remove('hidden');
             document.getElementById('nav-sop').classList.add(...activeNavClasses.split(' '));
             document.getElementById('nav-sop').classList.remove('text-gray-300');
-            
-            // Auto close Chat bubble on leaving Tracker tab
             if(window.isChatOpen) window.toggleChat();
+            window.renderSOPTimeline('Wholesale'); // Default load
         }
     }
 
-    function generateTaskInstances() {
-        return sopBlueprint.map(task => {
+    // Modal Dynamic CSV Upload Logic
+    window.handleStrategyChange = function() {
+        const strat = document.getElementById('newAssetStrategyInput').value;
+        const csvBox = document.getElementById('csvUploadWrapper');
+        if (strat === 'Fix & Flip') {
+            csvBox.classList.remove('hidden');
+        } else {
+            csvBox.classList.add('hidden');
+            window.pendingCSVContent = null;
+            document.getElementById('csvFileNameDisplay').innerText = "Click to attach a CSV file (Task, Cost, Notes)";
+        }
+    }
+
+    window.handleCSVUpload = function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        document.getElementById('csvFileNameDisplay').innerHTML = `<span class="text-brand-cyan">${file.name}</span> loaded successfully!`;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            window.pendingCSVContent = evt.target.result;
+        };
+        reader.readAsText(file);
+    }
+
+    function parseSOWCSV(csvText) {
+        if (!csvText) return [];
+        const rows = csvText.split('\n').filter(r => r.trim().length > 0);
+        if (rows.length <= 1) return []; // Only headers or empty
+        const dataRows = rows.slice(1);
+        return dataRows.map((row, i) => {
+            // Simple split handling quotes optionally
+            const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.trim().replace(/^"|"$/g, ''));
+            const task = cols[0] || `SOW Item ${i+1}`;
+            const detail = cols[1] ? ` - ${cols[1]}` : '';
+            return task + detail;
+        });
+    }
+
+    function generateTaskInstances(strategy, csvContent) {
+        const blueprint = sopBlueprints[strategy] || sopBlueprints["Wholesale"];
+        let tasks = blueprint.map(task => {
             const subtasks = task.defaultSubtasks ? task.defaultSubtasks.map((stTitle, i) => ({
                 id: 'sub_' + Date.now() + i + Math.random().toString(36).substr(2, 5),
                 title: stTitle,
                 completed: false,
                 isDefault: true
             })) : [];
-            
             return {
                 id: task.id,
                 phase: task.phase,
@@ -960,15 +840,50 @@
                 assignee: task.defaultAssignee,
                 completed: false,
                 subtasks: subtasks,
-                templateText: "", // Placeholder ready for drafts
+                templateText: "",
                 templateLastEditedBy: null,
                 templateLastEditedAt: null
             };
         });
+
+        // Inject SOW tasks if provided for Fix & Flip
+        if (strategy === "Fix & Flip" && csvContent) {
+            const sowItems = parseSOWCSV(csvContent);
+            if (sowItems.length > 0) {
+                const subtasks = sowItems.map((item, i) => ({
+                    id: 'sub_sow_' + Date.now() + i,
+                    title: item,
+                    completed: false,
+                    isDefault: true
+                }));
+                
+                // Adjust weights: SOW gets 20%, take 10% from Rough-In and 10% from Finishes
+                tasks.forEach(t => {
+                    if (t.mainTask === "Rough-In & Trades" || t.mainTask === "Finishes") {
+                        t.weight = Math.max(5, t.weight - 10);
+                    }
+                });
+
+                tasks.splice(4, 0, {
+                    id: "ff_sow_imported",
+                    phase: "Phase II: Rehab Execution",
+                    mainTask: "SOW Execution (Imported)",
+                    title: "Execute Uploaded Statement of Work",
+                    weight: 20,
+                    assignee: "Moe",
+                    completed: false,
+                    subtasks: subtasks
+                });
+            }
+        }
+        return tasks;
     }
 
     window.openAssetModal = function() {
         document.getElementById('newAssetAddressInput').value = '';
+        document.getElementById('newAssetStrategyInput').value = 'Wholesale';
+        window.handleStrategyChange();
+        window.pendingCSVContent = null;
         document.getElementById('newAssetModal').classList.remove('hidden');
         document.getElementById('newAssetModal').classList.add('flex');
         document.getElementById('newAssetAddressInput').focus();
@@ -987,13 +902,18 @@
             return;
         }
         
+        const strategy = document.getElementById('newAssetStrategyInput').value;
+        const newTasks = generateTaskInstances(strategy, window.pendingCSVContent);
+
         const newProp = {
             id: 'prop_' + Date.now() + Math.random().toString(36).substr(2, 5),
             address: address.trim(),
+            exitStrategy: strategy,
             dateStarted: Date.now(),
             dateLastEdited: Date.now(),
             comments: [],
-            tasks: generateTaskInstances()
+            readBy: {},
+            tasks: newTasks
         };
         
         if (!currentUser) { propertiesData.unshift(newProp); }
@@ -1028,10 +948,7 @@
             if (activePropertyId) {
                 await window.removePropertyData(activePropertyId);
                 window.closeDeleteModal();
-                
-                // Keep chat closed after deletion
                 if(window.isChatOpen) window.toggleChat();
-                
                 window.switchTab('dashboard');
             }
         } else {
@@ -1053,13 +970,11 @@
 
         prop.tasks.forEach(t => {
             const isTaskFullyCompleted = t.completed && (!t.subtasks || t.subtasks.every(s => s.completed));
-            
             if (isTaskFullyCompleted) {
                 percent += t.weight;
             } else if (!foundNext) {
                 nextStep = t.phase;
                 nextTaskDetail = t.title;
-                // Pinpoint pending subtask if main task is checked
                 if (t.completed && t.subtasks) {
                     const pendingSub = t.subtasks.find(s => !s.completed);
                     if (pendingSub) nextTaskDetail = `Subtask: ${pendingSub.title}`;
@@ -1071,15 +986,10 @@
             }
         });
         
-        if (percent >= 100) {
-            percent = 100;
-            nextAgent = "Completed";
-        }
-
+        if (percent >= 100) { percent = 100; nextAgent = "Completed"; }
         return { percent, nextStep, nextTaskDetail, nextAgent, nextTaskId, nextSectionKey };
     }
 
-    // Safely format time strictly to EST
     function formatEST(ms) {
         if (!ms) return '-';
         const d = new Date(ms);
@@ -1087,7 +997,6 @@
             const options = { timeZone: 'America/New_York', month: '2-digit', day: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true };
             return d.toLocaleString('en-US', options);
         } catch (error) {
-            console.warn("Timezone formatter fallback active.");
             return d.toLocaleString();
         }
     }
@@ -1095,22 +1004,18 @@
     function timeSince(ms) {
         const diffInSeconds = Math.floor((Date.now() - ms) / 1000);
         if (diffInSeconds < 60) return "Just now";
-        
         let mins = Math.floor(diffInSeconds / 60);
         let hrs = Math.floor(mins / 60);
         let days = Math.floor(hrs / 24);
         let yrs = Math.floor(days / 365);
         
-        mins = mins % 60;
-        hrs = hrs % 24;
-        days = days % 365;
+        mins = mins % 60; hrs = hrs % 24; days = days % 365;
         
         let parts = [];
         if (yrs > 0) parts.push(`${yrs} ${yrs === 1 ? 'yr' : 'yrs'}`);
         if (days > 0) parts.push(`${days} ${days === 1 ? 'day' : 'days'}`);
         if (hrs > 0) parts.push(`${hrs} ${hrs === 1 ? 'hr' : 'hrs'}`);
         if (mins > 0) parts.push(`${mins} ${mins === 1 ? 'min' : 'mins'}`);
-        
         return parts.join(' - ') + ' Ago';
     }
 
@@ -1133,13 +1038,17 @@
             activePropertyId = null;
             window.sectionToggleState = {};
             window.sectionCompletionState = {};
-            
-            if(window.isChatOpen) window.toggleChat(); // Close chat if switching away
-            
+            if(window.isChatOpen) window.toggleChat(); 
             renderTrackerView();
         } else {
             window.openTracker(propId);
         }
+    }
+
+    window.updateDashboardFilters = function() {
+        window.currentDashboardStrategy = document.getElementById('filterStrategy').value;
+        window.currentDashboardSort = document.getElementById('filterSort').value;
+        renderDashboard();
     }
 
     function renderDashboard() {
@@ -1149,11 +1058,24 @@
         
         tbody.innerHTML = '';
 
-        if (propertiesData.length === 0) {
+        let filteredProps = propertiesData.filter(p => {
+            if (window.currentDashboardStrategy === "All") return true;
+            return (p.exitStrategy || 'Wholesale') === window.currentDashboardStrategy;
+        });
+
+        filteredProps.sort((a, b) => {
+            if (window.currentDashboardSort === 'started_desc') return b.dateStarted - a.dateStarted;
+            if (window.currentDashboardSort === 'started_asc') return a.dateStarted - b.dateStarted;
+            if (window.currentDashboardSort === 'edited_desc') return b.dateLastEdited - a.dateLastEdited;
+            if (window.currentDashboardSort === 'edited_asc') return a.dateLastEdited - b.dateLastEdited;
+            return 0;
+        });
+
+        if (filteredProps.length === 0) {
             emptyState.classList.remove('hidden');
         } else {
             emptyState.classList.add('hidden');
-            propertiesData.forEach(prop => {
+            filteredProps.forEach(prop => {
                 const stats = getPropStats(prop);
                 const agentTxtColor = getAgentColorClass(stats.nextAgent, 'text');
                 const agentBgColor = getAgentColorClass(stats.nextAgent, 'bg');
@@ -1161,14 +1083,17 @@
                 const progressColor = getProgressColorRGB(stats.percent);
                 const tooltipEscapedDetail = stats.nextTaskDetail.replace(/"/g, '&quot;');
                 
+                const strategy = prop.exitStrategy || 'Wholesale';
+                const strategyColor = getStrategyColorClass(strategy);
+                
                 const tr = document.createElement('tr');
                 tr.className = "cursor-pointer group";
                 tr.onclick = () => window.openTracker(prop.id);
                 
                 tr.innerHTML = `
                     <td class="p-4 font-bold text-white group-hover:text-brand-emerald transition-colors text-center">${prop.address}</td>
+                    <td class="p-4 text-center"><span class="${strategyColor} px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider">${strategy}</span></td>
                     <td class="p-4 text-center">${formatEST(prop.dateStarted)}</td>
-                    <td class="p-4 text-center">${formatEST(prop.dateLastEdited)}</td>
                     <td class="p-4 text-brand-emerald text-xs font-mono text-center">${timeSince(prop.dateLastEdited)}</td>
                     <td class="p-4 text-center">
                         <span class="${agentBgColor} ${agentTxtColor} px-2.5 py-1 rounded text-xs font-extrabold border ${agentBorderColor}">${stats.nextAgent}</span>
@@ -1178,7 +1103,7 @@
                         onmouseenter="window.showDashboardTooltip(event)"
                         onmouseleave="window.hideDashboardTooltip()"
                         onclick="event.stopPropagation(); window.openTracker('${prop.id}', '${stats.nextTaskId}', '${stats.nextSectionKey}')">
-                        <div class="truncate max-w-[200px] mx-auto border-b border-dashed border-gray-600 pb-0.5 inline-block">${stats.nextStep}</div>
+                        <div class="truncate max-w-[150px] mx-auto border-b border-dashed border-gray-600 pb-0.5 inline-block">${stats.nextStep}</div>
                     </td>
                     <td class="p-4 text-center">
                         <div class="flex items-center justify-center gap-2">
@@ -1194,19 +1119,14 @@
     window.showDashboardTooltip = function(event) {
         const td = event.currentTarget;
         const text = td.getAttribute('data-tooltip-text');
-        
         if (!text || text === 'All workflow tasks finished' || text === 'null') return;
-        
         const tooltip = document.getElementById('dashboard-tooltip');
         const textEl = document.getElementById('dashboard-tooltip-text');
         
-        // Clear any pending hide timers to prevent flicker/disappearance bugs
         if (window.hideTooltipTimer) clearTimeout(window.hideTooltipTimer);
-        
         textEl.innerText = text;
         tooltip.classList.remove('hidden');
         
-        // Target the master table's parent card wrapper explicitly via document.querySelector
         const tableCard = document.querySelector('#tab-dashboard .glass-card');
         if (!tableCard) return;
 
@@ -1221,46 +1141,37 @@
         tooltip.style.top = `${topPos}px`;
         tooltip.style.transform = `translateY(-50%)`;
         
-        // Check bounds after placing, if it overflows off screen, anchor it securely to the right edge of viewport
         const tooltipWidth = tooltip.offsetWidth || 250;
         if (leftPos + tooltipWidth > window.innerWidth) {
             tooltip.style.left = 'auto';
             tooltip.style.right = '15px';
         }
-        
         setTimeout(() => tooltip.classList.remove('opacity-0'), 10);
     }
 
     window.hideDashboardTooltip = function() {
         const tooltip = document.getElementById('dashboard-tooltip');
         tooltip.classList.add('opacity-0');
-        window.hideTooltipTimer = setTimeout(() => {
-            tooltip.classList.add('hidden');
-        }, 200);
+        window.hideTooltipTimer = setTimeout(() => { tooltip.classList.add('hidden'); }, 200);
     }
 
     window.openTracker = function(propId, scrollToTaskId = null, forceOpenSectionKey = null) {
         if (activePropertyId !== propId) {
             window.sectionToggleState = {};
             window.sectionCompletionState = {};
-            if(window.isChatOpen) window.toggleChat(); // Reset chat state between assets
+            if(window.isChatOpen) window.toggleChat(); 
         }
         activePropertyId = propId;
-
-        // Force open specific accordion section if navigating from a Next Step click
         if (forceOpenSectionKey && forceOpenSectionKey !== 'null') {
             if (!window.sectionToggleState) window.sectionToggleState = {};
             window.sectionToggleState[forceOpenSectionKey] = 'open';
         }
-
         if(document.getElementById('tab-tracker').classList.contains('hidden')) {
             window.switchTab('tracker');
         } else {
             renderTrackerView();
             updateGlobalAssetSelector();
         }
-
-        // Handle scrolling and highlighting for deep-links
         if (scrollToTaskId && scrollToTaskId !== 'null') {
             setTimeout(() => {
                 const el = document.getElementById('task_' + scrollToTaskId);
@@ -1274,24 +1185,30 @@
     }
 
     // --- SUPPORT STYLE CHAT LOGIC ---
-    window.toggleChat = function() {
+    window.toggleChat = async function() {
         window.isChatOpen = !window.isChatOpen;
         const chatWin = document.getElementById('chatWindow');
         if (window.isChatOpen) {
             chatWin.classList.remove('hidden');
             chatWin.classList.add('flex');
             
-            // Mark chat as read
+            // Log read receipt
             if (activePropertyId) {
-                window.chatReadStates[activePropertyId] = Date.now();
                 const prop = propertiesData.find(p => p.id === activePropertyId);
-                updateChatBadge(prop);
+                if (prop) {
+                    const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
+                    prop.readBy = prop.readBy || {};
+                    prop.readBy[myPrefix] = Date.now();
+                    // Save quietly to update DB without wrecking local focus
+                    await window.savePropertyData(prop, true); 
+                    updateChatBadge(prop);
+                    renderChatMessages(prop);
+                }
             }
-
-            // Auto scroll to bottom
             setTimeout(() => {
                 const scrollBox = document.getElementById('chatMessages');
                 if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight;
+                document.getElementById('chatInput').focus();
             }, 10);
         } else {
             chatWin.classList.add('hidden');
@@ -1309,6 +1226,7 @@
         if (!prop) return;
 
         const authorName = currentUser && currentUser.email ? currentUser.email.split('@')[0] : "Agent";
+        const myPrefix = authorName.toLowerCase();
 
         if (!prop.comments) prop.comments = [];
         prop.comments.push({
@@ -1318,25 +1236,26 @@
             timestamp: Date.now()
         });
 
-        // Always mark as read for ourselves when we send a message
-        window.chatReadStates[activePropertyId] = Date.now();
+        prop.readBy = prop.readBy || {};
+        prop.readBy[myPrefix] = Date.now();
 
         input.value = '';
-        await window.savePropertyData(prop);
+        await window.savePropertyData(prop); // Triggers re-render which updates chat naturally
     }
 
     function renderChatMessages(prop) {
         const container = document.getElementById('chatMessages');
         if (!container) return;
         
-        // Mark as read if window is open
+        const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
+        
         if (window.isChatOpen) {
-            window.chatReadStates[prop.id] = Date.now();
+            prop.readBy = prop.readBy || {};
+            prop.readBy[myPrefix] = Date.now();
         }
         updateChatBadge(prop);
 
         const comments = prop.comments || [];
-        
         if (comments.length === 0) {
             container.innerHTML = '<div class="text-center text-xs text-gray-500 mt-10 italic">No messages yet. Be the first to start the discussion!</div>';
             return;
@@ -1345,20 +1264,28 @@
         container.innerHTML = comments.map(c => {
             const authorLower = c.author.toLowerCase();
             const authorColorClass = getAgentColorClass(authorLower, 'text');
+            const isMe = myPrefix === authorLower;
             
-            // Detect if the message was sent by the current active user to align it to the right
-            const isMe = currentUser && currentUser.email && currentUser.email.split('@')[0].toLowerCase() === authorLower;
+            // Determine who has read this specific message
+            const readers = Object.entries(prop.readBy || {})
+                .filter(([u, t]) => t >= c.timestamp && u !== authorLower)
+                .map(x => x[0]);
             
+            let readReceiptHtml = '';
+            if (readers.length > 0) {
+                readReceiptHtml = `<div class="text-[9px] text-gray-500 ${isMe ? 'text-right' : 'text-left'} mt-1 flex items-center gap-1 ${isMe ? 'justify-end' : 'justify-start'}"><i class="fa-solid fa-check-double text-brand-cyan/70"></i> Read by: ${readers.join(', ')}</div>`;
+            }
+
             return `
-            <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+            <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} mb-1">
                 <span class="text-[9px] font-bold ${authorColorClass} mb-0.5 px-1">${escapeHtml(c.author)} • ${formatEST(c.timestamp)}</span>
-                <div class="${isMe ? 'bg-brand-emerald/10 border-brand-emerald/30' : 'bg-gray-800/60 border-gray-700/50'} border rounded-xl px-3 py-2 max-w-[90%]">
+                <div class="${isMe ? 'bg-brand-emerald/10 border-brand-emerald/30' : 'bg-gray-800/60 border-gray-700/50'} border rounded-xl px-3 py-2 max-w-[90%] shadow-sm">
                     <p class="text-xs text-gray-200 whitespace-pre-wrap">${escapeHtml(c.text)}</p>
                 </div>
+                ${readReceiptHtml}
             </div>`;
         }).join('');
         
-        // Force scroll to bottom to show newest messages
         container.scrollTop = container.scrollHeight;
     }
 
@@ -1384,6 +1311,11 @@
         if(chatContainer) chatContainer.classList.remove('hidden');
 
         document.getElementById('tracker-address').innerText = prop.address;
+        const strat = prop.exitStrategy || 'Wholesale';
+        const badge = document.getElementById('tracker-strategy-badge');
+        badge.innerText = strat;
+        badge.className = `${getStrategyColorClass(strat)} text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded`;
+        
         document.getElementById('tracker-date-started').innerText = `Created: ${formatEST(prop.dateStarted)}`;
         document.getElementById('tracker-last-edited').innerText = `Updated: ${formatEST(prop.dateLastEdited)}`;
         document.getElementById('chatWindowAddress').innerText = prop.address;
@@ -1392,7 +1324,9 @@
         document.getElementById('tracker-percent-text').innerText = `${stats.percent}%`;
         document.getElementById('tracker-progress-bar').style.width = `${stats.percent}%`;
 
-        // Load chat UI natively in sync
+        // Preserve focus state during re-render
+        let focusedId = document.activeElement ? document.activeElement.id : null;
+
         renderChatMessages(prop);
 
         // Group tasks by Phase -> MainTask
@@ -1411,12 +1345,11 @@
             const sectionDiv = document.createElement('div');
             sectionDiv.className = "glass-card rounded-xl border border-gray-800/80 overflow-hidden mb-6";
             
-            // Phase Header with dynamic icons matching SOP
             let phaseIcon = "fa-layer-group";
-            let phaseIconColor = "text-brand-purple";
-            if (phaseName === "Phase I: Deal Intake") { phaseIcon = "fa-clipboard-check"; phaseIconColor = "text-brand-crimson"; }
-            else if (phaseName === "Phase II: Marketing Prep") { phaseIcon = "fa-bullseye"; phaseIconColor = "text-brand-purple"; }
-            else if (phaseName === "Phase III: Marketing Execution") { phaseIcon = "fa-rocket"; phaseIconColor = "text-brand-emerald"; }
+            let phaseIconColor = "text-gray-400";
+            if (phaseName.includes("Phase I")) { phaseIcon = "fa-clipboard-check"; phaseIconColor = "text-brand-crimson"; }
+            else if (phaseName.includes("Phase II")) { phaseIcon = "fa-bullseye"; phaseIconColor = "text-brand-purple"; }
+            else if (phaseName.includes("Phase III")) { phaseIcon = "fa-rocket"; phaseIconColor = "text-brand-emerald"; }
 
             const phaseHeader = document.createElement('div');
             phaseHeader.className = "bg-gray-900/60 p-4 border-b border-gray-800 flex items-center justify-between";
@@ -1429,15 +1362,12 @@
             listDiv.className = "flex flex-col";
 
             for (const [mainTaskName, tasks] of Object.entries(mainTasksMap)) {
-                
                 const sectionKey = btoa(encodeURIComponent(phaseName + "_" + mainTaskName)).replace(/=/g, '');
                 const allCompleted = tasks.every(t => t.completed && (!t.subtasks || t.subtasks.every(s => s.completed)));
 
-                // State Management for Section Collapsing
                 if (!window.sectionToggleState) window.sectionToggleState = {};
                 if (!window.sectionCompletionState) window.sectionCompletionState = {};
 
-                // Auto-close on complete / Auto-open on pending, unless overridden
                 if (window.sectionCompletionState[sectionKey] !== undefined && window.sectionCompletionState[sectionKey] !== allCompleted) {
                      window.sectionToggleState[sectionKey] = allCompleted ? 'closed' : 'open';
                 } else if (typeof window.sectionToggleState[sectionKey] === 'undefined') {
@@ -1454,7 +1384,6 @@
                 const mainTaskContainer = document.createElement('div');
                 mainTaskContainer.className = "border-b border-gray-800/60 last:border-0";
                 
-                // Subheader / Toggle Button for Main Task
                 const mainTaskHeader = document.createElement('div');
                 mainTaskHeader.className = "group bg-gray-800/40 hover:bg-brand-emerald/10 px-4 py-3 flex items-center justify-between cursor-pointer transition-colors duration-300 select-none";
                 mainTaskHeader.onclick = () => window.toggleSection(sectionKey);
@@ -1516,7 +1445,6 @@
                         </div>
                     `;
 
-                    // Generate Dynamic In-line Template UI specifically for Draft/Approved tasks
                     let templateActionHtml = '';
                     let templateBoxHtml = '';
                     
@@ -1587,6 +1515,116 @@
             sectionDiv.appendChild(listDiv);
             container.appendChild(sectionDiv);
         }
+        
+        if (focusedId) {
+            const el = document.getElementById(focusedId);
+            if(el) { el.focus(); }
+        }
+    }
+
+    // Dynamic SOP Reference Rendering
+    window.renderSOPTimeline = function(strategyName) {
+        // Toggle Pills UI
+        document.querySelectorAll('.sop-pill').forEach(btn => {
+            btn.className = "px-5 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer sop-pill bg-gray-900 border-gray-700 text-gray-400 hover:text-white";
+        });
+        const activeBtn = document.getElementById(`sopPill_${strategyName}`);
+        if(activeBtn) {
+            if(strategyName==='Wholesale') activeBtn.className = "px-5 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer sop-pill bg-brand-purple/20 text-brand-purple border-brand-purple shadow-lg";
+            if(strategyName==='Fix & Flip') activeBtn.className = "px-5 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer sop-pill bg-brand-cyan/20 text-brand-cyan border-brand-cyan shadow-lg";
+            if(strategyName==='Creative') activeBtn.className = "px-5 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer sop-pill bg-brand-gold/20 text-brand-gold border-brand-gold shadow-lg";
+            if(strategyName==='Novation') activeBtn.className = "px-5 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer sop-pill bg-pink-500/20 text-pink-400 border-pink-500 shadow-lg";
+        }
+
+        const container = document.getElementById('sopTimelineContainer');
+        container.innerHTML = `<div class="absolute left-0 top-0 w-1 bg-gradient-to-b from-brand-crimson via-brand-purple to-brand-emerald h-full pointer-events-none -ml-px rounded-full opacity-60"></div>`;
+        
+        const tasks = sopBlueprints[strategyName] || [];
+        const structure = {};
+        tasks.forEach(t => {
+            if (!structure[t.phase]) structure[t.phase] = {};
+            if (!structure[t.phase][t.mainTask]) structure[t.phase][t.mainTask] = [];
+            structure[t.phase][t.mainTask].push(t);
+        });
+
+        let cardCounter = 1;
+        for (const [phaseName, mainTasksMap] of Object.entries(structure)) {
+            let phaseIcon = "fa-layer-group";
+            let phaseColorClass = "bg-brand-purple border-[#05070f] shadow-[0_0_15px_rgba(79,70,229,0.4)]";
+            let borderColorClass = "border-brand-purple/30 group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)]";
+            let dotColor = "bg-brand-purple";
+
+            if (phaseName.includes("Phase I")) { 
+                phaseIcon = "fa-clipboard-check"; 
+                phaseColorClass = "bg-brand-crimson border-[#05070f] shadow-[0_0_15px_rgba(220,38,38,0.4)] text-white"; 
+                borderColorClass = "border-brand-crimson/30 group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)]";
+                dotColor = "bg-brand-crimson text-white";
+            }
+            else if (phaseName.includes("Phase II")) { 
+                phaseIcon = "fa-bullseye"; 
+                phaseColorClass = "bg-brand-purple border-[#05070f] shadow-[0_0_15px_rgba(79,70,229,0.4)] text-white"; 
+                borderColorClass = "border-brand-purple/30 group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)]";
+                dotColor = "bg-brand-purple text-white";
+            }
+            else if (phaseName.includes("Phase III")) { 
+                phaseIcon = "fa-rocket"; 
+                phaseColorClass = "bg-brand-emerald border-[#05070f] shadow-[0_0_15px_rgba(16,185,129,0.4)] text-gray-900"; 
+                borderColorClass = "border-brand-emerald/30 group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)]";
+                dotColor = "bg-brand-emerald text-gray-900";
+            }
+
+            const phaseTotalWeight = Object.values(mainTasksMap).flat().reduce((sum, t) => sum + t.weight, 0);
+
+            container.innerHTML += `
+                <div class="relative -ml-[31px] sm:-ml-[47px] mb-8 pt-8">
+                    <div class="inline-flex items-center gap-3">
+                        <span class="${phaseColorClass} font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4">
+                            <i class="fa-solid ${phaseIcon}"></i> ${phaseName.toUpperCase()} (${phaseTotalWeight}%)
+                        </span>
+                    </div>
+                </div>
+            `;
+
+            for (const [mainTaskName, innerTasks] of Object.entries(mainTasksMap)) {
+                let itemsHtml = innerTasks.map(t => {
+                    const agentColorClass = getAgentColorClass(t.defaultAssignee, 'text');
+                    const agentBgClass = getAgentColorClass(t.defaultAssignee, 'bg');
+                    
+                    let subHtml = "";
+                    if(t.defaultSubtasks && t.defaultSubtasks.length > 0) {
+                        subHtml = t.defaultSubtasks.map(st => `
+                            <div class="mt-2 pl-6 flex items-center gap-2 text-gray-400 border-l-2 border-gray-700 ml-2">
+                                <i class="fa-solid fa-level-up-alt rotate-90 text-gray-500 text-[10px]"></i> <span class="text-xs font-medium italic">Subtask: ${st}</span>
+                            </div>
+                        `).join('');
+                    }
+                    
+                    return `
+                    <li class="flex flex-col bg-gray-900/50 p-2.5 rounded border border-gray-800/80">
+                        <div class="flex justify-between items-center gap-4">
+                            <span class="flex items-start gap-2 flex-1"><i class="fa-solid fa-angle-right text-gray-500 mt-0.5"></i> ${t.title}</span> 
+                            <span class="text-xs ${agentColorClass} ${agentBgClass} px-2 py-0.5 rounded font-bold shrink-0">${t.weight}% (${t.defaultAssignee})</span>
+                        </div>
+                        ${subHtml}
+                    </li>`;
+                }).join('');
+
+                container.innerHTML += `
+                    <div class="relative group">
+                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full ${dotColor} border-4 border-[#05070f] flex items-center justify-center font-black text-xs shadow-lg group-hover:scale-110 transition-transform">${cardCounter}</div>
+                        <div class="glass-card rounded-xl p-6 ${borderColorClass} hover:-translate-y-1 transition-all">
+                            <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
+                                <h3 class="text-lg font-bold text-white">${mainTaskName}</h3>
+                            </div>
+                            <ul class="space-y-3 text-sm text-gray-300">
+                                ${itemsHtml}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                cardCounter++;
+            }
+        }
     }
 
     // Task Specific Template Logic
@@ -1614,8 +1652,7 @@
         prop.tasks[taskIndex].templateLastEditedBy = currentUser && currentUser.email ? currentUser.email.split('@')[0] : "Agent";
         prop.tasks[taskIndex].templateLastEditedAt = Date.now();
         
-        await window.savePropertyData(prop);
-        renderTrackerView(); // Re-render to show the updated save metadata
+        await window.savePropertyData(prop); 
     }
 
     window.toggleSection = function(sectionKey) {
@@ -1629,7 +1666,6 @@
         if (!prop) return;
         prop.tasks[taskIndex].completed = isCompleted;
         await window.savePropertyData(prop);
-        renderTrackerView();
     }
 
     window.changeAssignee = async function(taskIndex, newAssignee) {
@@ -1637,7 +1673,6 @@
         if (!prop) return;
         prop.tasks[taskIndex].assignee = newAssignee;
         await window.savePropertyData(prop);
-        renderTrackerView();
     }
 
     window.toggleAddSubtaskUI = function(taskIndex) {
@@ -1655,20 +1690,14 @@
         const input = document.getElementById(`newSubtaskInput_${taskIndex}`);
         const title = input.value.trim();
         if (!title) return;
-
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
-
-        if (!prop.tasks[taskIndex].subtasks) {
-            prop.tasks[taskIndex].subtasks = [];
-        }
-
+        if (!prop.tasks[taskIndex].subtasks) prop.tasks[taskIndex].subtasks = [];
         prop.tasks[taskIndex].subtasks.push({
             id: 'sub_' + Date.now() + Math.random().toString(36).substr(2, 5),
             title: title,
             completed: false
         });
-
         await window.savePropertyData(prop);
     }
 
@@ -1701,7 +1730,6 @@
             
             appId = typeof __app_id !== 'undefined' ? __app_id : 'tchb-dispo-ops';
 
-            // Dynamically import to prevent local browser file:// blocking
             const appModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
             const authModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
             const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
@@ -1710,13 +1738,9 @@
             firebaseAuth = authModule.getAuth(app);
             db = firestoreModule.getFirestore(app);
 
-            // Setup Google Auth Provider
             googleProvider = new authModule.GoogleAuthProvider();
-            googleProvider.setCustomParameters({
-                hd: 'totalchb.com' // Hints the Google Sign-In pop-up to prefer this domain
-            });
+            googleProvider.setCustomParameters({ hd: 'totalchb.com' });
             
-            // Export Auth functions to window for UI use
             window.firebaseSignInWithPopup = authModule.signInWithPopup;
             window.firebaseSignOut = authModule.signOut;
 
@@ -1729,13 +1753,12 @@
                     snapshot.forEach(doc => {
                         let data = doc.data();
                         
-                        // --- MIGRATION BLOCK: Clean up legacy duplicate tasks ---
+                        // Migration Cleanup
                         if (data.tasks) {
-                            data.tasks = data.tasks.filter(t => t.id !== 'p3_7'); // Permanently remove old main task
+                            data.tasks = data.tasks.filter(t => t.id !== 'p3_7'); 
                             let p3_6 = data.tasks.find(t => t.id === 'p3_6');
                             if (p3_6) {
                                 p3_6.subtasks = p3_6.subtasks || [];
-                                // Ensure the default subtask exists backwards compatibly
                                 if (!p3_6.subtasks.some(s => s.title.includes("Boost the Post"))) {
                                     p3_6.subtasks.unshift({
                                         id: 'sub_default_boost',
@@ -1746,11 +1769,9 @@
                                 }
                             }
                         }
-                        // --------------------------------------------------------
                         
                         propertiesData.push(data);
                     });
-                    propertiesData.sort((a, b) => b.dateStarted - a.dateStarted);
                     
                     if (isGatewayUnlocked) {
                         renderDashboard();
@@ -1763,9 +1784,9 @@
                 });
             };
 
-            firebaseSavePropertyData = async function(prop) {
+            firebaseSavePropertyData = async function(prop, quiet = false) {
                 if (currentUser && db) {
-                    prop.dateLastEdited = Date.now();
+                    if(!quiet) prop.dateLastEdited = Date.now();
                     const propRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'properties', prop.id);
                     await firestoreModule.setDoc(propRef, prop);
                 }
@@ -1778,15 +1799,12 @@
                 }
             };
 
-            // Listen to persistent Auth State
             authModule.onAuthStateChanged(firebaseAuth, async (user) => {
                 if (user) {
-                    // Re-verify domain on automatic reconnects
                     if (user.email && user.email.endsWith('@totalchb.com')) {
                         currentUser = user;
-                        grantAccess(); // Automatically skip gate if already validly signed in
+                        grantAccess(); 
                         
-                        // --- LIVE ACTIVE USER PRESENCE TRACKING ---
                         if (!window.presenceInterval) {
                             const updatePresence = () => {
                                 if (currentUser && db) {
@@ -1798,7 +1816,7 @@
                                 }
                             };
                             updatePresence();
-                            window.presenceInterval = setInterval(updatePresence, 60000); // 1-minute heartbeat
+                            window.presenceInterval = setInterval(updatePresence, 60000); 
 
                             const activeUsersRef = firestoreModule.collection(db, 'artifacts', appId, 'public', 'data', 'active_users');
                             firestoreModule.onSnapshot(activeUsersRef, (snapshot) => {
@@ -1806,7 +1824,6 @@
                                 const now = Date.now();
                                 snapshot.forEach(doc => {
                                     const data = doc.data();
-                                    // Consider active if heartbeat logged within the last 5 minutes
                                     if (now - data.lastActive < 300000) { 
                                         window.activeUsersData.push(data);
                                     }
@@ -1832,27 +1849,10 @@
     }
 
     function initLocalApp() {
-        const stored = localStorage.getItem('tchb_dispo_app_data_v7');
+        const stored = localStorage.getItem('tchb_dispo_app_data_v8');
         if (stored) {
             let parsed = JSON.parse(stored);
-            propertiesData = parsed.map(data => {
-                if (data.tasks) {
-                    data.tasks = data.tasks.filter(t => t.id !== 'p3_7');
-                    let p3_6 = data.tasks.find(t => t.id === 'p3_6');
-                    if (p3_6) {
-                        p3_6.subtasks = p3_6.subtasks || [];
-                        if (!p3_6.subtasks.some(s => s.title.includes("Boost the Post"))) {
-                            p3_6.subtasks.unshift({
-                                id: 'sub_default_boost',
-                                title: "Boost the Post (If Needed)",
-                                completed: false,
-                                isDefault: true
-                            });
-                        }
-                    }
-                }
-                return data;
-            });
+            propertiesData = parsed;
         }
         if (isGatewayUnlocked) {
             renderDashboard();
@@ -1860,14 +1860,14 @@
         }
     }
 
-    window.savePropertyData = async function(prop) {
+    window.savePropertyData = async function(prop, quiet = false) {
         if (firebaseSavePropertyData) {
-            await firebaseSavePropertyData(prop);
+            await firebaseSavePropertyData(prop, quiet);
         } else {
-            prop.dateLastEdited = Date.now();
-            localStorage.setItem('tchb_dispo_app_data_v7', JSON.stringify(propertiesData));
-            renderDashboard();
-            if (activePropertyId) renderTrackerView();
+            if(!quiet) prop.dateLastEdited = Date.now();
+            localStorage.setItem('tchb_dispo_app_data_v8', JSON.stringify(propertiesData));
+            if(!quiet) renderDashboard();
+            if (activePropertyId && !quiet) renderTrackerView();
         }
     }
 
@@ -1876,7 +1876,7 @@
             await firebaseRemovePropertyData(id);
         } else {
             propertiesData = propertiesData.filter(p => p.id !== id);
-            localStorage.setItem('tchb_dispo_app_data_v7', JSON.stringify(propertiesData));
+            localStorage.setItem('tchb_dispo_app_data_v8', JSON.stringify(propertiesData));
             renderDashboard();
         }
     }
@@ -1887,7 +1887,7 @@
     const ctx = canvas.getContext('2d');
     let gridSize = 55; let sparks = []; let lastSpanSpawn = 0;
     let lastInteractionTime = Date.now(); 
-    const brandColors = [{ r: 79, g: 70, b: 229 }, { r: 220, g: 38, b: 38 }, { r: 16, g: 185, b: 129 }]; // Purple, Crimson, Emerald
+    const brandColors = [{ r: 79, g: 70, b: 229 }, { r: 220, g: 38, b: 38 }, { r: 16, g: 185, b: 129 }];
 
     let customMouseX = window.innerWidth / 2; let customMouseY = window.innerHeight / 2;
     let ringX = customMouseX; let ringY = customMouseY;
@@ -1941,7 +1941,7 @@
         if (e.target.closest('.cursor-not-allowed')) {
             document.body.classList.add('cursor-locked');
             document.body.classList.remove('cursor-hover');
-        } else if (e.target.closest('a, button, input, select, [onclick], .cursor-pointer, tr')) {
+        } else if (e.target.closest('a, button, input, select, [onclick], .cursor-pointer, tr, label')) {
             document.body.classList.add('cursor-hover');
             document.body.classList.remove('cursor-locked');
         } else {
@@ -2011,7 +2011,7 @@
     window.addEventListener('DOMContentLoaded', () => {
         resizeCanvas();
         requestAnimationFrame(animateGrid);
-        initFirebase(); // Kickoff database load safely
+        initFirebase();
     });
   </script>
 </body>
