@@ -247,7 +247,7 @@
         <!-- Controls Bar -->
         <div class="flex flex-col xl:flex-row justify-between xl:items-center gap-4 mb-6">
             <h2 class="text-2xl font-bold text-white flex items-center gap-2 shrink-0">
-                <i class="fa-solid fa-satellite-dish text-brand-emerald"></i> Live Pipeline
+                <i class="fa-solid fa-satellite-dish text-brand-emerald animate-pulse"></i> Live Pipeline
             </h2>
             
             <!-- Dynamic Filters & Action -->
@@ -676,6 +676,49 @@
             b = Math.round(229 + pct * (129 - 229));
         }
         return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function getPhaseConfig(phaseName) {
+        if (phaseName.includes("Phase I")) {
+            return {
+                roman: "I", icon: "fa-clipboard-check",
+                navBorder: "border-brand-crimson/30", navIconBg: "bg-brand-crimson/20", navIconBorder: "border-brand-crimson", navIconText: "text-brand-crimson",
+                pillBg: "bg-brand-crimson", pillShadow: "shadow-[0_0_15px_rgba(220,38,38,0.4)]",
+                cardBorder: "border-brand-crimson/30", cardHoverShadow: "group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)]",
+                dotBg: "bg-brand-crimson", textColor: "text-white"
+            };
+        } else if (phaseName.includes("Phase II")) {
+            return {
+                roman: "II", icon: "fa-bullseye",
+                navBorder: "border-brand-purple/30", navIconBg: "bg-brand-purple/20", navIconBorder: "border-brand-purple", navIconText: "text-brand-purple",
+                pillBg: "bg-brand-purple", pillShadow: "shadow-[0_0_15px_rgba(79,70,229,0.4)]",
+                cardBorder: "border-brand-purple/30", cardHoverShadow: "group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)]",
+                dotBg: "bg-brand-purple", textColor: "text-white"
+            };
+        } else if (phaseName.includes("Phase III")) {
+            return {
+                roman: "III", icon: "fa-rocket",
+                navBorder: "border-brand-emerald/30", navIconBg: "bg-brand-emerald/20", navIconBorder: "border-brand-emerald", navIconText: "text-brand-emerald",
+                pillBg: "bg-brand-emerald", pillShadow: "shadow-[0_0_15px_rgba(16,185,129,0.4)]",
+                cardBorder: "border-brand-emerald/30", cardHoverShadow: "group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)]",
+                dotBg: "bg-brand-emerald", textColor: "text-gray-900"
+            };
+        } else if (phaseName.includes("Phase IV")) {
+            return {
+                roman: "IV", icon: "fa-chart-pie",
+                navBorder: "border-brand-cyan/30", navIconBg: "bg-brand-cyan/20", navIconBorder: "border-brand-cyan", navIconText: "text-brand-cyan",
+                pillBg: "bg-brand-cyan", pillShadow: "shadow-[0_0_15px_rgba(6,182,212,0.4)]",
+                cardBorder: "border-brand-cyan/30", cardHoverShadow: "group-hover:shadow-[0_0_25px_rgba(6,182,212,0.2)]",
+                dotBg: "bg-brand-cyan", textColor: "text-gray-900"
+            };
+        }
+        return {
+            roman: "?", icon: "fa-layer-group",
+            navBorder: "border-gray-600/30", navIconBg: "bg-gray-600/20", navIconBorder: "border-gray-600", navIconText: "text-gray-400",
+            pillBg: "bg-gray-700", pillShadow: "shadow-none",
+            cardBorder: "border-gray-700/30", cardHoverShadow: "group-hover:shadow-[0_0_25px_rgba(255,255,255,0.05)]",
+            dotBg: "bg-gray-700", textColor: "text-white"
+        };
     }
 
     // --- UTILITIES ---
@@ -1344,20 +1387,19 @@
 
         // --- 3. STANDARD TASKS WORKFLOW ---
         for (const [phaseName, mainTasksMap] of Object.entries(structure)) {
-            const sectionDiv = document.createElement('div');
-            sectionDiv.className = "glass-card rounded-xl border border-gray-800/80 overflow-hidden mb-6";
+            const conf = getPhaseConfig(phaseName);
             
-            let phaseIcon = "fa-layer-group";
-            let phaseIconColor = "text-gray-400";
-            if (phaseName.includes("Phase I")) { phaseIcon = "fa-clipboard-check"; phaseIconColor = "text-brand-crimson"; }
-            else if (phaseName.includes("Phase II")) { phaseIcon = "fa-bullseye"; phaseIconColor = "text-brand-purple"; }
-            else if (phaseName.includes("Phase III")) { phaseIcon = "fa-rocket"; phaseIconColor = "text-brand-emerald"; }
-            else if (phaseName.includes("Phase IV")) { phaseIcon = "fa-chart-pie"; phaseIconColor = "text-brand-cyan"; }
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = `glass-card rounded-xl border ${conf.cardBorder} overflow-hidden mb-6 transition-all`;
 
             const phaseHeader = document.createElement('div');
-            phaseHeader.className = "bg-gray-900/60 p-4 border-b border-gray-800 flex items-center justify-between";
+            phaseHeader.className = "bg-gray-900/40 p-4 border-b border-gray-800 flex items-center justify-between";
             phaseHeader.innerHTML = `
-                <h3 class="font-bold text-white uppercase text-sm tracking-wider flex items-center gap-2"><i class="fa-solid ${phaseIcon} ${phaseIconColor}"></i> ${phaseName}</h3>
+                <div class="inline-flex items-center gap-3">
+                    <span class="${conf.pillBg} ${conf.textColor} font-extrabold text-[10px] px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/10 shadow-md tracking-wider">
+                        <i class="fa-solid ${conf.icon}"></i> ${phaseName.toUpperCase()}
+                    </span>
+                </div>
             `;
             sectionDiv.appendChild(phaseHeader);
 
@@ -1553,20 +1595,15 @@
         let pIndex = 1;
         for (const phaseName of phaseNames) {
             const phaseId = `phase-${pIndex}`;
-            
-            let roman = "I", pColor = "brand-purple", pIcon = "fa-layer-group";
-            if (phaseName.includes("Phase I")) { roman = "I"; pColor = "brand-crimson"; pIcon = "fa-clipboard-check"; }
-            else if (phaseName.includes("Phase II")) { roman = "II"; pColor = "brand-purple"; pIcon = "fa-bullseye"; }
-            else if (phaseName.includes("Phase III")) { roman = "III"; pColor = "brand-emerald"; pIcon = "fa-rocket"; }
-            else if (phaseName.includes("Phase IV")) { roman = "IV"; pColor = "brand-cyan"; pIcon = "fa-chart-pie"; }
+            const conf = getPhaseConfig(phaseName);
             
             let splitName = phaseName.split(':');
-            let shortPhase = splitName[0] ? splitName[0].trim() : `Phase ${roman}`;
+            let shortPhase = splitName[0] ? splitName[0].trim() : `Phase ${conf.roman}`;
             let phaseDesc = splitName[1] ? splitName[1].trim() : phaseName;
 
             navHtml += `
-                <div onclick="document.getElementById('${phaseId}').scrollIntoView({behavior: 'smooth'})" class="cursor-pointer flex items-center gap-3 bg-gray-900/60 hover:bg-gray-800/90 p-4 rounded-xl border border-${pColor}/30 transition-all hover:-translate-y-1 shadow-sm">
-                    <span class="w-8 h-8 rounded-lg bg-${pColor}/20 border border-${pColor} flex items-center justify-center text-${pColor} font-extrabold text-sm shadow">${roman}</span>
+                <div onclick="document.getElementById('${phaseId}').scrollIntoView({behavior: 'smooth'})" class="cursor-pointer flex items-center gap-3 bg-gray-900/60 hover:bg-gray-800/90 p-4 rounded-xl border ${conf.navBorder} transition-all hover:-translate-y-1 shadow-sm">
+                    <span class="w-8 h-8 rounded-lg ${conf.navIconBg} border ${conf.navIconBorder} flex items-center justify-center ${conf.navIconText} font-extrabold text-sm shadow">${conf.roman}</span>
                     <div>
                         <span class="text-gray-400 text-[9px] uppercase font-bold tracking-wider block">${shortPhase}</span>
                         <span class="text-xs font-bold text-white block">${phaseDesc}</span>
@@ -1585,45 +1622,15 @@
         pIndex = 1;
         for (const [phaseName, mainTasksMap] of Object.entries(structure)) {
             const phaseId = `phase-${pIndex}`;
-            
-            let phaseIcon = "fa-layer-group";
-            let phaseColorClass = "bg-brand-purple border-[#05070f] shadow-[0_0_15px_rgba(79,70,229,0.4)]";
-            let borderColorClass = "border-brand-purple/30 group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)]";
-            let dotColor = "bg-brand-purple";
-
-            if (phaseName.includes("Phase I")) { 
-                phaseIcon = "fa-clipboard-check"; 
-                phaseColorClass = "bg-brand-crimson border-[#05070f] shadow-[0_0_15px_rgba(220,38,38,0.4)] text-white"; 
-                borderColorClass = "border-brand-crimson/30 group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)]";
-                dotColor = "bg-brand-crimson text-white";
-            }
-            else if (phaseName.includes("Phase II")) { 
-                phaseIcon = "fa-bullseye"; 
-                phaseColorClass = "bg-brand-purple border-[#05070f] shadow-[0_0_15px_rgba(79,70,229,0.4)] text-white"; 
-                borderColorClass = "border-brand-purple/30 group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)]";
-                dotColor = "bg-brand-purple text-white";
-            }
-            else if (phaseName.includes("Phase III")) { 
-                phaseIcon = "fa-rocket"; 
-                phaseColorClass = "bg-brand-emerald border-[#05070f] shadow-[0_0_15px_rgba(16,185,129,0.4)] text-gray-900"; 
-                borderColorClass = "border-brand-emerald/30 group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)]";
-                dotColor = "bg-brand-emerald text-gray-900";
-            }
-            else if (phaseName.includes("Phase IV")) {
-                phaseIcon = "fa-chart-pie"; 
-                phaseColorClass = "bg-brand-cyan border-[#05070f] shadow-[0_0_15px_rgba(6,182,212,0.4)] text-gray-900"; 
-                borderColorClass = "border-brand-cyan/30 group-hover:shadow-[0_0_25px_rgba(6,182,212,0.2)]";
-                dotColor = "bg-brand-cyan text-gray-900";
-            }
-
+            const conf = getPhaseConfig(phaseName);
             const phaseTotalWeight = Object.values(mainTasksMap).flat().reduce((sum, t) => sum + t.weight, 0);
 
             timelineHtml += `
                 <div id="${phaseId}" class="absolute -top-10"></div>
                 <div class="relative -ml-[31px] sm:-ml-[47px] mb-8 ${pIndex > 1 ? 'pt-8' : ''}">
                     <div class="inline-flex items-center gap-3">
-                        <span class="${phaseColorClass} font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4">
-                            <i class="fa-solid ${phaseIcon}"></i> ${phaseName.toUpperCase()} (${phaseTotalWeight}%)
+                        <span class="${conf.pillBg} ${conf.textColor} font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4 border-[#05070f] ${conf.pillShadow}">
+                            <i class="fa-solid ${conf.icon}"></i> ${phaseName.toUpperCase()} (${phaseTotalWeight}%)
                         </span>
                     </div>
                 </div>
@@ -1655,8 +1662,8 @@
 
                 timelineHtml += `
                     <div class="relative group">
-                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full ${dotColor} border-4 border-[#05070f] flex items-center justify-center font-black text-xs shadow-lg group-hover:scale-110 transition-transform">${cardCounter}</div>
-                        <div class="glass-card rounded-xl p-6 ${borderColorClass} hover:-translate-y-1 transition-all">
+                        <div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full ${conf.dotBg} ${conf.textColor} border-4 border-[#05070f] flex items-center justify-center font-black text-xs shadow-lg group-hover:scale-110 transition-transform">${cardCounter}</div>
+                        <div class="glass-card rounded-xl p-6 ${conf.cardBorder} ${conf.cardHoverShadow} hover:-translate-y-1 transition-all">
                             <div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4">
                                 <h3 class="text-lg font-bold text-white">${mainTaskName}</h3>
                             </div>
