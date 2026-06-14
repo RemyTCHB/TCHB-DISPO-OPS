@@ -1393,13 +1393,9 @@
             sectionDiv.className = `glass-card rounded-xl border ${conf.cardBorder} overflow-hidden mb-6 transition-all`;
 
             const phaseHeader = document.createElement('div');
-            phaseHeader.className = "bg-gray-900/40 p-4 border-b border-gray-800 flex items-center justify-between";
+            phaseHeader.className = "bg-gray-900/60 p-4 border-b border-gray-800 flex items-center justify-between";
             phaseHeader.innerHTML = `
-                <div class="inline-flex items-center gap-3">
-                    <span class="${conf.pillBg} ${conf.textColor} font-extrabold text-[10px] px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/10 shadow-md tracking-wider">
-                        <i class="fa-solid ${conf.icon}"></i> ${phaseName.toUpperCase()}
-                    </span>
-                </div>
+                <h3 class="font-bold text-white uppercase text-sm tracking-wider flex items-center gap-2"><i class="fa-solid ${conf.icon} ${conf.navIconText}"></i> ${phaseName}</h3>
             `;
             sectionDiv.appendChild(phaseHeader);
 
