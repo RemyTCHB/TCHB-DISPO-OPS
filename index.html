@@ -266,35 +266,36 @@
     <!-- Header -->
     <header class="sticky top-0 md:top-2 z-[100] flex flex-col md:flex-row justify-between items-center gap-4 mb-6 sm:mb-8 bg-[#0b0f19]/95 p-3 sm:p-4 rounded-2xl border border-gray-800/80 backdrop-blur-xl shrink-0 shadow-lg">
         
-        <div class="flex items-center justify-between w-full md:w-auto gap-5 flex-wrap lg:flex-nowrap">
+        <div class="flex items-center justify-between w-full md:w-auto flex-wrap lg:flex-nowrap">
             
-            <div class="flex items-center gap-3 md:gap-5">
+            <div class="flex items-center gap-4 sm:gap-5 w-full overflow-x-auto custom-scrollbar pb-1 sm:pb-0">
+                
                 <!-- NOTIFICATION HUB (LOGO) -->
                 <div class="relative shrink-0 flex items-center justify-center" id="mainLogoContainer">
                     <button id="mainLogoBtn" onclick="window.toggleNotificationList(event); this.classList.remove('animate-jelly-pop'); void this.offsetWidth; this.classList.add('animate-jelly-pop');" class="relative cursor-pointer transition-transform hover:scale-105 group p-1 z-10" title="Notification Hub">
                         <img src="icon.svg" alt="TCHB Icon" class="h-8 w-8 sm:h-10 sm:w-10 object-contain drop-shadow-md group-hover:drop-shadow-[0_0_15px_rgba(16,185,129,0.5)] transition-all" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
-                        <span id="notifUnreadBadge" class="absolute -top-1 -right-1 bg-brand-crimson text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-[#0f1423] shadow-md hidden z-20">0</span>
+                        <span id="notifUnreadBadge" class="absolute -top-2 -right-2 bg-brand-crimson text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#0f1423] shadow-md hidden z-20">0</span>
                     </button>
                     
                     <!-- NOTIFICATIONS DROPDOWN LIST -->
-                    <div id="notificationsListDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-96 bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-left transition-all text-left">
+                    <div id="notificationsListDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-96 h-[70vh] sm:h-[500px] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-left transition-all text-left">
                         <div id="notifHeaderActions" class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px]">
                             <!-- Populated dynamically by JS based on selection state -->
                         </div>
                         
-                        <div id="notificationsListItems" class="p-0 flex flex-col max-h-[60vh] overflow-y-auto custom-scrollbar divide-y divide-gray-800">
+                        <div id="notificationsListItems" class="p-0 flex flex-col flex-1 overflow-y-auto custom-scrollbar divide-y divide-gray-800">
                             <!-- Dynamic Notification Items -->
                         </div>
                     </div>
 
                     <!-- SETTINGS PANEL -->
-                    <div id="notifSettingsDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-80 bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[121] overflow-hidden origin-top-left transition-all text-left">
+                    <div id="notifSettingsDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-80 h-[70vh] sm:h-[500px] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[121] overflow-hidden origin-top-left transition-all text-left">
                         <div class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px]">
                             <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-sliders text-brand-cyan"></i> Alert Preferences</span>
                             <button onclick="window.toggleNotificationSettings(event)" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Back</button>
                         </div>
                         
-                        <div class="p-4 space-y-5 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                        <div class="p-4 space-y-5 flex-1 overflow-y-auto custom-scrollbar">
                             <div class="flex gap-2">
                                 <button id="enablePushBtn" onclick="window.enablePush()" class="flex-1 bg-gradient-to-r from-brand-purple to-brand-cyan hover:from-indigo-500 hover:to-cyan-400 text-white text-xs font-bold py-3 px-4 rounded-lg shadow-md transition-all cursor-pointer flex justify-center items-center gap-2">
                                     <i class="fa-regular fa-bell animate-shake"></i> Enable Push
@@ -373,7 +374,7 @@
                             </div>
                         </div>
                         
-                        <div class="p-3 border-t border-gray-700 bg-gray-900/50 flex justify-end">
+                        <div class="p-3 border-t border-gray-700 bg-gray-900/50 flex justify-end shrink-0">
                             <button id="savePrefsBtn" onclick="window.saveNotificationPreferences()" class="bg-brand-cyan hover:bg-cyan-400 text-gray-900 text-xs font-bold py-2 px-4 rounded-lg shadow-md transition-colors cursor-pointer w-full flex justify-center items-center gap-2">
                                 Save Preferences
                             </button>
@@ -381,13 +382,13 @@
                     </div>
                 </div>
 
-                <div class="h-6 sm:h-8 w-px bg-gray-700 hidden sm:block shrink-0"></div>
+                <div class="h-6 sm:h-8 w-px bg-gray-700 shrink-0 hidden sm:block"></div>
                 
-                <h1 class="text-sm sm:text-lg font-bold text-white tracking-tight whitespace-nowrap shrink-0">Dispositions Team Dashboard</h1>
-            </div>
-            
-            <!-- RIGHT SIDE METRICS AND CONTROLS -->
-            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                <h1 class="text-base sm:text-lg font-bold text-white tracking-tight whitespace-nowrap shrink-0 hidden sm:block">Dispositions Team Dashboard</h1>
+                
+                <div class="h-6 sm:h-8 w-px bg-gray-700 shrink-0 hidden sm:block"></div>
+
+                <!-- ACTIVE USERS -->
                 <div class="relative shrink-0">
                     <button onclick="window.toggleActiveUsers(event)" class="flex items-center gap-2 bg-gray-800/60 border border-gray-700/60 hover:bg-gray-700/60 rounded-lg px-2 sm:px-3 h-8 cursor-pointer transition-colors shadow-sm">
                         <i class="fa-solid fa-users text-brand-emerald text-[10px]"></i>
@@ -404,15 +405,14 @@
                     </div>
                 </div>
 
-                <div class="h-6 sm:h-8 w-px bg-gray-700 shrink-0"></div>
+                <div class="h-6 sm:h-8 w-px bg-gray-700 shrink-0 hidden sm:block"></div>
                 
                 <!-- Recenter/Styled Logout Button -->
-                <button onclick="window.logOut()" class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/60 border border-gray-700/60 text-gray-400 hover:text-brand-crimson hover:bg-brand-crimson/10 hover:border-brand-crimson/30 transition-all cursor-pointer shadow-sm" title="Sign Out">
+                <button onclick="window.logOut()" class="flex sm:flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/60 border border-gray-700/60 text-gray-400 hover:text-brand-crimson hover:bg-brand-crimson/10 hover:border-brand-crimson/30 transition-all cursor-pointer shadow-sm shrink-0" title="Sign Out">
                     <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i>
                 </button>
             </div>
             
-            <div class="h-8 w-px bg-gray-700 hidden xl:block shrink-0"></div>
         </div>
         
         <div class="hidden md:flex shrink-0 bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 overflow-x-auto max-w-full mt-4 md:mt-0">
@@ -517,7 +517,7 @@
                     </div>
                 </div>
             </div>
-            <button onclick="window.openAssetModal()" class="w-full sm:w-auto px-4 py-2 text-xs font-bold bg-gradient-to-r from-brand-crimson to-brand-purple text-white rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer">
+            <button onclick="window.openAssetModal()" class="w-full sm:w-auto px-4 py-2 text-xs font-bold bg-gradient-to-r from-brand-crimson to-brand-purple text-white rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer mt-2 sm:mt-0">
                 <i class="fa-solid fa-plus text-brand-emerald"></i> Add New Asset
             </button>
         </div>
@@ -576,7 +576,7 @@
         <!-- FLOATING CHAT BUBBLE (Tied to Tracker View) -->
         <div id="propertyChatContainer" class="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-[105] flex flex-col items-end hidden transition-all">
             <!-- Chat Window -->
-            <div id="chatWindow" class="bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-none md:rounded-2xl w-full md:w-[400px] h-[100dvh] md:h-auto max-h-none md:max-h-[85vh] shadow-2xl mb-0 md:mb-4 hidden flex-col overflow-hidden transition-all md:origin-bottom-right relative fixed md:absolute inset-0 md:inset-auto md:bottom-full md:right-0 z-[200] md:z-auto">
+            <div id="chatWindow" class="bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-none md:rounded-2xl w-full md:w-[400px] h-[100dvh] md:h-[600px] md:max-h-[85vh] shadow-2xl mb-0 md:mb-4 hidden flex-col overflow-hidden transition-all md:origin-bottom-right relative fixed md:absolute inset-0 md:inset-auto md:bottom-full md:right-0 z-[200] md:z-auto">
                 
                 <!-- Pins Overlay -->
                 <div id="chatPinsModal" class="hidden absolute inset-0 bg-[#0f1423]/95 backdrop-blur-md z-20 flex-col transition-all">
@@ -623,11 +623,11 @@
                     <button onclick="window.toggleChatSearch()" class="text-gray-500 hover:text-gray-300 pr-2 p-1"><i class="fa-solid fa-times text-[10px] sm:text-xs"></i></button>
                 </div>
 
-                <div id="chatMessages" class="p-3 sm:p-4 flex-1 md:h-80 overflow-y-auto flex flex-col gap-3 custom-scrollbar scroll-smooth">
+                <div id="chatMessages" class="p-3 sm:p-4 flex-1 overflow-y-auto flex flex-col gap-3 custom-scrollbar scroll-smooth">
                     <!-- Messages populated dynamically -->
                 </div>
                 
-                <div class="p-3 border-t border-gray-700 bg-gray-900/50 pb-safe">
+                <div class="p-3 border-t border-gray-700 bg-gray-900/50 pb-safe shrink-0">
                     <div class="flex items-center gap-2">
                         <input type="text" id="chatInput" class="flex-1 bg-gray-950 border border-gray-700 rounded-lg px-3 py-3 sm:py-2 text-xs text-white focus:outline-none focus:border-brand-emerald transition-colors" placeholder="Type a message..." onkeydown="if(event.key === 'Enter') window.sendChatMessage()">
                         <button onclick="window.sendChatMessage()" class="bg-brand-emerald hover:bg-emerald-400 text-gray-900 w-10 h-10 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer shadow-md shrink-0"><i class="fa-solid fa-paper-plane text-xs sm:text-sm"></i></button>
@@ -758,8 +758,8 @@
     function grantAccess() {
         if (isGatewayUnlocked) return; 
         if (currentUser && currentUser.email) {
-            const badge = document.getElementById('userBadge');
-            if(badge) { badge.classList.remove('hidden'); badge.classList.add('flex'); }
+            // Note: userEmailDisplay and userBadge removed from HTML per user request
+            // Just leaving this here in case we ever want to hook it back up.
         }
 
         const btn = document.getElementById('googleAuthButton');
@@ -1655,10 +1655,12 @@
 
         window.isChatOpen = focusCommentId ? true : !window.isChatOpen;
         const chatWin = document.getElementById('chatWindow');
+        const scrollBtn = document.getElementById('scrollToTopBtn');
         
         if (window.isChatOpen) {
             chatWin.classList.remove('hidden');
             chatWin.classList.add('flex');
+            if (scrollBtn) scrollBtn.style.right = '5.5rem';
             
             if (activePropertyId) {
                 const prop = propertiesData.find(p => p.id === activePropertyId);
@@ -1679,6 +1681,7 @@
         } else {
             chatWin.classList.add('hidden');
             chatWin.classList.remove('flex');
+            if (scrollBtn) scrollBtn.style.right = '1.5rem';
             
             if(window.isChatSearchOpen) window.toggleChatSearch();
         }
@@ -2145,7 +2148,7 @@
                     const agentBg = getAgentColorClass(t.assignee, 'bg');
 
                     const weightColor = t.completed ? 'text-brand-emerald bg-brand-emerald/10 border-brand-emerald/30' : 'text-brand-crimson bg-gray-900 border-gray-700';
-                    const paddingAdjust = "pl-6 sm:pl-8";
+                    const paddingAdjust = "pl-2 sm:pl-3";
 
                     const tFeat = buildFeatures(t, false, null, t.originalIndex);
 
@@ -2157,13 +2160,13 @@
                             const sFeat = buildFeatures(st, true, sIdx, t.originalIndex);
 
                             return `
-                            <div class="flex flex-col gap-2 pl-8 sm:pl-14 py-2 group/sub border-b border-gray-800/30 last:border-0" id="sub_row_${t.originalIndex}_${sIdx}">
+                            <div class="flex flex-col gap-2 pl-7 sm:pl-10 py-2 group/sub border-b border-gray-800/30 last:border-0" id="sub_row_${t.originalIndex}_${sIdx}">
                                 <!-- View Mode -->
-                                <div id="sub_view_${t.originalIndex}_${sIdx}" class="flex flex-col sm:flex-row items-start sm:items-start justify-between gap-3">
-                                    <div class="flex items-start gap-3 w-full">
+                                <div id="sub_view_${t.originalIndex}_${sIdx}" class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                    <div class="flex items-start gap-3 w-full sm:flex-1">
                                         <input type="checkbox" ${st.completed ? 'checked' : ''} onchange="window.toggleSubtask(${t.originalIndex}, ${sIdx}, this.checked)" class="w-4 h-4 mt-0.5 rounded accent-brand-purple bg-gray-900 border-gray-600 focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer shrink-0">
                                         <div class="flex-1 min-w-0">
-                                            <span class="text-xs font-medium ${st.completed ? 'text-gray-500 line-through' : 'text-gray-300'} leading-relaxed break-words whitespace-pre-wrap mt-0.5">${escapeHtml(st.title)}</span>
+                                            <span class="text-xs font-medium ${st.completed ? 'text-gray-500 line-through' : 'text-gray-300'} leading-relaxed break-words whitespace-pre-wrap">${escapeHtml(st.title)}</span>
                                             <div class="mt-1 flex items-center flex-wrap gap-y-2">
                                                 ${sFeat.linkActionHtml}
                                                 ${sFeat.templateActionHtml}
@@ -2202,7 +2205,7 @@
                     }
 
                     const addSubtaskInputHtml = `
-                        <div id="addSubtaskUI_${t.originalIndex}" class="hidden pl-8 sm:pl-14 mt-1">
+                        <div id="addSubtaskUI_${t.originalIndex}" class="hidden pl-8 sm:pl-10 mt-1">
                             <div class="flex flex-col gap-2 max-w-md bg-gray-900/50 p-3 rounded-lg border border-brand-purple/30">
                                 <textarea id="newSubtaskInput_${t.originalIndex}" placeholder="Describe subtask..." class="w-full bg-gray-950 border border-gray-700 rounded p-2 text-xs text-white focus:outline-none focus:border-brand-purple transition-colors resize-y min-h-[50px] custom-scrollbar"></textarea>
                                 <div class="flex items-center justify-between mt-1">
@@ -2220,8 +2223,8 @@
                     `;
 
                     row.innerHTML = `
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            <div class="flex items-start gap-4 w-full sm:flex-1 pl-6 sm:pl-8">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                            <div class="flex items-start gap-3 w-full sm:flex-1 ${paddingAdjust}">
                                 <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="window.toggleTask(${t.originalIndex}, this.checked)" class="w-5 h-5 mt-0.5 rounded accent-brand-purple bg-gray-900 border-gray-600 focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer shrink-0">
                                 <div class="min-w-0 flex-1">
                                     <p class="text-sm font-bold ${t.completed ? 'text-gray-500 line-through' : 'text-gray-100'} leading-tight break-words whitespace-pre-wrap mt-0.5">${t.title}</p>
@@ -2234,14 +2237,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0 self-end sm:self-auto w-full sm:w-auto mt-2 sm:mt-0 border-t sm:border-t-0 border-gray-800/60 pt-3 sm:pt-0">
+                            <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto mt-2 sm:mt-0 border-t sm:border-t-0 border-gray-800/60 pt-3 sm:pt-0 pl-1 sm:pl-0">
                                 <select onchange="window.changeAssignee(${t.originalIndex}, this.value)" class="${agentBg} border ${agentBorder} ${agentColor} text-xs font-bold rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-purple cursor-pointer appearance-none text-center min-w-[80px]">
                                     ${agentOpts}
                                 </select>
                                 <span class="${weightColor} text-xs font-black px-2 py-1 rounded w-12 text-center transition-colors">+${t.weight}%</span>
                             </div>
                         </div>
-                        <div class="pl-8 sm:pl-14">
+                        <div class="pl-7 sm:pl-10">
                             ${tFeat.linkBoxHtml}
                             ${tFeat.templateBoxHtml}
                         </div>
@@ -3046,8 +3049,12 @@
                             const activeUsersRef = firestoreModule.collection(db, 'artifacts', appId, 'public', 'data', 'active_users');
                             firestoreModule.onSnapshot(activeUsersRef, (snapshot) => {
                                 window.activeUsersData = [];
+                                const now = Date.now();
                                 snapshot.forEach(doc => {
-                                    window.activeUsersData.push(doc.data());
+                                    const data = doc.data();
+                                    if (now - data.lastActive < 300000) { 
+                                        window.activeUsersData.push(data);
+                                    }
                                 });
                                 if(window.renderActiveUsersList) window.renderActiveUsersList();
                             });
