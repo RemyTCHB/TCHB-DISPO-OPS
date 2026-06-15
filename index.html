@@ -95,10 +95,6 @@
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #334155; }
     
-    /* Utility class for hiding scrollbars but allowing scroll */
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
     table tbody tr { transition: all 0.2s ease-in-out; }
     table tbody tr:hover { background-color: rgba(79, 70, 229, 0.1); }
     
@@ -247,7 +243,7 @@
   <div id="propertyChatContainer" class="fixed bottom-0 md:bottom-6 right-0 md:right-6 z-[105] flex flex-col items-end justify-end transition-all hidden w-full md:w-auto pointer-events-none">
       
       <!-- Chat Window -->
-      <div id="chatWindow" class="fixed top-0 left-0 right-0 bottom-[calc(64px+env(safe-area-inset-bottom))] md:absolute md:bottom-20 md:right-0 md:top-auto md:left-auto md:h-[600px] md:max-h-[calc(100vh-140px)] w-full md:w-[400px] pointer-events-auto z-[200] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 md:rounded-2xl shadow-2xl mb-0 hidden flex-col overflow-hidden transition-all md:origin-bottom-right">
+      <div id="chatWindow" class="fixed top-0 left-0 right-0 bottom-[calc(60px+env(safe-area-inset-bottom))] md:relative md:inset-auto md:h-[600px] md:max-h-[calc(100vh-100px)] w-full md:w-[400px] pointer-events-auto z-[200] md:z-auto bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 md:rounded-2xl shadow-2xl mb-0 md:mb-4 hidden flex-col overflow-hidden transition-all md:origin-bottom-right">
           
           <!-- Pins Overlay -->
           <div id="chatPinsModal" class="hidden absolute inset-0 bg-[#0f1423]/95 backdrop-blur-md z-20 flex-col transition-all">
@@ -339,7 +335,7 @@
   </button>
 
   <!-- MOBILE BOTTOM NAVIGATION -->
-  <nav id="mobileBottomNav" class="md:hidden hidden fixed bottom-0 left-0 right-0 z-[250] bg-[#0b0f19]/95 backdrop-blur-xl border-t border-gray-800 justify-around p-2 pb-safe shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+  <nav id="mobileBottomNav" class="md:hidden hidden fixed bottom-0 left-0 right-0 z-[110] bg-[#0b0f19]/95 backdrop-blur-xl border-t border-gray-800 justify-around p-2 pb-safe shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
       <button onclick="window.switchTab('dashboard')" id="nav-mobile-dashboard" class="flex flex-col items-center justify-center w-full p-2 text-brand-emerald transition-colors">
           <i class="fa-solid fa-layer-group text-lg mb-1"></i>
           <span class="text-[9px] font-bold uppercase tracking-wider">Master</span>
@@ -365,157 +361,159 @@
     <!-- Header -->
     <header class="sticky top-0 md:top-2 z-[100] flex flex-col md:flex-row justify-between items-center gap-4 mb-6 sm:mb-8 bg-[#0b0f19]/95 p-3 sm:p-4 rounded-2xl border border-gray-800/80 backdrop-blur-xl shrink-0 shadow-lg">
         
-        <!-- Left Side: Unified Flex Row for Perfect Spacing -->
-        <div class="flex items-center gap-4 sm:gap-6 overflow-x-auto no-scrollbar w-full md:w-auto pb-1 md:pb-0">
+        <div class="flex items-center justify-between w-full">
             
-            <!-- NOTIFICATION HUB (LOGO) -->
-            <div class="relative shrink-0 flex items-center justify-center" id="mainLogoContainer">
-                <button id="mainLogoBtn" onclick="window.toggleNotificationList(event); this.classList.remove('animate-jelly-pop'); void this.offsetWidth; this.classList.add('animate-jelly-pop');" class="relative cursor-pointer transition-transform hover:scale-105 group p-1 z-10" title="Notification Hub">
-                    <img src="icon.svg" alt="TCHB Icon" class="h-8 w-8 sm:h-10 sm:w-10 object-contain drop-shadow-md group-hover:drop-shadow-[0_0_15px_rgba(16,185,129,0.5)] transition-all" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
-                    <span id="notifUnreadBadge" class="absolute -top-2 -right-2 bg-brand-crimson text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#0f1423] shadow-md hidden z-20">0</span>
-                </button>
-                
-                <!-- NOTIFICATIONS DROPDOWN LIST -->
-                <div id="notificationsListDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-[420px] h-[400px] sm:h-[500px] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-left transition-all text-left">
-                    <div id="notifHeaderActions" class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px] shrink-0">
-                        <!-- Populated dynamically by JS -->
+            <div class="flex items-center gap-3 sm:gap-4 shrink-0">
+                <!-- NOTIFICATION HUB (LOGO) -->
+                <div class="relative shrink-0 flex items-center justify-center" id="mainLogoContainer">
+                    <button id="mainLogoBtn" onclick="window.toggleNotificationList(event); this.classList.remove('animate-jelly-pop'); void this.offsetWidth; this.classList.add('animate-jelly-pop');" class="relative cursor-pointer transition-transform hover:scale-105 group p-1 z-10" title="Notification Hub">
+                        <img src="icon.svg" alt="TCHB Icon" class="h-8 w-8 sm:h-10 sm:w-10 object-contain drop-shadow-md group-hover:drop-shadow-[0_0_15px_rgba(16,185,129,0.5)] transition-all" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
+                        <span id="notifUnreadBadge" class="absolute -top-2 -right-2 bg-brand-crimson text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#0f1423] shadow-md hidden z-20">0</span>
+                    </button>
+                    
+                    <!-- NOTIFICATIONS DROPDOWN LIST -->
+                    <div id="notificationsListDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-[420px] h-[400px] sm:h-[500px] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-left transition-all text-left">
+                        <div id="notifHeaderActions" class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px] shrink-0">
+                            <!-- Populated dynamically by JS based on selection state -->
+                        </div>
+                        
+                        <div id="notificationsListItems" class="p-0 flex flex-col flex-1 overflow-y-auto custom-scrollbar divide-y divide-gray-800">
+                            <!-- Dynamic Notification Items -->
+                        </div>
                     </div>
-                    <div id="notificationsListItems" class="p-0 flex flex-col flex-1 overflow-y-auto custom-scrollbar divide-y divide-gray-800">
-                        <!-- Dynamic Notification Items -->
-                    </div>
-                </div>
 
-                <!-- SETTINGS PANEL -->
-                <div id="notifSettingsDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-[420px] h-auto max-h-[85vh] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[121] overflow-hidden origin-top-left transition-all text-left">
-                    <div class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px]">
-                        <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-sliders text-brand-cyan"></i> Notification Settings</span>
-                        <button onclick="window.toggleNotificationSettings(event)" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Back</button>
-                    </div>
-                    <div class="p-4 space-y-5 flex-1 overflow-y-auto custom-scrollbar">
-                        <div class="flex gap-2">
-                            <button id="enablePushBtn" onclick="window.enablePush()" class="flex-1 bg-gradient-to-r from-brand-purple to-brand-cyan hover:from-indigo-500 hover:to-cyan-400 text-white text-xs font-bold py-3 px-4 rounded-lg shadow-md transition-all cursor-pointer flex justify-center items-center gap-2">
-                                <i class="fa-regular fa-bell animate-shake"></i> Enable Push
-                            </button>
-                            <button onclick="window.resetNotificationPreferences()" class="bg-gray-800 hover:bg-brand-emerald/20 hover:text-brand-emerald text-gray-400 border border-gray-700 text-xs font-bold py-3 px-4 rounded-lg transition-all cursor-pointer flex justify-center items-center shrink-0" title="Reset Settings to Default">
-                                <i class="fa-solid fa-rotate-left"></i>
-                            </button>
-                            <button onclick="window.resetPushTokens()" class="bg-gray-800 hover:bg-brand-crimson/20 hover:text-brand-crimson hover:border-brand-crimson text-gray-400 border border-gray-700 text-xs font-bold py-3 px-4 rounded-lg transition-all cursor-pointer flex justify-center items-center shrink-0" title="Wipe Old Devices">
-                                <i class="fa-solid fa-mobile-screen-button relative"><i class="fa-solid fa-xmark absolute -bottom-1 -right-2 text-[10px] text-brand-crimson"></i></i>
-                            </button>
+                    <!-- SETTINGS PANEL -->
+                    <div id="notifSettingsDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-[420px] h-auto max-h-[85vh] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[121] overflow-hidden origin-top-left transition-all text-left">
+                        <div class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px]">
+                            <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-sliders text-brand-cyan"></i> Notification Settings</span>
+                            <button onclick="window.toggleNotificationSettings(event)" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Back</button>
                         </div>
-                        <div class="flex items-center justify-between border-t border-gray-800 pt-4">
-                            <div class="pr-3">
-                                <p class="text-xs font-bold text-gray-200">Offline Comment Alerts</p>
-                                <p class="text-[9px] text-gray-500">Receive alerts for new unread property discussions.</p>
+                        
+                        <div class="p-4 space-y-5 flex-1 overflow-y-auto custom-scrollbar">
+                            <div class="flex gap-2">
+                                <button id="enablePushBtn" onclick="window.enablePush()" class="flex-1 bg-gradient-to-r from-brand-purple to-brand-cyan hover:from-indigo-500 hover:to-cyan-400 text-white text-xs font-bold py-3 px-4 rounded-lg shadow-md transition-all cursor-pointer flex justify-center items-center gap-2">
+                                    <i class="fa-regular fa-bell animate-shake"></i> Enable Push
+                                </button>
+                                <button onclick="window.resetNotificationPreferences()" class="bg-gray-800 hover:bg-brand-emerald/20 hover:text-brand-emerald text-gray-400 border border-gray-700 text-xs font-bold py-3 px-4 rounded-lg transition-all cursor-pointer flex justify-center items-center shrink-0" title="Reset Settings to Default">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                                <button onclick="window.resetPushTokens()" class="bg-gray-800 hover:bg-brand-crimson/20 hover:text-brand-crimson hover:border-brand-crimson text-gray-400 border border-gray-700 text-xs font-bold py-3 px-4 rounded-lg transition-all cursor-pointer flex justify-center items-center shrink-0" title="Wipe Old Devices">
+                                    <i class="fa-solid fa-mobile-screen-button relative"><i class="fa-solid fa-xmark absolute -bottom-1 -right-2 text-[10px] text-brand-crimson"></i></i>
+                                </button>
                             </div>
-                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                <input type="checkbox" id="pref_comments" class="sr-only peer">
-                                <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-cyan"></div>
-                            </label>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="pr-3">
-                                <p class="text-xs font-bold text-gray-200">New Asset Deployments</p>
-                                <p class="text-[9px] text-gray-500">Alert when a new property tracker is initialized.</p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                <input type="checkbox" id="pref_new_assets" class="sr-only peer">
-                                <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-cyan"></div>
-                            </label>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="pr-3">
-                                <p class="text-xs font-bold text-gray-200">Phase Completions</p>
-                                <p class="text-[9px] text-gray-500">Notify the team when major pipeline phases reach 100%.</p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                <input type="checkbox" id="pref_completions" class="sr-only peer">
-                                <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-cyan"></div>
-                            </label>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="pr-3">
-                                <p class="text-xs font-bold text-brand-emerald"><i class="fa-solid fa-arrow-turn-down rotate-90 mr-1"></i> Task Turn Alerts</p>
-                                <p class="text-[9px] text-gray-500">Instant alert when the next workflow step is assigned to you.</p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                <input type="checkbox" id="pref_task_turns" class="sr-only peer">
-                                <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-emerald"></div>
-                            </label>
-                        </div>
-                        <div class="flex items-center justify-between border-t border-gray-800 pt-4">
-                            <div class="pr-3">
-                                <p class="text-xs font-bold text-brand-gold"><i class="fa-regular fa-sun mr-1"></i> 10 AM Daily Briefing</p>
-                                <p class="text-[9px] text-gray-500">Morning summary of your pending tasks for the day.</p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                <input type="checkbox" id="pref_daily_brief" class="sr-only peer">
-                                <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-gold"></div>
-                            </label>
-                        </div>
-                        <div class="flex flex-col border-t border-gray-800 pt-4">
-                            <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center justify-between border-t border-gray-800 pt-4">
                                 <div class="pr-3">
-                                    <p class="text-xs font-bold text-brand-crimson"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Overdue Reminders</p>
-                                    <p class="text-[9px] text-gray-500">Recurring nudges for tasks sitting on your desk.</p>
+                                    <p class="text-xs font-bold text-gray-200">Offline Comment Alerts</p>
+                                    <p class="text-[9px] text-gray-500">Receive alerts for new unread property discussions.</p>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                    <input type="checkbox" id="pref_reminders" class="sr-only peer" onchange="document.getElementById('pref_reminder_interval').disabled = !this.checked">
-                                    <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-crimson"></div>
+                                    <input type="checkbox" id="pref_comments" class="sr-only peer">
+                                    <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-cyan"></div>
                                 </label>
                             </div>
-                            <select id="pref_reminder_interval" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-2 text-[10px] font-bold text-gray-300 focus:outline-none focus:border-brand-crimson transition-colors cursor-pointer appearance-none disabled:opacity-50 disabled:cursor-not-allowed">
-                                <option value="2">Every 2 Hours</option>
-                                <option value="4" selected>Every 4 Hours</option>
-                                <option value="8">Every 8 Hours</option>
-                                <option value="24">Once a Day (24 Hours)</option>
-                            </select>
+                            <div class="flex items-center justify-between">
+                                <div class="pr-3">
+                                    <p class="text-xs font-bold text-gray-200">New Asset Deployments</p>
+                                    <p class="text-[9px] text-gray-500">Alert when a new property tracker is initialized.</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                    <input type="checkbox" id="pref_new_assets" class="sr-only peer">
+                                    <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-cyan"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="pr-3">
+                                    <p class="text-xs font-bold text-gray-200">Phase Completions</p>
+                                    <p class="text-[9px] text-gray-500">Notify the team when major pipeline phases reach 100%.</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                    <input type="checkbox" id="pref_completions" class="sr-only peer">
+                                    <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-cyan"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="pr-3">
+                                    <p class="text-xs font-bold text-brand-emerald"><i class="fa-solid fa-arrow-turn-down rotate-90 mr-1"></i> Task Turn Alerts</p>
+                                    <p class="text-[9px] text-gray-500">Instant alert when the next workflow step is assigned to you.</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                    <input type="checkbox" id="pref_task_turns" class="sr-only peer">
+                                    <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-emerald"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between border-t border-gray-800 pt-4">
+                                <div class="pr-3">
+                                    <p class="text-xs font-bold text-brand-gold"><i class="fa-regular fa-sun mr-1"></i> 10 AM Daily Briefing</p>
+                                    <p class="text-[9px] text-gray-500">Morning summary of your pending tasks for the day.</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                    <input type="checkbox" id="pref_daily_brief" class="sr-only peer">
+                                    <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-gold"></div>
+                                </label>
+                            </div>
+                            <div class="flex flex-col border-t border-gray-800 pt-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="pr-3">
+                                        <p class="text-xs font-bold text-brand-crimson"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Overdue Reminders</p>
+                                        <p class="text-[9px] text-gray-500">Recurring nudges for tasks sitting on your desk.</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                        <input type="checkbox" id="pref_reminders" class="sr-only peer" onchange="document.getElementById('pref_reminder_interval').disabled = !this.checked">
+                                        <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-crimson"></div>
+                                    </label>
+                                </div>
+                                <select id="pref_reminder_interval" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-2 text-[10px] font-bold text-gray-300 focus:outline-none focus:border-brand-crimson transition-colors cursor-pointer appearance-none disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <option value="2">Every 2 Hours</option>
+                                    <option value="4" selected>Every 4 Hours</option>
+                                    <option value="8">Every 8 Hours</option>
+                                    <option value="24">Once a Day (24 Hours)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="p-3 border-t border-gray-700 bg-gray-900/50 flex justify-end shrink-0">
+                            <button id="savePrefsBtn" onclick="window.saveNotificationPreferences()" class="bg-brand-cyan hover:bg-cyan-400 text-gray-900 text-xs font-bold py-2 px-4 rounded-lg shadow-md transition-colors cursor-pointer w-full flex justify-center items-center gap-2">
+                                Save Settings
+                            </button>
                         </div>
                     </div>
-                    <div class="p-3 border-t border-gray-700 bg-gray-900/50 flex justify-end shrink-0">
-                        <button id="savePrefsBtn" onclick="window.saveNotificationPreferences()" class="bg-brand-cyan hover:bg-cyan-400 text-gray-900 text-xs font-bold py-2 px-4 rounded-lg shadow-md transition-colors cursor-pointer w-full flex justify-center items-center gap-2">
-                            Save Settings
-                        </button>
+                </div>
+
+                <div class="h-6 sm:h-8 w-px bg-gray-700/80 shrink-0 hidden sm:block"></div>
+                
+                <h1 class="text-sm sm:text-lg font-bold text-white whitespace-nowrap shrink-0 uppercase tracking-widest">Dispo Ops</h1>
+            </div>
+            
+            <div class="flex items-center gap-3 sm:gap-4 ml-auto">
+                <div class="h-6 sm:h-8 w-px bg-gray-700/80 shrink-0 hidden md:block"></div>
+
+                <!-- ACTIVE USERS -->
+                <div class="relative shrink-0">
+                    <button onclick="window.toggleActiveUsers(event)" class="flex items-center gap-2 bg-gray-800/60 border border-gray-700/60 hover:bg-gray-700/60 rounded-lg px-2 sm:px-3 h-8 cursor-pointer transition-colors shadow-sm">
+                        <i class="fa-solid fa-users text-brand-emerald text-[10px]"></i>
+                        <span class="text-[10px] font-bold text-gray-300 uppercase tracking-wider hidden sm:inline">Active Users</span>
+                        <span id="activeUserCountBtn" class="bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/30 px-1.5 py-0.5 rounded text-[10px] font-black leading-none flex items-center justify-center">0</span>
+                    </button>
+                    <div id="activeUsersDropdown" class="absolute right-0 top-full mt-3 w-48 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden">
+                        <div class="bg-gray-800/80 px-3 py-2 border-b border-gray-700 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
+                            <span>Personnel Online</span>
+                            <span id="activeUserCount" class="text-brand-emerald">0</span>
+                        </div>
+                        <div id="activeUsersList" class="flex flex-col max-h-48 overflow-y-auto p-1.5 gap-1 custom-scrollbar">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Separator -->
-            <div class="h-6 sm:h-8 w-px bg-gray-700/80 shrink-0"></div>
-            
-            <h1 class="text-sm sm:text-lg font-bold text-white whitespace-nowrap shrink-0 uppercase tracking-widest">Dispo Ops</h1>
-
-            <!-- Separator -->
-            <div class="h-6 sm:h-8 w-px bg-gray-700/80 shrink-0"></div>
-
-            <!-- ACTIVE USERS -->
-            <div class="relative shrink-0">
-                <button onclick="window.toggleActiveUsers(event)" class="flex items-center gap-2 bg-gray-800/60 border border-gray-700/60 hover:bg-gray-700/60 rounded-lg px-2 sm:px-3 h-8 cursor-pointer transition-colors shadow-sm">
-                    <i class="fa-solid fa-users text-brand-emerald text-[10px]"></i>
-                    <span class="text-[10px] font-bold text-gray-300 uppercase tracking-wider hidden sm:inline">Active Users</span>
-                    <span id="activeUserCountBtn" class="bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/30 px-1.5 py-0.5 rounded text-[10px] font-black leading-none flex items-center justify-center">0</span>
+                <div class="h-6 sm:h-8 w-px bg-gray-700/80 shrink-0 hidden sm:block"></div>
+                
+                <!-- Logout Button -->
+                <button onclick="window.logOut()" class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/60 border border-gray-700/60 text-gray-400 hover:text-brand-crimson hover:bg-brand-crimson/10 hover:border-brand-crimson/30 transition-all cursor-pointer shadow-sm shrink-0" title="Sign Out">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i>
                 </button>
-                <div id="activeUsersDropdown" class="absolute left-0 md:left-auto md:right-0 top-full mt-3 w-48 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden">
-                    <div class="bg-gray-800/80 px-3 py-2 border-b border-gray-700 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
-                        <span>Personnel Online</span>
-                        <span id="activeUserCount" class="text-brand-emerald">0</span>
-                    </div>
-                    <div id="activeUsersList" class="flex flex-col max-h-48 overflow-y-auto p-1.5 gap-1 custom-scrollbar">
-                    </div>
-                </div>
             </div>
-
-            <!-- Separator -->
-            <div class="h-6 sm:h-8 w-px bg-gray-700/80 shrink-0"></div>
-            
-            <!-- Logout Button -->
-            <button onclick="window.logOut()" class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/60 border border-gray-700/60 text-gray-400 hover:text-brand-crimson hover:bg-brand-crimson/10 hover:border-brand-crimson/30 transition-all cursor-pointer shadow-sm shrink-0" title="Sign Out">
-                <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i>
-            </button>
             
         </div>
         
-        <!-- Right Side: Navigation Tabs -->
         <div class="hidden md:flex shrink-0 bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 overflow-x-auto max-w-full mt-4 md:mt-0">
             <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md flex items-center gap-2 whitespace-nowrap">
                 <i class="fa-solid fa-layer-group"></i> Master Dashboard
@@ -1837,6 +1835,470 @@
             else if (firstUnreadId && !isSearching) document.getElementById('chat_msg_' + firstUnreadId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             else if (!isSearching) container.scrollTop = container.scrollHeight;
         }, 100);
+    }
+
+    function renderTrackerView() {
+        const emptyView = document.getElementById('tracker-empty');
+        const contentView = document.getElementById('tracker-content');
+        if(!emptyView || !contentView) return;
+        
+        if (!activePropertyId) {
+            window.toggleDisplay('tracker-empty', true); window.toggleDisplay('tracker-content', false); return;
+        }
+
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) { activePropertyId = null; renderTrackerView(); return; }
+
+        window.toggleDisplay('tracker-empty', false); window.toggleDisplay('tracker-content', true, 'block');
+
+        document.getElementById('tracker-address').innerText = prop.address;
+        const strat = prop.exitStrategy || 'Wholesale';
+        const badge = document.getElementById('tracker-strategy-badge');
+        badge.innerText = strat; badge.className = `${getStrategyColorClass(strat)} text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded mt-1 sm:mt-0`;
+        
+        document.getElementById('tracker-date-started').innerText = `Created: ${formatEST(prop.dateStarted)}`;
+        document.getElementById('tracker-last-edited').innerText = `Updated: ${formatEST(prop.dateLastEdited)}`;
+        document.getElementById('chatWindowAddress').innerText = prop.address;
+        
+        const stats = getPropStats(prop);
+        document.getElementById('tracker-percent-text').innerText = `${stats.percent}%`;
+        document.getElementById('tracker-progress-bar').style.width = `${stats.percent}%`;
+
+        let focusedId = document.activeElement ? document.activeElement.id : null;
+        updateChatBadge(prop);
+        if (window.isChatOpen) renderChatMessages(prop);
+
+        const structure = {};
+        prop.tasks.forEach((t, i) => {
+            if (!structure[t.phase]) structure[t.phase] = {};
+            if (!structure[t.phase][t.mainTask]) structure[t.phase][t.mainTask] = [];
+            structure[t.phase][t.mainTask].push({ ...t, originalIndex: i });
+        });
+
+        const container = document.getElementById('tracker-task-container');
+        container.innerHTML = '';
+
+        const buildFeatures = (item, isSubtask, sIdx, tOriginalIndex) => {
+            const itemKey = isSubtask ? `${tOriginalIndex}_${sIdx}` : `${tOriginalIndex}`;
+            let templateActionHtml = ''; let templateBoxHtml = ''; let linkActionHtml = ''; let linkBoxHtml = '';
+
+            if (item.title.toLowerCase().includes('draft') || item.requiresDraft) {
+                const isApprovedTask = item.title.toLowerCase().includes('approved');
+                const btnLabel = isApprovedTask ? "Template" : "Draft";
+                const btnIcon = isApprovedTask ? "fa-file-circle-check" : "fa-file-pen";
+                const templateIsOpen = window.sectionToggleState[`template_${itemKey}`] === 'open';
+                
+                templateActionHtml = `<div class="w-px h-3 bg-gray-700 mx-2 hidden sm:block"></div><button onclick="window.toggleUIState('template_${itemKey}', 'templateUI_${itemKey}')" class="text-[10px] uppercase tracking-wider font-bold text-brand-cyan/70 hover:text-brand-cyan flex items-center gap-1.5 transition-colors cursor-pointer"><i class="fa-solid ${btnIcon}"></i> ${btnLabel}</button>`;
+
+                let saveMetaHtml = '<span class="text-[9px] uppercase tracking-wider text-brand-cyan opacity-50">Saves automatically on blur</span>';
+                if (item.templateLastEditedBy) {
+                    const authorColorClass = getAgentColorClass(item.templateLastEditedBy, 'text');
+                    saveMetaHtml = `<span class="text-[9px] uppercase tracking-wider text-gray-500">Last saved by <span class="${authorColorClass} font-bold">${escapeHtml(item.templateLastEditedBy)}</span> • ${formatEST(item.templateLastEditedAt)}</span>`;
+                }
+
+                templateBoxHtml = `<div id="templateUI_${itemKey}" class="${templateIsOpen ? 'block' : 'hidden'} mt-2 w-full pl-0"><textarea id="templateInput_${itemKey}" onchange="window.saveItemTemplate('${itemKey}')" class="w-full max-w-3xl h-24 bg-gray-950/50 border border-brand-cyan/30 rounded-lg p-3 text-xs text-gray-300 focus:border-brand-cyan focus:outline-none transition-colors resize-y custom-scrollbar placeholder-gray-600" placeholder="Paste text here...">${escapeHtml(item.templateText || "")}</textarea><div class="max-w-3xl flex justify-end mt-1">${saveMetaHtml}</div></div>`;
+            }
+
+            if (item.requiresLink || item.hyperlink) {
+                const linkIsOpen = window.sectionToggleState[`link_${itemKey}`] === 'open';
+                
+                if (item.hyperlink) {
+                    const href = item.hyperlink.startsWith('http') ? item.hyperlink : 'https://'+item.hyperlink;
+                    linkActionHtml = `<div class="w-px h-3 bg-gray-700 mx-2 hidden sm:block"></div><div class="flex items-center gap-1"><a href="${href}" target="_blank" class="text-[10px] uppercase tracking-wider font-bold text-brand-emerald hover:underline flex items-center gap-1 transition-colors cursor-pointer max-w-[150px] truncate" title="${escapeHtml(item.hyperlink)}"><i class="fa-solid fa-arrow-up-right-from-square"></i> Link</a><button onclick="window.toggleUIState('link_${itemKey}', 'linkUI_${itemKey}', 'flex')" class="text-gray-500 hover:text-brand-emerald px-1.5 cursor-pointer" title="Edit Link"><i class="fa-solid fa-pen text-[9px]"></i></button></div>`;
+                } else {
+                    linkActionHtml = `<div class="w-px h-3 bg-gray-700 mx-2 hidden sm:block"></div><button onclick="window.toggleUIState('link_${itemKey}', 'linkUI_${itemKey}', 'flex')" class="text-[10px] uppercase tracking-wider font-bold text-brand-emerald/70 hover:text-brand-emerald flex items-center gap-1.5 transition-colors cursor-pointer"><i class="fa-solid fa-link"></i> + Link</button>`;
+                }
+
+                linkBoxHtml = `<div id="linkUI_${itemKey}" class="${linkIsOpen ? 'flex' : 'hidden'} mt-2 w-full flex-col gap-2 pl-0"><div class="flex items-center gap-2 max-w-lg"><input type="text" id="linkInput_${itemKey}" value="${escapeHtml(item.hyperlink || "")}" class="flex-1 bg-gray-950/50 border border-brand-emerald/30 rounded-lg p-2 text-xs text-gray-300 focus:border-brand-emerald focus:outline-none transition-colors placeholder-gray-600" placeholder="https://..." onkeydown="if(event.key === 'Enter') window.saveItemLink('${itemKey}')"><button onclick="window.saveItemLink('${itemKey}')" class="bg-brand-emerald hover:bg-emerald-400 text-gray-900 px-3 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-md">Save</button><button onclick="window.clearItemLink('${itemKey}')" class="text-gray-500 hover:text-red-400 px-2 py-2 cursor-pointer transition-colors" title="Remove Link"><i class="fa-solid fa-trash"></i></button></div></div>`;
+            }
+
+            return { templateActionHtml, templateBoxHtml, linkActionHtml, linkBoxHtml };
+        };
+
+        for (const [phaseName, mainTasksMap] of Object.entries(structure)) {
+            const ui = getPhaseUI(phaseName);
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = `glass-card rounded-xl border ${ui.timelineCard} overflow-hidden mb-6 transition-all`;
+
+            sectionDiv.innerHTML = `<div class="bg-gray-900/60 p-4 border-b border-gray-800 flex items-center justify-between"><h3 class="font-bold text-white uppercase text-sm tracking-wider flex items-center gap-2"><i class="fa-solid ${ui.icon} ${ui.trackerHeaderIcon}"></i> ${phaseName}</h3></div>`;
+            const listDiv = document.createElement('div'); listDiv.className = "flex flex-col";
+
+            for (const [mainTaskName, tasks] of Object.entries(mainTasksMap)) {
+                const sectionKey = btoa(encodeURIComponent(phaseName + "_" + mainTaskName)).replace(/=/g, '');
+                const allCompleted = tasks.length > 0 && tasks.every(t => t.completed && (!t.subtasks || t.subtasks.every(s => s.completed)));
+
+                if (!window.sectionToggleState) window.sectionToggleState = {};
+                if (!window.sectionCompletionState) window.sectionCompletionState = {};
+
+                if (window.sectionCompletionState[sectionKey] !== undefined && window.sectionCompletionState[sectionKey] !== allCompleted) window.sectionToggleState[sectionKey] = allCompleted ? 'closed' : 'open';
+                else if (typeof window.sectionToggleState[sectionKey] === 'undefined') window.sectionToggleState[sectionKey] = allCompleted ? 'closed' : 'open';
+                window.sectionCompletionState[sectionKey] = allCompleted;
+
+                const isOpen = window.sectionToggleState[sectionKey] === 'open';
+                const totalWeight = tasks.reduce((sum, t) => sum + t.weight, 0);
+                const completedWeight = tasks.reduce((sum, t) => sum + (t.completed ? t.weight : 0), 0);
+                const sectionPercent = totalWeight > 0 ? Math.round((completedWeight / totalWeight) * 100) : (allCompleted ? 100 : 0);
+
+                const mainTaskContainer = document.createElement('div');
+                mainTaskContainer.className = "border-b border-gray-800/60 last:border-0";
+                
+                mainTaskContainer.innerHTML = `
+                    <div class="group bg-gray-800/40 hover:bg-brand-emerald/10 px-4 py-3 flex items-center justify-between cursor-pointer transition-colors duration-300 select-none" onclick="window.toggleUIState('${sectionKey}', 'tasks_${sectionKey}')">
+                        <h4 class="text-xs font-black text-gray-300 group-hover:text-brand-emerald uppercase tracking-widest flex items-center gap-2 transition-colors duration-300"><i id="icon_${sectionKey}" class="fa-solid fa-caret-${isOpen ? 'down' : 'right'} text-gray-600 group-hover:text-brand-emerald transition-transform duration-300 w-3 text-center"></i> ${mainTaskName}</h4>
+                        <div class="flex items-center gap-3"><span class="text-xs font-black text-gray-400">${sectionPercent}%</span><span class="${allCompleted ? 'bg-brand-emerald/10 text-brand-emerald border-brand-emerald/30' : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30'} px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider">${allCompleted ? 'COMPLETE' : 'PENDING'}</span></div>
+                    </div>
+                `;
+
+                const tasksContainer = document.createElement('div');
+                tasksContainer.id = `tasks_${sectionKey}`;
+                tasksContainer.className = `divide-y divide-gray-800/60 ${isOpen ? 'block' : 'hidden'} bg-gray-900/20`;
+
+                tasks.forEach(t => {
+                    const row = document.createElement('div'); row.id = `task_${t.id}`;
+                    row.className = `p-4 flex flex-col gap-3 transition-colors duration-500 hover:bg-gray-800/30 ${(t.completed && (!t.subtasks || t.subtasks.every(s=>s.completed))) ? 'opacity-60' : ''}`;
+                    
+                    const agentOpts = agentsList.map(a => `<option value="${a}" ${t.assignee === a ? 'selected' : ''} class="bg-gray-900 text-white">${a}</option>`).join('');
+                    const agentColor = getAgentColorClass(t.assignee, 'text');
+                    const agentBorder = getAgentColorClass(t.assignee, 'border');
+                    const agentBg = getAgentColorClass(t.assignee, 'bg');
+                    const weightColor = t.completed ? 'text-brand-emerald bg-brand-emerald/10 border-brand-emerald/30' : 'text-brand-crimson bg-gray-900 border-gray-700';
+
+                    const tFeat = buildFeatures(t, false, null, t.originalIndex);
+                    let subtasksHtml = '';
+                    if (t.subtasks && t.subtasks.length > 0) {
+                        subtasksHtml = t.subtasks.map((st, sIdx) => {
+                            const subWeightBadge = t.isSOW ? `<span class="text-[9px] font-bold text-brand-cyan bg-brand-cyan/10 border border-brand-cyan/30 px-1.5 py-0.5 rounded shadow-sm">+${(t.weight / t.subtasks.length).toFixed(1).replace(/\.0$/, '')}%</span>` : '';
+                            const isDefaultSub = st.isDefault || (t.id === 'p3_6' && st.title.includes('Boost the Post'));
+                            const sFeat = buildFeatures(st, true, sIdx, t.originalIndex);
+
+                            return `
+                            <div class="flex flex-col gap-2 pl-7 sm:pl-10 py-2 group/sub border-b border-gray-800/30 last:border-0" id="sub_row_${t.originalIndex}_${sIdx}">
+                                <div id="sub_view_${t.originalIndex}_${sIdx}" class="flex items-start gap-3 w-full">
+                                    <input type="checkbox" ${st.completed ? 'checked' : ''} onchange="window.toggleSubtask(${t.originalIndex}, ${sIdx}, this.checked)" class="w-4 h-4 mt-0.5 rounded accent-brand-purple bg-gray-900 border-gray-600 focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer shrink-0">
+                                    <div class="flex-1 min-w-0 flex flex-col gap-1">
+                                        <div class="flex justify-between items-start gap-2">
+                                            <span class="text-[11px] sm:text-xs font-medium ${st.completed ? 'text-gray-500 line-through' : 'text-gray-300'} leading-relaxed break-words whitespace-pre-wrap mt-0.5">${escapeHtml(st.title)}</span>
+                                            <div class="flex items-center gap-2 shrink-0">${subWeightBadge}<button onclick="window.toggleDisplay('sub_view_${t.originalIndex}_${sIdx}', false); window.toggleDisplay('sub_edit_${t.originalIndex}_${sIdx}', true);" class="text-gray-500 hover:text-brand-cyan transition-colors cursor-pointer px-1" title="Edit Item"><i class="fa-solid fa-pen text-[10px] sm:text-xs"></i></button></div>
+                                        </div>
+                                        <div class="flex items-center flex-wrap gap-x-2 sm:gap-x-3 gap-y-1 mt-0.5">${sFeat.linkActionHtml}${sFeat.templateActionHtml}</div>
+                                        <div class="pl-0 mt-1">${sFeat.linkBoxHtml}${sFeat.templateBoxHtml}</div>
+                                    </div>
+                                </div>
+                                <div id="sub_edit_${t.originalIndex}_${sIdx}" class="hidden flex-col gap-2 bg-gray-900/50 p-3 rounded-lg border border-brand-cyan/30 mt-1">
+                                    <textarea id="sub_input_${t.originalIndex}_${sIdx}" class="w-full bg-gray-950 border border-gray-700 rounded p-2 text-xs text-white focus:outline-none focus:border-brand-cyan transition-colors resize-y min-h-[50px] custom-scrollbar">${escapeHtml(st.title)}</textarea>
+                                    <div class="flex items-center gap-3 mt-1 px-1">
+                                        <label class="text-[10px] text-gray-400 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="editSubtaskLink_${t.originalIndex}_${sIdx}" class="accent-brand-emerald" ${st.requiresLink || st.hyperlink ? 'checked' : ''}> Require Link</label>
+                                        <label class="text-[10px] text-gray-400 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="editSubtaskDraft_${t.originalIndex}_${sIdx}" class="accent-brand-cyan" ${st.requiresDraft || st.templateText ? 'checked' : ''}> Require Draft</label>
+                                    </div>
+                                    <div class="flex justify-between items-center mt-1">
+                                        ${isDefaultSub ? '<div></div>' : `<button onclick="window.promptRemoveSubtask(${t.originalIndex}, ${sIdx})" class="text-xs font-bold text-red-500 hover:text-red-400 flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-trash-can"></i> Remove</button>`}
+                                        <div class="flex gap-2 ml-auto">
+                                            <button onclick="window.cancelEditSubtask(${t.originalIndex}, ${sIdx})" class="text-xs font-bold text-gray-400 hover:text-white px-3 py-1.5 transition-colors">Cancel</button>
+                                            <button onclick="window.saveSubtask(${t.originalIndex}, ${sIdx})" class="text-xs font-bold bg-brand-cyan hover:bg-cyan-400 text-gray-900 px-4 py-1.5 rounded-lg shadow-md transition-colors">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        }).join('');
+                    }
+
+                    const addSubtaskInputHtml = `
+                        <div id="addSubtaskUI_${t.originalIndex}" class="hidden pl-8 sm:pl-10 mt-1">
+                            <div class="flex flex-col gap-2 max-w-md bg-gray-900/50 p-3 rounded-lg border border-brand-purple/30">
+                                <textarea id="newSubtaskInput_${t.originalIndex}" placeholder="Describe subtask..." class="w-full bg-gray-950 border border-gray-700 rounded p-2 text-xs text-white focus:outline-none focus:border-brand-purple transition-colors resize-y min-h-[50px] custom-scrollbar"></textarea>
+                                <div class="flex items-center justify-between mt-1">
+                                    <div class="flex items-center gap-3"><label class="text-[10px] text-gray-400 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="newSubtaskLink_${t.originalIndex}" class="accent-brand-emerald"> Add Link</label><label class="text-[10px] text-gray-400 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="newSubtaskDraft_${t.originalIndex}" class="accent-brand-cyan"> Add Draft</label></div>
+                                    <div class="flex justify-end gap-2"><button onclick="window.toggleUIState('addSubtaskUI_${t.originalIndex}', 'addSubtaskUI_${t.originalIndex}')" class="text-xs font-bold text-gray-400 hover:text-white px-3 py-1.5 transition-colors">Cancel</button><button onclick="window.confirmAddSubtask(${t.originalIndex})" class="bg-brand-purple hover:bg-indigo-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-colors shadow-md cursor-pointer">Save</button></div>
+                                </div>
+                            </div>
+                        </div>`;
+
+                    row.innerHTML = `
+                        <div class="flex items-start gap-3 w-full pl-2 sm:pl-3 relative">
+                            <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="window.toggleTask(${t.originalIndex}, this.checked)" class="w-5 h-5 mt-0.5 rounded accent-brand-purple bg-gray-900 border-gray-600 focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer shrink-0">
+                            <div class="min-w-0 flex-1 flex flex-col gap-1.5">
+                                <div class="flex justify-between items-start gap-2">
+                                    <p class="text-sm font-bold ${t.completed ? 'text-gray-500 line-through' : 'text-gray-100'} leading-tight break-words whitespace-pre-wrap mt-0.5">${t.title}</p>
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        <select onchange="window.changeAssignee(${t.originalIndex}, this.value)" class="${agentBg} border ${agentBorder} ${agentColor} text-[10px] sm:text-xs font-bold rounded px-1.5 sm:px-2 py-1 focus:outline-none focus:ring-1 focus:ring-brand-purple cursor-pointer appearance-none text-center min-w-[70px]">${agentOpts}</select>
+                                        <span class="${weightColor} text-[10px] sm:text-xs font-black px-1.5 sm:px-2 py-1 rounded w-10 sm:w-12 text-center transition-colors">+${t.weight}%</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center flex-wrap gap-x-2 sm:gap-x-3 gap-y-2 mt-0.5"><button onclick="window.toggleUIState('addSubtaskUI_${t.originalIndex}', 'addSubtaskUI_${t.originalIndex}'); setTimeout(()=>document.getElementById('newSubtaskInput_${t.originalIndex}').focus(),50);" class="text-[10px] uppercase tracking-wider font-bold text-brand-purple/70 hover:text-brand-purple flex items-center gap-1 transition-colors cursor-pointer"><i class="fa-solid fa-plus"></i> Add Subtask</button>${tFeat.linkActionHtml}${tFeat.templateActionHtml}</div>
+                            </div>
+                        </div>
+                        <div class="pl-7 sm:pl-10 mt-2">${tFeat.linkBoxHtml}${tFeat.templateBoxHtml}</div>
+                        ${subtasksHtml}${addSubtaskInputHtml}`;
+                    tasksContainer.appendChild(row);
+                });
+                
+                mainTaskContainer.appendChild(tasksContainer);
+                listDiv.appendChild(mainTaskContainer);
+            }
+            sectionDiv.appendChild(listDiv); container.appendChild(sectionDiv);
+        }
+        if (focusedId) { const el = document.getElementById(focusedId); if(el) el.focus(); }
+    }
+
+    // Dynamic SOP Reference Rendering
+    window.renderSOPTimeline = function(strategyName) {
+        document.querySelectorAll('.sop-pill').forEach(btn => {
+            btn.className = "px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap sop-pill";
+        });
+        const activeBtn = document.getElementById(`sopPill_${strategyName}`);
+        if(activeBtn) activeBtn.className = "px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap";
+
+        const container = document.getElementById('sopTimelineContainer');
+        const tasks = sopBlueprints[strategyName] || [];
+        const structure = {};
+        
+        tasks.forEach(t => {
+            if (!structure[t.phase]) structure[t.phase] = {};
+            if (!structure[t.phase][t.mainTask]) structure[t.phase][t.mainTask] = [];
+            structure[t.phase][t.mainTask].push(t);
+        });
+
+        const phaseNames = Object.keys(structure);
+        let navHtml = `<div class="grid grid-cols-1 md:grid-cols-${Math.min(phaseNames.length, 4)} gap-4 mb-6 sm:mb-10 z-[80] bg-transparent p-2 sm:p-4 -mx-2 sm:-mx-4 rounded-2xl transition-all">`;
+        
+        let pIndex = 1;
+        for (const phaseName of phaseNames) {
+            const phaseId = `phase-${pIndex}`;
+            const ui = getPhaseUI(phaseName);
+            let splitName = phaseName.split(':');
+            let shortPhase = splitName[0] ? splitName[0].trim() : `Phase ${ui.roman}`;
+            let phaseDesc = splitName[1] ? splitName[1].trim() : phaseName;
+
+            navHtml += `
+                <div onclick="document.getElementById('${phaseId}').scrollIntoView({behavior: 'smooth'})" class="cursor-pointer flex items-center gap-3 bg-gray-900/60 hover:bg-gray-800/90 p-4 rounded-xl border ${ui.navWrapper} transition-all hover:-translate-y-1 shadow-sm">
+                    <span class="w-8 h-8 rounded-lg ${ui.navIcon} flex items-center justify-center font-extrabold text-sm shadow">${ui.roman}</span>
+                    <div><span class="text-gray-400 text-[9px] uppercase font-bold tracking-wider block">${shortPhase}</span><span class="text-xs font-bold text-white block">${phaseDesc}</span></div>
+                </div>`;
+            pIndex++;
+        }
+        navHtml += `</div>`;
+
+        let timelineHtml = `<div class="relative pl-6 sm:pl-10 border-l border-gray-800 space-y-12 py-4"><div class="absolute left-0 top-0 w-1 bg-gradient-to-b from-brand-crimson via-brand-purple to-brand-emerald h-full pointer-events-none -ml-px rounded-full opacity-60"></div>`;
+
+        let cardCounter = 1; pIndex = 1;
+        for (const [phaseName, mainTasksMap] of Object.entries(structure)) {
+            const phaseId = `phase-${pIndex}`; const ui = getPhaseUI(phaseName);
+            const phaseTotalWeight = Object.values(mainTasksMap).flat().reduce((sum, t) => sum + t.weight, 0);
+
+            timelineHtml += `<div id="${phaseId}" class="relative -ml-[31px] sm:-ml-[47px] mb-8 ${pIndex > 1 ? 'pt-8' : ''} scroll-mt-10 transition-all"><div class="inline-flex items-center gap-3"><span class="${ui.timelineHeader} font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4"><i class="fa-solid ${ui.icon}"></i> ${phaseName.toUpperCase()} (${phaseTotalWeight}%)</span></div></div>`;
+
+            for (const [mainTaskName, innerTasks] of Object.entries(mainTasksMap)) {
+                let itemsHtml = innerTasks.map(t => {
+                    const agentColorClass = getAgentColorClass(t.defaultAssignee, 'text');
+                    const agentBgClass = getAgentColorClass(t.defaultAssignee, 'bg');
+                    let subHtml = "";
+                    if(t.defaultSubtasks && t.defaultSubtasks.length > 0) subHtml = t.defaultSubtasks.map(st => `<div class="mt-2 pl-6 flex items-center gap-2 text-gray-400 border-l-2 border-gray-700 ml-2"><i class="fa-solid fa-level-up-alt rotate-90 text-gray-500 text-[10px]"></i> <span class="text-xs font-medium italic">Subtask: ${st}</span></div>`).join('');
+                    
+                    return `<li class="flex flex-col bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><div class="flex justify-between items-center gap-4"><span class="flex items-start gap-2 flex-1"><i class="fa-solid fa-angle-right text-gray-500 mt-0.5"></i> ${t.title}</span><span class="text-xs ${agentColorClass} ${agentBgClass} px-2 py-0.5 rounded font-bold shrink-0">${t.weight}% (${t.defaultAssignee})</span></div>${subHtml}</li>`;
+                }).join('');
+
+                timelineHtml += `<div class="relative group"><div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full ${ui.timelineDot} border-4 flex items-center justify-center font-black text-xs shadow-lg group-hover:scale-110 transition-transform">${cardCounter}</div><div class="glass-card rounded-xl p-4 sm:p-6 ${ui.timelineCard} hover:-translate-y-1 transition-all"><div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4"><h3 class="text-lg font-bold text-white">${mainTaskName}</h3></div><ul class="space-y-3 text-sm text-gray-300">${itemsHtml}</ul></div></div>`;
+                cardCounter++;
+            }
+            pIndex++;
+        }
+        timelineHtml += `</div>`; container.innerHTML = navHtml + timelineHtml;
+    }
+
+    // Generalized Feature Toggles (Tasks & Subtasks)
+    window.toggleUIState = function(key, elId, displayClass = 'block') {
+        const ui = document.getElementById(elId);
+        if (!window.sectionToggleState) window.sectionToggleState = {};
+        const isHidden = ui.classList.contains('hidden');
+        if (isHidden) { ui.classList.remove('hidden'); if (displayClass !== 'block') ui.classList.add(displayClass); window.sectionToggleState[key] = 'open'; }
+        else { ui.classList.add('hidden'); if (displayClass !== 'block') ui.classList.remove(displayClass); window.sectionToggleState[key] = 'closed'; }
+        
+        if(key.startsWith('Phase')) {
+            const icon = document.getElementById('icon_' + key);
+            if(icon) {
+                if(isHidden) { icon.classList.remove('fa-caret-right'); icon.classList.add('fa-caret-down'); }
+                else { icon.classList.remove('fa-caret-down'); icon.classList.add('fa-caret-right'); }
+            }
+        }
+        return isHidden;
+    }
+
+    window.saveItemTemplate = async function(itemKey) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        const target = getItemFromKey(prop, itemKey);
+        target.templateText = document.getElementById(`templateInput_${itemKey}`).value;
+        target.templateLastEditedBy = currentUser && currentUser.email ? currentUser.email.split('@')[0] : "Agent";
+        target.templateLastEditedAt = Date.now();
+        await window.savePropertyData(prop); 
+    }
+
+    window.saveItemLink = async function(itemKey) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        const target = getItemFromKey(prop, itemKey);
+        target.hyperlink = document.getElementById(`linkInput_${itemKey}`).value.trim();
+        await window.savePropertyData(prop);
+        window.toggleUIState('link_'+itemKey, 'linkUI_'+itemKey, 'flex');
+    }
+
+    window.clearItemLink = async function(itemKey) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        const target = getItemFromKey(prop, itemKey);
+        target.hyperlink = "";
+        await window.savePropertyData(prop);
+        window.toggleUIState('link_'+itemKey, 'linkUI_'+itemKey, 'flex');
+    }
+
+    window.cancelEditSubtask = function(taskIndex, subIndex) {
+        window.toggleDisplay(`sub_view_${taskIndex}_${subIndex}`, true);
+        window.toggleDisplay(`sub_edit_${taskIndex}_${subIndex}`, false);
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (prop) document.getElementById(`sub_input_${taskIndex}_${subIndex}`).value = prop.tasks[taskIndex].subtasks[subIndex].title;
+    }
+
+    window.saveSubtask = async function(taskIndex, subIndex) {
+        const input = document.getElementById(`sub_input_${taskIndex}_${subIndex}`).value.trim();
+        if (!input) return;
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        prop.tasks[taskIndex].subtasks[subIndex].title = input;
+        
+        const linkCheck = document.getElementById(`editSubtaskLink_${taskIndex}_${subIndex}`);
+        const draftCheck = document.getElementById(`editSubtaskDraft_${taskIndex}_${subIndex}`);
+        if (linkCheck) { prop.tasks[taskIndex].subtasks[subIndex].requiresLink = linkCheck.checked; if (!linkCheck.checked) prop.tasks[taskIndex].subtasks[subIndex].hyperlink = ""; }
+        if (draftCheck) { prop.tasks[taskIndex].subtasks[subIndex].requiresDraft = draftCheck.checked; if (!draftCheck.checked) prop.tasks[taskIndex].subtasks[subIndex].templateText = ""; }
+        await window.savePropertyData(prop);
+    }
+
+    window.promptRemoveSubtask = function(taskIndex, subIndex) {
+        pendingSOWRemove = { taskIndex, subIndex };
+        document.getElementById('removeSOWConfirmInput').value = '';
+        document.getElementById('removeSOWBtn').disabled = true;
+        document.getElementById('removeSOWBtn').className = "px-5 py-2 text-sm font-bold bg-gray-700 text-gray-500 rounded-lg shadow-lg cursor-not-allowed transition-all";
+        window.toggleDisplay('removeSOWModal', true);
+        document.getElementById('removeSOWConfirmInput').focus();
+    }
+
+    window.validateRemoveSOWInput = function() {
+        const val = document.getElementById('removeSOWConfirmInput').value;
+        const btn = document.getElementById('removeSOWBtn');
+        if (val === 'Confirm') {
+            btn.disabled = false; btn.className = "px-5 py-2 text-sm font-bold bg-brand-crimson hover:bg-red-500 text-white rounded-lg shadow-lg cursor-pointer transition-all";
+        } else {
+            btn.disabled = true; btn.className = "px-5 py-2 text-sm font-bold bg-gray-700 text-gray-500 rounded-lg shadow-lg cursor-not-allowed transition-all";
+        }
+    }
+
+    window.executeRemoveSOWSubtask = async function() {
+        if (!pendingSOWRemove) return;
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        const { taskIndex, subIndex } = pendingSOWRemove;
+        
+        prop.tasks[taskIndex].subtasks.splice(subIndex, 1);
+        if (prop.tasks[taskIndex].subtasks.length > 0) {
+            const allDone = prop.tasks[taskIndex].subtasks.every(s => s.completed);
+            if (allDone) {
+                prop.tasks[taskIndex].completed = true;
+                const sectionKey = btoa(encodeURIComponent(prop.tasks[taskIndex].phase + "_" + prop.tasks[taskIndex].mainTask)).replace(/=/g, '');
+                if (window.sectionToggleState) window.sectionToggleState[sectionKey] = 'closed';
+            }
+        } else prop.tasks[taskIndex].completed = false;
+
+        await window.savePropertyData(prop);
+        window.toggleDisplay('removeSOWModal', false); pendingSOWRemove = null;
+    }
+
+    window.toggleTask = async function(taskIndex, isCompleted) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        prop.tasks[taskIndex].completed = isCompleted;
+        await window.savePropertyData(prop);
+    }
+
+    window.changeAssignee = async function(taskIndex, newAssignee) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        prop.tasks[taskIndex].assignee = newAssignee;
+        await window.savePropertyData(prop);
+    }
+
+    window.confirmAddSubtask = async function(taskIndex) {
+        const input = document.getElementById(`newSubtaskInput_${taskIndex}`);
+        const title = input.value.trim();
+        if (!title) return;
+        
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        
+        const needsLink = document.getElementById(`newSubtaskLink_${taskIndex}`)?.checked || false;
+        const needsDraft = document.getElementById(`newSubtaskDraft_${taskIndex}`)?.checked || false;
+
+        if (!prop.tasks[taskIndex].subtasks) prop.tasks[taskIndex].subtasks = [];
+        prop.tasks[taskIndex].subtasks.push({
+            id: 'sub_' + Date.now() + Math.random().toString(36).substr(2, 5), title: title, completed: false,
+            requiresLink: needsLink, requiresDraft: needsDraft, hyperlink: "", templateText: ""
+        });
+        prop.tasks[taskIndex].completed = false; 
+        await window.savePropertyData(prop);
+    }
+
+    window.toggleSubtask = async function(taskIndex, subtaskIndex, isCompleted) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        prop.tasks[taskIndex].subtasks[subtaskIndex].completed = isCompleted;
+        
+        const allDone = prop.tasks[taskIndex].subtasks.every(s => s.completed);
+        if (allDone) {
+            prop.tasks[taskIndex].completed = true;
+            const sectionKey = btoa(encodeURIComponent(prop.tasks[taskIndex].phase + "_" + prop.tasks[taskIndex].mainTask)).replace(/=/g, '');
+            if (window.sectionToggleState) window.sectionToggleState[sectionKey] = 'closed';
+        } else prop.tasks[taskIndex].completed = false;
+        
+        await window.savePropertyData(prop);
+    }
+
+    // MULTI-SELECT NOTIFICATIONS ACTIONS
+    window.toggleNotificationSelection = function(id, e) {
+        if (e) e.stopPropagation();
+        if (window.selectedNotifs.has(id)) window.selectedNotifs.delete(id);
+        else window.selectedNotifs.add(id);
+        window.renderNotificationList();
+    }
+
+    window.toggleSelectAllNotifications = function(e) {
+        if (e) e.stopPropagation();
+        if (e.target.checked) window.notificationHistory.forEach(n => window.selectedNotifs.add(n.id));
+        else window.selectedNotifs.clear();
+        window.renderNotificationList();
+    }
+
+    window.deleteNotification = async function(id, e) {
+        if (e) e.stopPropagation();
+        const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+        const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+        firestoreModule.deleteDoc(ref).catch(err=>console.error(err));
+        window.selectedNotifs.delete(id);
+    }
+
+    window.deleteSelectedNotifications = async function() {
+        const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+        window.selectedNotifs.forEach(id => {
+            const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+            firestoreModule.deleteDoc(ref).catch(err=>console.error(err));
+        });
+        window.selectedNotifs.clear();
+    }
+
+    window.markSelectedNotificationsRead = async function() {
+        const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+        window.selectedNotifs.forEach(id => {
+            const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+            firestoreModule.updateDoc(ref, { read: true }).catch(err=>console.error(err));
+        });
+        window.selectedNotifs.clear();
     }
 
     // --- 6. CLOUD FIREBASE SYNC ENGINE (DYNAMIC IMPORT) ---
