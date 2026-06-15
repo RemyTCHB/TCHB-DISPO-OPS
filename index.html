@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- LINK THE MANIFEST TO TURN THIS INTO A MOBILE APP -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0b0f19">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -32,12 +31,7 @@
   </script>
   
   <style>
-    /* Added overflow-y: scroll to permanently reserve scrollbar space and prevent layout shifts */
     body { background-color: #0b0f19; color: #f3f4f6; overflow-x: hidden; overflow-y: scroll; }
-
-    /* ========================================= */
-    /* CUSTOM CURSOR & GLOW STYLES               */
-    /* ========================================= */
     body, a, button, input, select, [onclick], .cursor-pointer, .cursor-not-allowed, label { cursor: none !important; }
     
     #mouseGlow {
@@ -57,16 +51,11 @@
     #cursor-ring { position: fixed; top: 0; left: 0; width: 36px; height: 36px; border: 1.5px solid rgba(79, 70, 229, 0.6); border-radius: 50%; pointer-events: none; z-index: 999998; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s; opacity: 0; }
     
     body.mouse-active #cursor-dot, body.mouse-active #cursor-ring { opacity: 1; }
-    
     body.cursor-hover #cursor-ring { width: 56px; height: 56px; background-color: rgba(220, 38, 38, 0.1); border-color: rgba(220, 38, 38, 0.8); }
     body.cursor-hover #cursor-dot { transform: translate(-50%, -50%) scale(1.5); background: #10b981; }
-    
     body.cursor-locked #cursor-ring { width: 44px; height: 44px; background-color: rgba(220, 38, 38, 0.1); border-color: rgba(220, 38, 38, 0.8); border-style: dashed; }
     body.cursor-locked #cursor-dot { transform: translate(-50%, -50%) scale(1.2); background: #dc2626; }
 
-    /* ========================================= */
-    /* UI UTILITIES & ANIMATIONS                 */
-    /* ========================================= */
     .gate-unlocked #secureGate { display: none !important; }
     .hidden-module { display: none !important; }
 
@@ -79,9 +68,7 @@
       70% { transform: scale(1.15) rotate(15deg); }
       100% { transform: scale(1) rotate(0deg); }
     }
-    .animate-jelly-pop {
-      animation: jelly-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+    .animate-jelly-pop { animation: jelly-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
     @keyframes rocket-up {
       0% { transform: translateY(0) scale(1); opacity: 1; }
@@ -89,9 +76,7 @@
       41% { transform: translateY(40px) scale(0.5); opacity: 0; }
       100% { transform: translateY(0) scale(1); opacity: 1; }
     }
-    .animate-rocket-up {
-      animation: rocket-up 0.6s cubic-bezier(0.5, 0, 0.2, 1);
-    }
+    .animate-rocket-up { animation: rocket-up 0.6s cubic-bezier(0.5, 0, 0.2, 1); }
 
     .glass-card {
         background: rgba(17, 24, 39, 0.75);
@@ -101,7 +86,6 @@
         box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
     }
     
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: #0b0f19; }
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
@@ -113,7 +97,6 @@
 </head>
 <body class="font-sans antialiased relative selection:bg-brand-crimson selection:text-white capitalize">
 
-  <!-- TAILWIND SAFELIST -->
   <div class="hidden bg-brand-crimson bg-brand-crimson/20 border-brand-crimson border-brand-crimson/30 text-brand-crimson shadow-[0_0_15px_rgba(220,38,38,0.4)] group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] bg-brand-purple bg-brand-purple/20 border-brand-purple border-brand-purple/30 text-brand-purple shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] bg-brand-emerald bg-brand-emerald/20 border-brand-emerald border-brand-emerald/30 border-brand-emerald/50 text-brand-emerald text-gray-900 shadow-[0_0_15px_rgba(16,185,129,0.4)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] bg-brand-cyan bg-brand-cyan/20 border-brand-cyan border-brand-cyan/30 border-brand-cyan/50 text-brand-cyan shadow-[0_0_15px_rgba(6,182,212,0.4)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.2)] bg-brand-gold bg-brand-gold/20 border-brand-gold border-brand-gold/30 border-brand-gold/50 text-brand-gold bg-pink-500/20 text-pink-400 border-pink-500/50"></div>
 
   <!-- FOREGROUND PUSH TOAST -->
@@ -2150,7 +2133,14 @@
             const appModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
             const authModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
             const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-            const messagingModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js");
+            
+            // Isolate messaging so a tracking reset doesn't crash the whole login screen!
+            let messagingModule = null;
+            try {
+                messagingModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js");
+            } catch (err) {
+                console.warn("Push messaging blocked by browser:", err);
+            }
 
             const app = appModule.initializeApp(firebaseConfig);
             firebaseAuth = authModule.getAuth(app);
@@ -2162,34 +2152,36 @@
             window.firebaseSignInWithPopup = authModule.signInWithPopup;
             window.firebaseSignOut = authModule.signOut;
 
-            // Initialize FCM for foreground pushes
+            // Initialize FCM for foreground pushes safely
             let messaging = null;
-            try {
-                messaging = messagingModule.getMessaging(app);
-                messagingModule.onMessage(messaging, (payload) => {
-                    const toast = document.getElementById('pushToast');
-                    document.getElementById('pushToastTitle').innerText = payload.notification.title;
-                    document.getElementById('pushToastBody').innerText = payload.notification.body;
-                    toast.classList.remove('hidden');
-                    
-                    setTimeout(() => toast.classList.remove('translate-x-[150%]'), 50);
-                    setTimeout(() => { toast.classList.add('translate-x-[150%]'); }, 6000);
-                });
-            } catch (err) {
-                console.warn("Messaging not supported on this environment", err);
+            if (messagingModule) {
+                try {
+                    messaging = messagingModule.getMessaging(app);
+                    messagingModule.onMessage(messaging, (payload) => {
+                        const toast = document.getElementById('pushToast');
+                        document.getElementById('pushToastTitle').innerText = payload.notification.title;
+                        document.getElementById('pushToastBody').innerText = payload.notification.body;
+                        toast.classList.remove('hidden');
+                        
+                        setTimeout(() => toast.classList.remove('translate-x-[150%]'), 50);
+                        setTimeout(() => { toast.classList.add('translate-x-[150%]'); }, 6000);
+                    });
+                } catch (err) {
+                    console.warn("Messaging not supported on this environment", err);
+                }
             }
 
             // Function to request VAPID token (UPDATED FOR EXPLICIT SW REGISTRATION)
             window.requestPushToken = async function() {
-                if(!messaging) return null;
+                if(!messaging || !messagingModule) return null;
                 try {
-                    // 1. Explicitly register the Service Worker first
                     const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
                     
-                    // 2. Request permission from the user
+                    // NEW LINE: Force the browser to bypass its cache and aggressively update the Service Worker!
+                    await registration.update();
+                    
                     const permission = await Notification.requestPermission();
                     if (permission === 'granted') {
-                        // 3. Get the token using our specific Service Worker registration
                         const token = await messagingModule.getToken(messaging, { 
                             vapidKey: "BAOBgrEDGG_WLKRjNEXU_L2_kHZrWTVFGUxN5gm7Udkkh9p0l2Tc8sTZhErN_dZmpxD-EzjEnNfhYX7R3XHrRhw",
                             serviceWorkerRegistration: registration
@@ -2428,6 +2420,11 @@
             
         } catch (e) {
             console.error("Firebase dynamic import failed:", e);
+            const errorMsg = document.getElementById('gateErrorMessage');
+            if (errorMsg) {
+                errorMsg.innerHTML = "System Error: " + e.message + "<br/><br/>Try refreshing the page or checking your internet connection.";
+                errorMsg.classList.remove('hidden');
+            }
             initLocalApp();
         }
     }
