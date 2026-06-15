@@ -103,7 +103,7 @@
 </head>
 <body class="font-sans antialiased relative selection:bg-brand-crimson selection:text-white capitalize">
 
-  <div class="hidden bg-brand-crimson bg-brand-crimson/20 border-brand-crimson border-brand-crimson/30 text-brand-crimson shadow-[0_0_15px_rgba(220,38,38,0.4)] group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] bg-brand-purple bg-brand-purple/20 border-brand-purple border-brand-purple/30 text-brand-purple shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] bg-brand-emerald bg-brand-emerald/20 border-brand-emerald border-brand-emerald/30 border-brand-emerald/50 text-brand-emerald text-gray-900 shadow-[0_0_15px_rgba(16,185,129,0.4)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] bg-brand-cyan bg-brand-cyan/20 border-brand-cyan border-brand-cyan/30 border-brand-cyan/50 text-brand-cyan shadow-[0_0_15px_rgba(6,182,212,0.4)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.2)] bg-brand-gold bg-brand-gold/20 border-brand-gold border-brand-gold/30 border-brand-gold/50 text-brand-gold bg-pink-500/20 text-pink-400 border-pink-500/50 bg-red-400/10 text-red-400 border-red-400/50 bg-green-400/10 text-green-400 border-green-400/50"></div>
+  <div class="hidden bg-brand-crimson bg-brand-crimson/20 border-brand-crimson border-brand-crimson/30 text-brand-crimson shadow-[0_0_15px_rgba(220,38,38,0.4)] group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] bg-brand-purple bg-brand-purple/20 border-brand-purple border-brand-purple/30 text-brand-purple shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] bg-brand-emerald bg-brand-emerald/20 border-brand-emerald border-brand-emerald/30 border-brand-emerald/50 text-brand-emerald text-gray-900 shadow-[0_0_15px_rgba(16,185,129,0.4)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] bg-brand-cyan bg-brand-cyan/20 border-brand-cyan border-brand-cyan/30 border-brand-cyan/50 text-brand-cyan shadow-[0_0_15px_rgba(6,182,212,0.4)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.2)] bg-brand-gold bg-brand-gold/20 border-brand-gold border-brand-gold/30 border-brand-gold/50 text-brand-gold bg-pink-500/20 text-pink-400 border-pink-500/50 bg-red-400/10 text-red-400 border-red-400/50 bg-green-400/10 text-green-400 border-green-400/50 text-blue-400 border-blue-400/50 bg-blue-400/10 text-yellow-500 border-yellow-500/50 bg-yellow-500/10"></div>
 
   <!-- FOREGROUND PUSH TOAST -->
   <div id="pushToast" class="fixed top-4 right-4 z-[9999] bg-[#0f1423]/95 backdrop-blur-xl border border-brand-emerald rounded-2xl shadow-[0_10px_40px_rgba(16,185,129,0.3)] p-4 hidden transform transition-all duration-500 translate-x-[150%] flex items-start gap-3 w-80 cursor-pointer" onclick="this.classList.add('translate-x-[150%]')">
@@ -281,7 +281,7 @@
                             </div>
                         </div>
 
-                        <!-- SETTINGS PANEL (Nested visually or logically) -->
+                        <!-- SETTINGS PANEL -->
                         <div id="notifSettingsDropdown" class="absolute right-0 top-full mt-5 w-72 sm:w-80 bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[121] overflow-hidden origin-top-right transition-all text-left">
                             <div class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center">
                                 <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-sliders text-brand-cyan"></i> Alert Preferences</span>
@@ -563,6 +563,18 @@
         <div id="propertyChatContainer" class="fixed bottom-6 right-6 z-[105] flex flex-col items-end hidden">
             <!-- Chat Window -->
             <div id="chatWindow" class="bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl w-80 sm:w-[400px] shadow-2xl mb-4 hidden flex-col overflow-hidden transition-all origin-bottom-right relative">
+                
+                <!-- Pins Overlay -->
+                <div id="chatPinsModal" class="hidden absolute inset-0 bg-[#0f1423]/95 backdrop-blur-md z-20 flex-col transition-all">
+                    <div class="bg-gray-800/90 p-3 border-b border-gray-700 flex justify-between items-center">
+                        <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-thumbtack text-brand-gold"></i> Pinned Messages</span>
+                        <button onclick="window.toggleChatPins()" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-times"></i></button>
+                    </div>
+                    <div id="chatPinsList" class="p-4 flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-3">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
                 <!-- Attachments/Clipboard Overlay -->
                 <div id="chatAttachmentsModal" class="hidden absolute inset-0 bg-[#0f1423]/95 backdrop-blur-md z-20 flex-col transition-all">
                     <div class="bg-gray-800/90 p-3 border-b border-gray-700 flex justify-between items-center">
@@ -582,16 +594,19 @@
                         </span>
                         <span id="chatWindowAddress" class="text-[10px] text-brand-emerald font-medium mt-0.5 truncate w-full pr-2"></span>
                     </div>
-                    <div class="flex items-center gap-3 mt-0.5">
+                    <div class="flex items-center gap-3 mt-0.5 shrink-0">
+                        <button onclick="window.toggleChatPins()" class="text-brand-gold hover:text-yellow-400 cursor-pointer" title="Pinned Messages"><i class="fa-solid fa-thumbtack"></i></button>
+                        <button onclick="window.toggleChatSearch()" class="text-gray-400 hover:text-white cursor-pointer" title="Search"><i class="fa-solid fa-search"></i></button>
                         <button onclick="window.toggleChatAttachments()" class="text-brand-cyan hover:text-cyan-400 cursor-pointer" title="View Links & Files"><i class="fa-solid fa-clipboard"></i></button>
-                        <button onclick="window.toggleChat()" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-times"></i></button>
+                        <button onclick="window.toggleChat()" class="text-gray-400 hover:text-white cursor-pointer ml-1"><i class="fa-solid fa-times"></i></button>
                     </div>
                 </div>
                 
                 <!-- Search Bar -->
-                <div class="bg-gray-900/50 p-2 border-b border-gray-800 flex items-center gap-2">
+                <div id="chatSearchContainer" class="hidden bg-gray-900/50 p-2 border-b border-gray-800 items-center gap-2">
                     <i class="fa-solid fa-search text-gray-500 text-[10px] pl-2"></i>
                     <input type="text" id="chatSearchInput" class="flex-1 bg-transparent border-none text-[10px] text-white focus:outline-none placeholder-gray-500" placeholder="Search discussion..." oninput="window.renderChatMessages(propertiesData.find(p => p.id === activePropertyId))">
+                    <button onclick="window.toggleChatSearch()" class="text-gray-500 hover:text-gray-300 pr-2"><i class="fa-solid fa-times text-[10px]"></i></button>
                 </div>
 
                 <div id="chatMessages" class="p-4 h-80 overflow-y-auto flex flex-col gap-3 custom-scrollbar scroll-smooth">
@@ -621,8 +636,8 @@
     <div id="tab-sop" class="flex-1 hidden space-y-6 pb-12">
         <div class="max-w-4xl mx-auto mt-4">
             
-            <!-- Strategy Navigation Tabs (Reordered + Removed Sticky) -->
-            <div class="flex bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 overflow-x-auto max-w-fit mx-auto mb-10 transition-all">
+            <!-- Strategy Navigation Tabs (Reordered + Sticky Restored) -->
+            <div class="flex bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 overflow-x-auto max-w-fit mx-auto mb-10 sticky top-[250px] md:top-[100px] z-[90] backdrop-blur-xl bg-[#0b0f19]/95 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] transition-all">
                 <button onclick="window.renderSOPTimeline('Wholesale')" id="sopPill_Wholesale" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md">Wholesale SOP</button>
                 <button onclick="window.renderSOPTimeline('Novation')" id="sopPill_Novation" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center gap-2 whitespace-nowrap text-gray-300 hover:text-white">Novation SOP</button>
                 <button onclick="window.renderSOPTimeline('Creative')" id="sopPill_Creative" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center gap-2 whitespace-nowrap text-gray-300 hover:text-white">Creative SOP</button>
@@ -667,6 +682,7 @@
     let firebaseRemovePropertyData = null;
     
     window.isChatOpen = false;
+    window.isChatSearchOpen = false;
     window.pendingCSVContent = null;
     window.currentDashboardStrategy = "All";
     window.currentDashboardSort = "edited_desc";
@@ -946,6 +962,15 @@
              .replace(/'/g, "&#039;");
     }
 
+    function getItemFromKey(prop, itemKey) {
+        const parts = itemKey.split('_');
+        const tIdx = parseInt(parts[0]);
+        if (parts.length > 1) {
+            return prop.tasks[tIdx].subtasks[parseInt(parts[1])];
+        }
+        return prop.tasks[tIdx];
+    }
+
     function updateChatBadge(prop) {
         const badge = document.getElementById('chatUnreadBadge');
         if (!badge || !prop) return;
@@ -957,7 +982,7 @@
         const unreadCount = (prop.comments || []).filter(c => c.timestamp > lastRead && c.author.toLowerCase() !== myPrefix).length;
         
         if (unreadCount > 0 && !window.isChatOpen) {
-            badge.innerText = unreadCount; // Endless count
+            badge.innerText = unreadCount; 
             badge.classList.remove('hidden');
             badge.classList.add('flex');
             badge.classList.add('animate-bounce');
@@ -1050,11 +1075,14 @@
             }
             if (activeIcons.length > 0) {
                 onlineCount++;
+                const name = u.email.split('@')[0];
+                const colorClass = getAgentColorClass(name, 'text');
+                
                 htmlStr += `
                     <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-gray-800/40 border border-gray-700/30">
                         <div class="flex items-center gap-2">
                             <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></div>
-                            <span class="text-[10px] font-bold text-gray-300 lowercase tracking-wide truncate max-w-[120px]">${u.email}</span>
+                            <span class="text-[10px] font-bold ${colorClass} capitalize tracking-wide truncate max-w-[120px]">${name}</span>
                         </div>
                         <div class="flex items-center gap-1.5 shrink-0">${activeIcons.join('')}</div>
                     </div>
@@ -1128,7 +1156,7 @@
             document.getElementById('tab-tracker').classList.add('flex');
             document.getElementById('nav-tracker').classList.add(...activeNavClasses.split(' '));
             document.getElementById('nav-tracker').classList.remove('text-gray-300');
-            if(scrollBtn && activePropertyId) { scrollBtn.style.right = '5.5rem'; } // Move next to chat FAB
+            if(scrollBtn && activePropertyId) { scrollBtn.style.right = '5.5rem'; } 
             renderTrackerView();
             updateGlobalAssetSelector();
         } else if (tab === 'sop') {
@@ -1187,6 +1215,14 @@
                 completed: false,
                 isDefault: true
             })) : [];
+            
+            const titleLower = task.title.toLowerCase();
+            const mainLower = task.mainTask.toLowerCase();
+            let reqLink = false;
+            if (mainLower.includes('underwriting') || mainLower.includes('uw') || titleLower.includes('format the data') || titleLower.includes('comps') || titleLower.includes('photos & videos')) {
+                reqLink = true;
+            }
+
             return {
                 id: task.id,
                 phase: task.phase,
@@ -1198,6 +1234,7 @@
                 subtasks: subtasks,
                 templateText: "",
                 hyperlink: "",
+                requiresLink: reqLink,
                 templateLastEditedBy: null,
                 templateLastEditedAt: null
             };
@@ -1568,7 +1605,6 @@
             fab.classList.add('animate-jelly-pop');
         }
 
-        // Toggle open if not open, or leave open if passing a comment ID
         window.isChatOpen = focusCommentId ? true : !window.isChatOpen;
         const chatWin = document.getElementById('chatWindow');
         const scrollBtn = document.getElementById('scrollToTopBtn');
@@ -1583,7 +1619,6 @@
                 if (prop) {
                     const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
                     prop.readBy = prop.readBy || {};
-                    // We must capture lastRead before updating to know where to scroll
                     const lastReadTime = prop.readBy[myPrefix] || 0;
                     
                     prop.readBy[myPrefix] = Date.now();
@@ -1593,13 +1628,95 @@
                 }
             }
             setTimeout(() => {
-                if(!focusCommentId) document.getElementById('chatInput').focus();
+                if(!focusCommentId && !window.isChatSearchOpen) document.getElementById('chatInput').focus();
             }, 100);
         } else {
             chatWin.classList.add('hidden');
             chatWin.classList.remove('flex');
             if (scrollBtn) scrollBtn.style.right = '1.5rem';
+            
+            if(window.isChatSearchOpen) window.toggleChatSearch();
         }
+    }
+
+    window.toggleChatSearch = function() {
+        window.isChatSearchOpen = !window.isChatSearchOpen;
+        const searchContainer = document.getElementById('chatSearchContainer');
+        const searchInput = document.getElementById('chatSearchInput');
+        
+        if(window.isChatSearchOpen) {
+            searchContainer.classList.remove('hidden');
+            searchContainer.classList.add('flex');
+            searchInput.focus();
+        } else {
+            searchContainer.classList.add('hidden');
+            searchContainer.classList.remove('flex');
+            searchInput.value = '';
+            if (activePropertyId) {
+                window.renderChatMessages(propertiesData.find(p => p.id === activePropertyId));
+            }
+        }
+    }
+
+    window.jumpToChatMessage = function(commentId) {
+        const searchInput = document.getElementById('chatSearchInput');
+        if (searchInput) searchInput.value = '';
+        if (window.isChatSearchOpen) window.toggleChatSearch();
+        const pinsModal = document.getElementById('chatPinsModal');
+        if (pinsModal && !pinsModal.classList.contains('hidden')) window.toggleChatPins();
+        
+        if (activePropertyId) {
+            window.renderChatMessages(propertiesData.find(p => p.id === activePropertyId), 0, commentId);
+        }
+    }
+
+    window.togglePinComment = async function(commentId) {
+        if (!activePropertyId) return;
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop || !prop.comments) return;
+        
+        const comment = prop.comments.find(c => c.id === commentId);
+        if (comment) {
+            comment.pinned = !comment.pinned;
+            await window.savePropertyData(prop, true);
+            
+            const pinsModal = document.getElementById('chatPinsModal');
+            if (pinsModal && !pinsModal.classList.contains('hidden')) {
+                window.renderChatPins(prop);
+            }
+        }
+    }
+
+    window.toggleChatPins = function() {
+        const modal = document.getElementById('chatPinsModal');
+        modal.classList.toggle('hidden');
+        modal.classList.toggle('flex');
+        
+        if (!modal.classList.contains('hidden') && activePropertyId) {
+            window.renderChatPins(propertiesData.find(p => p.id === activePropertyId));
+        }
+    }
+
+    window.renderChatPins = function(prop) {
+        const list = document.getElementById('chatPinsList');
+        if (!prop || !list) return;
+
+        const pinnedComments = (prop.comments || []).filter(c => c.pinned);
+        
+        if (pinnedComments.length === 0) {
+            list.innerHTML = `<div class="text-xs text-gray-500 italic text-center mt-6">No pinned messages yet.</div>`;
+            return;
+        }
+
+        list.innerHTML = pinnedComments.map(c => `
+            <div onclick="window.jumpToChatMessage('${c.id}')" class="bg-gray-900/50 p-2.5 rounded-lg border border-gray-700 cursor-pointer hover:bg-gray-800/80 transition-colors">
+                <div class="flex justify-between items-center mb-1 border-b border-gray-800 pb-1">
+                    <span class="text-[9px] font-bold text-gray-400 capitalize">${escapeHtml(c.author)}</span>
+                    <span class="text-[9px] text-gray-500">${formatEST(c.timestamp)}</span>
+                </div>
+                <p class="text-xs text-gray-300 line-clamp-3 whitespace-pre-wrap">${escapeHtml(c.text)}</p>
+            </div>
+        `).join('');
     }
 
     window.toggleChatAttachments = function() {
@@ -1612,23 +1729,32 @@
             const list = document.getElementById('chatAttachmentsList');
             if (!prop || !list) return;
 
-            let htmlStr = '';
+            let items = [];
             prop.tasks.forEach(t => {
+                if(t.hyperlink || t.templateText) items.push({ phase: t.phase, title: t.title, link: t.hyperlink, template: t.templateText });
+                if(t.subtasks) {
+                    t.subtasks.forEach(st => {
+                        if(st.hyperlink || st.templateText) items.push({ phase: t.phase, title: `${t.title} <i class="fa-solid fa-angle-right text-[8px] mx-1"></i> ${st.title}`, link: st.hyperlink, template: st.templateText });
+                    });
+                }
+            });
+
+            let htmlStr = '';
+            items.forEach(item => {
                 let hasItem = false;
                 let itemContent = '';
 
-                if (t.hyperlink) {
+                if (item.link) {
                     hasItem = true;
                     itemContent += `
-                        <a href="${t.hyperlink.startsWith('http') ? t.hyperlink : 'https://'+t.hyperlink}" target="_blank" class="text-brand-cyan hover:underline text-xs break-all block mb-1">
-                            <i class="fa-solid fa-link"></i> ${t.hyperlink}
+                        <a href="${item.link.startsWith('http') ? item.link : 'https://'+item.link}" target="_blank" class="text-brand-cyan hover:underline text-xs break-all block mb-1">
+                            <i class="fa-solid fa-link"></i> ${item.link}
                         </a>`;
                 }
 
-                if (t.templateText) {
-                    // Extract urls using regex
+                if (item.template) {
                     const urlRegex = /(https?:\/\/[^\s]+)/g;
-                    const urls = t.templateText.match(urlRegex);
+                    const urls = item.template.match(urlRegex);
                     if (urls) {
                         hasItem = true;
                         urls.forEach(url => {
@@ -1638,16 +1764,19 @@
                                 </a>`;
                         });
                     }
-                    if (!urls && t.templateText.length > 0) {
+                    if (item.template.length > 0) {
                         hasItem = true;
-                        itemContent += `<div class="text-[10px] text-gray-400 italic">Contains draft text.</div>`;
+                        itemContent += `<div class="text-[10px] text-gray-400 mt-1.5 p-2 bg-gray-950/50 rounded border border-gray-800 line-clamp-4 whitespace-pre-wrap leading-relaxed"><span class="text-brand-purple font-bold block mb-0.5 uppercase tracking-wider text-[8px]">Draft Content</span>${escapeHtml(item.template)}</div>`;
                     }
                 }
 
                 if (hasItem) {
                     htmlStr += `
-                        <div class="bg-gray-900/50 p-2.5 rounded-lg border border-gray-700">
-                            <h5 class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 border-b border-gray-800 pb-1">${t.title}</h5>
+                        <div class="bg-gray-900/50 p-2.5 rounded-lg border border-gray-700 shadow-sm">
+                            <div class="flex flex-col mb-2 border-b border-gray-800 pb-1.5">
+                                <span class="text-[8px] font-bold text-brand-emerald/70 uppercase tracking-widest mb-0.5">${item.phase}</span>
+                                <h5 class="text-[10px] font-bold text-gray-300">${item.title}</h5>
+                            </div>
                             ${itemContent}
                         </div>
                     `;
@@ -1676,7 +1805,8 @@
             id: 'cmt_' + Date.now() + Math.random().toString(36).substr(2, 5),
             text: text,
             author: authorName,
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            pinned: false
         });
 
         prop.readBy = prop.readBy || {};
@@ -1692,26 +1822,27 @@
         
         const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
         
-        if (window.isChatOpen) {
+        if (window.isChatOpen && !window.isChatSearchOpen) {
             prop.readBy = prop.readBy || {};
             prop.readBy[myPrefix] = Date.now();
         }
         updateChatBadge(prop);
 
         const searchInput = document.getElementById('chatSearchInput');
-        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+        const searchTerm = searchInput && window.isChatSearchOpen ? searchInput.value.toLowerCase() : '';
+        const isSearching = window.isChatSearchOpen && searchTerm !== '';
 
         const comments = (prop.comments || []).filter(c => 
             searchTerm === '' || c.text.toLowerCase().includes(searchTerm) || c.author.toLowerCase().includes(searchTerm)
         );
 
         if (comments.length === 0) {
-            container.innerHTML = '<div class="text-center text-xs text-gray-500 mt-10 italic">No messages found.</div>';
+            container.innerHTML = `<div class="text-center text-xs text-gray-500 mt-10 italic">${isSearching ? 'No matching messages.' : 'No messages found.'}</div>`;
             return;
         }
 
         let firstUnreadId = null;
-        if (!focusCommentId && lastReadTime > 0) {
+        if (!focusCommentId && lastReadTime > 0 && !isSearching) {
             for (let c of comments) {
                 if (c.timestamp > lastReadTime && c.author.toLowerCase() !== myPrefix) {
                     firstUnreadId = c.id; break;
@@ -1731,13 +1862,27 @@
             
             let readReceiptHtml = '';
             if (readers.length > 0) {
-                readReceiptHtml = `<div class="text-[9px] text-gray-500 ${isMe ? 'text-right' : 'text-left'} mt-1 flex items-center gap-1 ${isMe ? 'justify-end' : 'justify-start'}"><i class="fa-solid fa-check-double text-brand-cyan/70"></i> Read by: ${readers.join(', ')}</div>`;
+                readReceiptHtml = `<div class="text-[9px] text-gray-500 ${isMe ? 'text-right' : 'text-left'} mt-1 flex items-center gap-1 ${isMe ? 'justify-end' : 'justify-start'} pointer-events-none"><i class="fa-solid fa-check-double text-brand-cyan/70"></i> Read by: ${readers.join(', ')}</div>`;
+            }
+
+            const pinActionHtml = `<button onclick="event.stopPropagation(); window.togglePinComment('${c.id}')" class="mx-2 text-gray-500 hover:text-brand-gold ${c.pinned ? 'text-brand-gold opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity cursor-pointer z-10 relative" title="${c.pinned ? 'Unpin' : 'Pin'} Message"><i class="fa-solid fa-thumbtack text-[9px]"></i></button>`;
+
+            let wrapperClass = `group flex flex-col ${isMe ? 'items-end' : 'items-start'} mb-1 ${isHighlight ? 'highlight-comment' : ''}`;
+            let jumpOnClick = '';
+
+            if (isSearching) {
+                wrapperClass += ' cursor-pointer hover:bg-gray-800/40 p-2 rounded-lg transition-colors';
+                jumpOnClick = `onclick="window.jumpToChatMessage('${c.id}')"`;
             }
 
             return `
-            <div id="chat_msg_${c.id}" class="flex flex-col ${isMe ? 'items-end' : 'items-start'} mb-1 ${isHighlight ? 'highlight-comment' : ''}">
-                <span class="text-[9px] font-bold ${authorColorClass} mb-0.5 px-1">${escapeHtml(c.author)} • ${formatEST(c.timestamp)}</span>
-                <div class="${isMe ? 'bg-brand-emerald/10 border-brand-emerald/30' : 'bg-gray-800/60 border-gray-700/50'} border rounded-xl px-3 py-2 max-w-[90%] shadow-sm">
+            <div id="chat_msg_${c.id}" class="${wrapperClass}" ${jumpOnClick}>
+                <div class="flex items-center w-full ${isMe ? 'justify-end' : 'justify-start'} pointer-events-none">
+                    ${isMe ? pinActionHtml : ''}
+                    <span class="text-[9px] font-bold ${authorColorClass} mb-0.5 px-1">${escapeHtml(c.author)} • ${formatEST(c.timestamp)}</span>
+                    ${!isMe ? pinActionHtml : ''}
+                </div>
+                <div class="${isMe ? 'bg-brand-emerald/10 border-brand-emerald/30' : 'bg-gray-800/60 border-gray-700/50'} border rounded-xl px-3 py-2 max-w-[90%] shadow-sm ${isSearching ? 'pointer-events-none' : ''}">
                     <p class="text-xs text-gray-200 whitespace-pre-wrap">${escapeHtml(c.text)}</p>
                 </div>
                 ${readReceiptHtml}
@@ -1747,9 +1892,9 @@
         setTimeout(() => {
             if (focusCommentId) {
                 document.getElementById('chat_msg_' + focusCommentId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else if (firstUnreadId && searchTerm === '') {
+            } else if (firstUnreadId && !isSearching) {
                 document.getElementById('chat_msg_' + firstUnreadId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else if (searchTerm === '') {
+            } else if (!isSearching) {
                 container.scrollTop = container.scrollHeight;
             }
         }, 100);
@@ -1806,6 +1951,80 @@
 
         const container = document.getElementById('tracker-task-container');
         container.innerHTML = '';
+
+        const buildFeatures = (item, isSubtask, sIdx, tOriginalIndex) => {
+            const itemKey = isSubtask ? `${tOriginalIndex}_${sIdx}` : `${tOriginalIndex}`;
+            
+            let templateActionHtml = '';
+            let templateBoxHtml = '';
+            let linkActionHtml = '';
+            let linkBoxHtml = '';
+
+            // DRAFT / TEMPLATE
+            if (item.title.toLowerCase().includes('draft') || item.requiresDraft) {
+                const isApprovedTask = item.title.toLowerCase().includes('approved');
+                const btnLabel = isApprovedTask ? "Template" : "Draft";
+                const btnIcon = isApprovedTask ? "fa-file-circle-check" : "fa-file-pen";
+                const templateIsOpen = window.sectionToggleState[`template_${itemKey}`] === 'open';
+                
+                templateActionHtml = `
+                    <div class="w-px h-3 bg-gray-700 mx-2 hidden sm:block"></div>
+                    <button onclick="window.toggleItemTemplate('${itemKey}')" class="text-[10px] uppercase tracking-wider font-bold text-brand-cyan/70 hover:text-brand-cyan flex items-center gap-1.5 transition-colors cursor-pointer">
+                        <i class="fa-solid ${btnIcon}"></i> ${btnLabel}
+                    </button>
+                `;
+
+                let saveMetaHtml = '<span class="text-[9px] uppercase tracking-wider text-brand-cyan opacity-50">Saves automatically on blur</span>';
+                if (item.templateLastEditedBy) {
+                    const authorColorClass = getAgentColorClass(item.templateLastEditedBy, 'text');
+                    saveMetaHtml = `<span class="text-[9px] uppercase tracking-wider text-gray-500">Last saved by <span class="${authorColorClass} font-bold">${escapeHtml(item.templateLastEditedBy)}</span> • ${formatEST(item.templateLastEditedAt)}</span>`;
+                }
+
+                templateBoxHtml = `
+                    <div id="templateUI_${itemKey}" class="${templateIsOpen ? 'block' : 'hidden'} mt-2 mb-1 w-full pl-0">
+                        <textarea id="templateInput_${itemKey}" onchange="window.saveItemTemplate('${itemKey}')" class="w-full max-w-3xl h-24 bg-gray-950/50 border border-brand-cyan/30 rounded-lg p-3 text-xs text-gray-300 focus:border-brand-cyan focus:outline-none transition-colors resize-y custom-scrollbar placeholder-gray-600" placeholder="Paste text here...">${escapeHtml(item.templateText || "")}</textarea>
+                        <div class="max-w-3xl flex justify-end mt-1">${saveMetaHtml}</div>
+                    </div>
+                `;
+            }
+
+            // LINK
+            if (item.requiresLink || item.hyperlink) {
+                const linkIsOpen = window.sectionToggleState[`link_${itemKey}`] === 'open';
+                
+                if (item.hyperlink) {
+                    const href = item.hyperlink.startsWith('http') ? item.hyperlink : 'https://'+item.hyperlink;
+                    linkActionHtml = `
+                        <div class="w-px h-3 bg-gray-700 mx-2 hidden sm:block"></div>
+                        <div class="flex items-center gap-1">
+                            <a href="${href}" target="_blank" class="text-[10px] uppercase tracking-wider font-bold text-brand-emerald hover:underline flex items-center gap-1 transition-colors cursor-pointer max-w-[150px] truncate" title="${escapeHtml(item.hyperlink)}">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Link
+                            </a>
+                            <button onclick="window.toggleItemLink('${itemKey}')" class="text-gray-500 hover:text-brand-emerald px-1.5 cursor-pointer" title="Edit Link"><i class="fa-solid fa-pen text-[9px]"></i></button>
+                        </div>
+                    `;
+                } else {
+                    linkActionHtml = `
+                        <div class="w-px h-3 bg-gray-700 mx-2 hidden sm:block"></div>
+                        <button onclick="window.toggleItemLink('${itemKey}')" class="text-[10px] uppercase tracking-wider font-bold text-brand-emerald/70 hover:text-brand-emerald flex items-center gap-1.5 transition-colors cursor-pointer">
+                            <i class="fa-solid fa-link"></i> + Link
+                        </button>
+                    `;
+                }
+
+                linkBoxHtml = `
+                    <div id="linkUI_${itemKey}" class="${linkIsOpen ? 'flex' : 'hidden'} mt-2 mb-1 w-full flex-col gap-2 pl-0">
+                        <div class="flex items-center gap-2 max-w-lg">
+                            <input type="text" id="linkInput_${itemKey}" value="${escapeHtml(item.hyperlink || "")}" class="flex-1 bg-gray-950/50 border border-brand-emerald/30 rounded-lg p-2 text-xs text-gray-300 focus:border-brand-emerald focus:outline-none transition-colors placeholder-gray-600" placeholder="https://..." onkeydown="if(event.key === 'Enter') window.saveItemLink('${itemKey}')">
+                            <button onclick="window.saveItemLink('${itemKey}')" class="bg-brand-emerald hover:bg-emerald-400 text-gray-900 px-3 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-md">Save</button>
+                            <button onclick="window.clearItemLink('${itemKey}')" class="text-gray-500 hover:text-red-400 px-2 py-2 cursor-pointer transition-colors" title="Remove Link"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return { templateActionHtml, templateBoxHtml, linkActionHtml, linkBoxHtml };
+        };
 
         for (const [phaseName, mainTasksMap] of Object.entries(structure)) {
             const ui = getPhaseUI(phaseName);
@@ -1880,11 +2099,14 @@
                     const weightColor = t.completed ? 'text-brand-emerald bg-brand-emerald/10 border-brand-emerald/30' : 'text-brand-crimson bg-gray-900 border-gray-700';
                     const paddingAdjust = "pl-6 sm:pl-8";
 
+                    const tFeat = buildFeatures(t, false, null, t.originalIndex);
+
                     let subtasksHtml = '';
                     if (t.subtasks && t.subtasks.length > 0) {
                         subtasksHtml = t.subtasks.map((st, sIdx) => {
                             const subWeightBadge = t.isSOW ? `<span class="text-[9px] font-bold text-brand-cyan bg-brand-cyan/10 border border-brand-cyan/30 px-1.5 py-0.5 rounded shadow-sm">+${(t.weight / t.subtasks.length).toFixed(1).replace(/\.0$/, '')}%</span>` : '';
                             const isDefaultSub = st.isDefault || (t.id === 'p3_6' && st.title.includes('Boost the Post'));
+                            const sFeat = buildFeatures(st, true, sIdx, t.originalIndex);
 
                             return `
                             <div class="flex flex-col gap-2 pl-8 sm:pl-14 py-2 group/sub border-b border-gray-800/30 last:border-0" id="sub_row_${t.originalIndex}_${sIdx}">
@@ -1892,7 +2114,17 @@
                                 <div id="sub_view_${t.originalIndex}_${sIdx}" class="flex items-start justify-between gap-3">
                                     <div class="flex items-start gap-3 flex-1">
                                         <input type="checkbox" ${st.completed ? 'checked' : ''} onchange="window.toggleSubtask(${t.originalIndex}, ${sIdx}, this.checked)" class="w-4 h-4 mt-0.5 rounded accent-brand-purple bg-gray-900 border-gray-600 focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer shrink-0">
-                                        <span class="text-xs font-medium ${st.completed ? 'text-gray-500 line-through' : 'text-gray-300'} leading-relaxed break-words whitespace-pre-wrap">${escapeHtml(st.title)}</span>
+                                        <div class="flex-1">
+                                            <span class="text-xs font-medium ${st.completed ? 'text-gray-500 line-through' : 'text-gray-300'} leading-relaxed break-words whitespace-pre-wrap">${escapeHtml(st.title)}</span>
+                                            <div class="mt-1 flex items-center flex-wrap gap-y-2">
+                                                ${sFeat.linkActionHtml}
+                                                ${sFeat.templateActionHtml}
+                                            </div>
+                                            <div class="pl-0 mt-1">
+                                                ${sFeat.linkBoxHtml}
+                                                ${sFeat.templateBoxHtml}
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="flex items-center gap-3 shrink-0">
                                         ${subWeightBadge}
@@ -1919,72 +2151,16 @@
                         <div id="addSubtaskUI_${t.originalIndex}" class="hidden pl-8 sm:pl-14 mt-1">
                             <div class="flex flex-col gap-2 max-w-md bg-gray-900/50 p-3 rounded-lg border border-brand-purple/30">
                                 <textarea id="newSubtaskInput_${t.originalIndex}" placeholder="Describe subtask..." class="w-full bg-gray-950 border border-gray-700 rounded p-2 text-xs text-white focus:outline-none focus:border-brand-purple transition-colors resize-y min-h-[50px] custom-scrollbar"></textarea>
-                                <div class="flex justify-end gap-2">
-                                    <button onclick="window.toggleAddSubtaskUI(${t.originalIndex})" class="text-xs font-bold text-gray-400 hover:text-white px-3 py-1.5 transition-colors">Cancel</button>
-                                    <button onclick="window.confirmAddSubtask(${t.originalIndex})" class="bg-brand-purple hover:bg-indigo-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-colors shadow-md cursor-pointer">Save</button>
+                                <div class="flex items-center justify-between mt-1">
+                                    <div class="flex items-center gap-3">
+                                        <label class="text-[10px] text-gray-400 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="newSubtaskLink_${t.originalIndex}" class="accent-brand-emerald"> Add Link</label>
+                                        <label class="text-[10px] text-gray-400 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="newSubtaskDraft_${t.originalIndex}" class="accent-brand-cyan"> Add Draft</label>
+                                    </div>
+                                    <div class="flex justify-end gap-2">
+                                        <button onclick="window.toggleAddSubtaskUI(${t.originalIndex})" class="text-xs font-bold text-gray-400 hover:text-white px-3 py-1.5 transition-colors">Cancel</button>
+                                        <button onclick="window.confirmAddSubtask(${t.originalIndex})" class="bg-brand-purple hover:bg-indigo-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-colors shadow-md cursor-pointer">Save</button>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    `;
-
-                    let templateActionHtml = '';
-                    let templateBoxHtml = '';
-                    
-                    if (t.title.toLowerCase().includes('draft')) {
-                        const isApprovedTask = t.title.toLowerCase().includes('approved');
-                        const btnLabel = isApprovedTask ? "Template" : "Draft";
-                        const btnIcon = isApprovedTask ? "fa-file-circle-check" : "fa-file-pen";
-
-                        templateActionHtml = `
-                            <div class="w-px h-3 bg-gray-700 mx-3"></div>
-                            <button onclick="window.toggleTaskTemplate(${t.originalIndex})" class="text-[10px] uppercase tracking-wider font-bold text-brand-cyan/70 hover:text-brand-cyan flex items-center gap-1.5 transition-colors cursor-pointer">
-                                <i class="fa-solid ${btnIcon}"></i> ${btnLabel}
-                            </button>
-                        `;
-                        
-                        const templateIsOpen = window.sectionToggleState[`template_${t.originalIndex}`] === 'open';
-                        
-                        let saveMetaHtml = '<span class="text-[9px] uppercase tracking-wider text-brand-cyan opacity-50">Saves automatically on blur</span>';
-                        if (t.templateLastEditedBy) {
-                            const authorColorClass = getAgentColorClass(t.templateLastEditedBy, 'text');
-                            saveMetaHtml = `<span class="text-[9px] uppercase tracking-wider text-gray-500">Last saved by <span class="${authorColorClass} font-bold">${escapeHtml(t.templateLastEditedBy)}</span> • ${formatEST(t.templateLastEditedAt)}</span>`;
-                        }
-
-                        templateBoxHtml = `
-                            <div id="taskTemplateUI_${t.originalIndex}" class="${templateIsOpen ? 'block' : 'hidden'} pl-8 sm:pl-14 mt-3 mb-1 pr-4 w-full">
-                                <textarea id="taskTemplateInput_${t.originalIndex}" onchange="window.saveTaskTemplate(${t.originalIndex})" class="w-full max-w-3xl h-24 bg-gray-950/50 border border-brand-cyan/30 rounded-lg p-3 text-xs text-gray-300 focus:border-brand-cyan focus:outline-none transition-colors resize-y custom-scrollbar placeholder-gray-600" placeholder="Paste generated text blast, FB draft, or final approved copy here...">${escapeHtml(t.templateText || "")}</textarea>
-                                <div class="max-w-3xl flex justify-end mt-1">
-                                    ${saveMetaHtml}
-                                </div>
-                            </div>
-                        `;
-                    }
-
-                    // Hyperlink Feature UI
-                    const linkIsOpen = window.sectionToggleState[`link_${t.originalIndex}`] === 'open';
-                    const linkActionHtml = `
-                        <div class="w-px h-3 bg-gray-700 mx-3"></div>
-                        <button onclick="window.toggleTaskLink(${t.originalIndex})" class="text-[10px] uppercase tracking-wider font-bold text-brand-emerald/70 hover:text-brand-emerald flex items-center gap-1.5 transition-colors cursor-pointer">
-                            <i class="fa-solid fa-link"></i> Link
-                        </button>
-                    `;
-                    
-                    let activeLinkHtml = '';
-                    if (t.hyperlink) {
-                        activeLinkHtml = `
-                        <div class="mt-2 text-xs flex items-center gap-3 bg-gray-900/50 px-3 py-1.5 rounded-lg w-fit border border-gray-700">
-                            <a href="${t.hyperlink.startsWith('http') ? t.hyperlink : 'https://'+t.hyperlink}" target="_blank" class="text-brand-emerald hover:underline break-all flex items-center gap-1.5">
-                                <i class="fa-solid fa-arrow-up-right-from-square"></i> ${escapeHtml(t.hyperlink)}
-                            </a>
-                        </div>`;
-                    }
-
-                    const linkBoxHtml = `
-                        <div id="taskLinkUI_${t.originalIndex}" class="${linkIsOpen ? 'flex' : 'hidden'} pl-8 sm:pl-14 mt-3 mb-1 pr-4 w-full flex-col gap-2">
-                            <div class="flex items-center gap-2 max-w-lg">
-                                <input type="text" id="taskLinkInput_${t.originalIndex}" value="${escapeHtml(t.hyperlink || "")}" class="flex-1 bg-gray-950/50 border border-brand-emerald/30 rounded-lg p-2 text-xs text-gray-300 focus:border-brand-emerald focus:outline-none transition-colors placeholder-gray-600" placeholder="https://..." onkeydown="if(event.key === 'Enter') window.saveTaskLink(${t.originalIndex})">
-                                <button onclick="window.saveTaskLink(${t.originalIndex})" class="bg-brand-emerald hover:bg-emerald-400 text-gray-900 px-3 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-md">Save</button>
-                                <button onclick="window.clearTaskLink(${t.originalIndex})" class="text-gray-500 hover:text-red-400 px-2 py-2 cursor-pointer transition-colors" title="Remove Link"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>
                     `;
@@ -2001,10 +2177,9 @@
                                         <button onclick="window.toggleAddSubtaskUI(${t.originalIndex})" class="text-[10px] uppercase tracking-wider font-bold text-brand-purple/70 hover:text-brand-purple flex items-center gap-1 transition-colors cursor-pointer">
                                             <i class="fa-solid fa-plus"></i> Add Subtask
                                         </button>
-                                        ${linkActionHtml}
-                                        ${templateActionHtml}
+                                        ${tFeat.linkActionHtml}
+                                        ${tFeat.templateActionHtml}
                                     </div>
-                                    ${activeLinkHtml}
                                 </div>
                             </div>
                             <div class="flex items-center gap-3 shrink-0">
@@ -2014,8 +2189,10 @@
                                 <span class="${weightColor} text-xs font-black px-2 py-1 rounded w-12 text-center transition-colors">+${t.weight}%</span>
                             </div>
                         </div>
-                        ${linkBoxHtml}
-                        ${templateBoxHtml}
+                        <div class="pl-8 sm:pl-14">
+                            ${tFeat.linkBoxHtml}
+                            ${tFeat.templateBoxHtml}
+                        </div>
                         ${subtasksHtml}
                         ${addSubtaskInputHtml}
                     `;
@@ -2149,65 +2326,69 @@
         container.innerHTML = navHtml + timelineHtml;
     }
 
-    // Task Specific Add-ons
-    window.toggleTaskTemplate = function(taskIndex) {
-        const ui = document.getElementById(`taskTemplateUI_${taskIndex}`);
+    // Generalized Feature Toggles (Tasks & Subtasks)
+    window.toggleItemTemplate = function(itemKey) {
+        const ui = document.getElementById(`templateUI_${itemKey}`);
         if (!window.sectionToggleState) window.sectionToggleState = {};
         
         if (ui.classList.contains('hidden')) {
             ui.classList.remove('hidden');
-            window.sectionToggleState[`template_${taskIndex}`] = 'open';
-            document.getElementById(`taskTemplateInput_${taskIndex}`).focus();
+            window.sectionToggleState[`template_${itemKey}`] = 'open';
+            document.getElementById(`templateInput_${itemKey}`).focus();
         } else {
             ui.classList.add('hidden');
-            window.sectionToggleState[`template_${taskIndex}`] = 'closed';
+            window.sectionToggleState[`template_${itemKey}`] = 'closed';
         }
     }
 
-    window.saveTaskTemplate = async function(taskIndex) {
+    window.saveItemTemplate = async function(itemKey) {
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
         
-        const textVal = document.getElementById(`taskTemplateInput_${taskIndex}`).value;
-        prop.tasks[taskIndex].templateText = textVal;
-        
-        prop.tasks[taskIndex].templateLastEditedBy = currentUser && currentUser.email ? currentUser.email.split('@')[0] : "Agent";
-        prop.tasks[taskIndex].templateLastEditedAt = Date.now();
+        const target = getItemFromKey(prop, itemKey);
+        target.templateText = document.getElementById(`templateInput_${itemKey}`).value;
+        target.templateLastEditedBy = currentUser && currentUser.email ? currentUser.email.split('@')[0] : "Agent";
+        target.templateLastEditedAt = Date.now();
         
         await window.savePropertyData(prop); 
     }
 
-    window.toggleTaskLink = function(taskIndex) {
-        const ui = document.getElementById(`taskLinkUI_${taskIndex}`);
+    window.toggleItemLink = function(itemKey) {
+        const ui = document.getElementById(`linkUI_${itemKey}`);
         if (!window.sectionToggleState) window.sectionToggleState = {};
         
         if (ui.classList.contains('hidden')) {
             ui.classList.remove('hidden');
             ui.classList.add('flex');
-            window.sectionToggleState[`link_${taskIndex}`] = 'open';
-            document.getElementById(`taskLinkInput_${taskIndex}`).focus();
+            window.sectionToggleState[`link_${itemKey}`] = 'open';
+            document.getElementById(`linkInput_${itemKey}`).focus();
         } else {
             ui.classList.add('hidden');
             ui.classList.remove('flex');
-            window.sectionToggleState[`link_${taskIndex}`] = 'closed';
+            window.sectionToggleState[`link_${itemKey}`] = 'closed';
         }
     }
 
-    window.saveTaskLink = async function(taskIndex) {
+    window.saveItemLink = async function(itemKey) {
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
-        const val = document.getElementById(`taskLinkInput_${taskIndex}`).value.trim();
-        prop.tasks[taskIndex].hyperlink = val;
+        
+        const target = getItemFromKey(prop, itemKey);
+        target.hyperlink = document.getElementById(`linkInput_${itemKey}`).value.trim();
+        
         await window.savePropertyData(prop);
-        window.toggleTaskLink(taskIndex);
+        window.toggleItemLink(itemKey);
     }
 
-    window.clearTaskLink = async function(taskIndex) {
+    window.clearItemLink = async function(itemKey) {
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
-        prop.tasks[taskIndex].hyperlink = "";
+        
+        const target = getItemFromKey(prop, itemKey);
+        target.hyperlink = "";
+        
         await window.savePropertyData(prop);
-        window.toggleTaskLink(taskIndex);
+        window.toggleItemLink(itemKey);
     }
 
     let pendingSOWRemove = null;
@@ -2309,12 +2490,17 @@
     window.toggleAddSubtaskUI = function(taskIndex) {
         const ui = document.getElementById(`addSubtaskUI_${taskIndex}`);
         const input = document.getElementById(`newSubtaskInput_${taskIndex}`);
+        const linkCheck = document.getElementById(`newSubtaskLink_${taskIndex}`);
+        const draftCheck = document.getElementById(`newSubtaskDraft_${taskIndex}`);
+
         if (ui.classList.contains('hidden')) {
             ui.classList.remove('hidden');
             input.focus();
         } else {
             ui.classList.add('hidden');
             input.value = '';
+            if(linkCheck) linkCheck.checked = false;
+            if(draftCheck) draftCheck.checked = false;
         }
     }
 
@@ -2322,13 +2508,22 @@
         const input = document.getElementById(`newSubtaskInput_${taskIndex}`);
         const title = input.value.trim();
         if (!title) return;
+        
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
+        
+        const needsLink = document.getElementById(`newSubtaskLink_${taskIndex}`)?.checked || false;
+        const needsDraft = document.getElementById(`newSubtaskDraft_${taskIndex}`)?.checked || false;
+
         if (!prop.tasks[taskIndex].subtasks) prop.tasks[taskIndex].subtasks = [];
         prop.tasks[taskIndex].subtasks.push({
             id: 'sub_' + Date.now() + Math.random().toString(36).substr(2, 5),
             title: title,
-            completed: false
+            completed: false,
+            requiresLink: needsLink,
+            requiresDraft: needsDraft,
+            hyperlink: "",
+            templateText: ""
         });
         
         prop.tasks[taskIndex].completed = false; 
