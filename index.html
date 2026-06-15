@@ -106,29 +106,23 @@
 
     /* Fix for iOS bottom bar covering fixed elements */
     .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+    .pt-safe-top { padding-top: env(safe-area-inset-top); }
   </style>
 </head>
 <body class="font-sans antialiased relative selection:bg-brand-crimson selection:text-white capitalize">
 
-  <div class="hidden bg-brand-crimson bg-brand-crimson/20 border-brand-crimson border-brand-crimson/30 text-brand-crimson shadow-[0_0_15px_rgba(220,38,38,0.4)] group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] bg-brand-purple bg-brand-purple/20 border-brand-purple border-brand-purple/30 text-brand-purple shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] bg-brand-emerald bg-brand-emerald/20 border-brand-emerald border-brand-emerald/30 border-brand-emerald/50 text-brand-emerald text-gray-900 shadow-[0_0_15px_rgba(16,185,129,0.4)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] bg-brand-cyan bg-brand-cyan/20 border-brand-cyan border-brand-cyan/30 border-brand-cyan/50 text-brand-cyan shadow-[0_0_15px_rgba(6,182,212,0.4)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.2)] bg-brand-gold bg-brand-gold/20 border-brand-gold border-brand-gold/30 border-brand-gold/50 text-brand-gold bg-pink-500/20 text-pink-400 border-pink-500/50 bg-red-400/10 text-red-400 border-red-400/50 bg-green-400/10 text-green-400 border-green-400/50 text-blue-400 border-blue-400/50 bg-blue-400/10 text-yellow-500 border-yellow-500/50 bg-yellow-500/10"></div>
+  <div class="hidden bg-brand-crimson bg-brand-crimson/20 border-brand-crimson border-brand-crimson/30 text-brand-crimson shadow-[0_0_15px_rgba(220,38,38,0.4)] group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] bg-brand-purple bg-brand-purple/20 border-brand-purple border-brand-purple/30 text-brand-purple shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] bg-brand-emerald bg-brand-emerald/20 border-brand-emerald border-brand-emerald/30 border-brand-emerald/50 text-brand-emerald text-gray-900 shadow-[0_0_15px_rgba(16,185,129,0.4)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] bg-brand-cyan bg-brand-cyan/20 border-brand-cyan border-brand-cyan/30 border-brand-cyan/50 text-brand-cyan shadow-[0_0_15px_rgba(6,182,212,0.4)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.2)] bg-brand-gold bg-brand-gold/20 border-brand-gold border-brand-gold/30 border-brand-gold/50 text-brand-gold bg-pink-500/20 text-pink-400 border-pink-500/50 bg-red-400/10 text-red-400 border-red-400/50 bg-green-400/10 text-green-400 border-green-400/50 text-blue-400 border-blue-400/50 bg-blue-400/10 text-yellow-500 border-yellow-500/50 bg-yellow-500/10 grid-cols-2"></div>
 
   <!-- FOREGROUND PUSH TOAST -->
-  <div id="pushToast" class="fixed top-4 right-4 z-[9999] bg-[#0f1423]/95 backdrop-blur-xl border border-brand-emerald rounded-2xl shadow-[0_10px_40px_rgba(16,185,129,0.3)] p-4 hidden transform transition-all duration-500 translate-x-[150%] flex items-start gap-3 w-[90%] sm:w-80 cursor-pointer max-w-full" onclick="this.classList.add('translate-x-[150%]')">
+  <div id="appToast" class="fixed top-4 right-4 z-[9999] bg-[#0f1423]/95 backdrop-blur-xl border border-brand-emerald rounded-2xl shadow-[0_10px_40px_rgba(16,185,129,0.3)] p-4 hidden transform transition-all duration-500 translate-x-[150%] flex items-start gap-3 w-[90%] sm:w-80 cursor-pointer max-w-full" onclick="this.classList.add('translate-x-[150%]')">
       <div class="w-10 h-10 rounded-full bg-brand-emerald/20 flex items-center justify-center border border-brand-emerald shrink-0">
           <i class="fa-solid fa-bell text-brand-emerald text-lg animate-pulse"></i>
       </div>
       <div class="flex-1 overflow-hidden">
-          <h4 id="pushToastTitle" class="text-sm font-bold text-white mb-0.5 truncate">Notification</h4>
-          <p id="pushToastBody" class="text-xs text-gray-300 leading-relaxed truncate"></p>
+          <h4 id="appToastTitle" class="text-sm font-bold text-white mb-0.5 truncate">Notification</h4>
+          <p id="appToastBody" class="text-xs text-gray-300 leading-relaxed line-clamp-2"></p>
       </div>
   </div>
-
-  <!-- SCROLL TO TOP BUTTON (Dynamic Positioned horizontally next to FAB) -->
-  <button id="scrollToTopBtn" onclick="window.scrollToTop()" class="fixed z-[104] w-14 h-14 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)] flex items-center justify-center hover:scale-105 transition-all cursor-pointer opacity-0 pointer-events-none translate-y-4 p-0 border-0 bottom-24 md:bottom-6 right-20 md:right-auto" style="transition: opacity 0.3s ease, transform 0.3s ease, right 0.3s ease;">
-      <div id="scrollToTopIcon" class="w-full h-full bg-gray-800 rounded-full flex items-center justify-center text-white">
-          <i class="fa-solid fa-arrow-up text-xl"></i>
-      </div>
-  </button>
 
   <!-- CURSOR OVERLAYS -->
   <div id="mouseGlow"></div>
@@ -244,6 +238,100 @@
   <!-- CANVAS BACKGROUND -->
   <canvas id="gridCanvas" class="fixed inset-0 w-full h-full -z-10" style="pointer-events: none;"></canvas>
 
+  <!-- FLOATING GLOBALS: CHAT BUBBLE & SCROLL TO TOP -->
+  <div id="propertyChatContainer" class="fixed bottom-[84px] md:bottom-6 right-4 md:right-6 z-[105] flex flex-col items-end transition-all">
+      <!-- Chat Window -->
+      <div id="chatWindow" class="bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-none md:rounded-2xl w-[100vw] md:w-[400px] h-[100dvh] md:h-[600px] md:max-h-[85vh] shadow-2xl mb-0 md:mb-4 hidden flex-col overflow-hidden transition-all md:origin-bottom-right relative fixed md:absolute inset-0 md:inset-auto md:bottom-full md:right-0 z-[200] md:z-auto">
+          
+          <!-- Pins Overlay -->
+          <div id="chatPinsModal" class="hidden absolute inset-0 bg-[#0f1423]/95 backdrop-blur-md z-20 flex-col transition-all">
+              <div class="bg-gray-800/90 p-3 border-b border-gray-700 flex justify-between items-center">
+                  <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-thumbtack text-brand-gold"></i> Pinned Messages</span>
+                  <button onclick="window.toggleChatPins()" class="text-gray-400 hover:text-white cursor-pointer p-1"><i class="fa-solid fa-times text-lg"></i></button>
+              </div>
+              <div id="chatPinsList" class="p-4 flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-3">
+                  <!-- Populated dynamically -->
+              </div>
+          </div>
+
+          <!-- Attachments/Clipboard Overlay -->
+          <div id="chatAttachmentsModal" class="hidden absolute inset-0 bg-[#0f1423]/95 backdrop-blur-md z-20 flex-col transition-all">
+              <div class="bg-gray-800/90 p-3 border-b border-gray-700 flex justify-between items-center">
+                  <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-paperclip text-brand-cyan"></i> Links & Attachments</span>
+                  <button onclick="window.toggleChatAttachments()" class="text-gray-400 hover:text-white cursor-pointer p-1"><i class="fa-solid fa-times text-lg"></i></button>
+              </div>
+              <div id="chatAttachmentsList" class="p-4 flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-3">
+                  <!-- Populated dynamically -->
+              </div>
+          </div>
+
+          <!-- ================= GLOBAL HUB VIEW ================= -->
+          <div id="chatHubView" class="hidden flex-col h-full w-full bg-[#0f1423]/95">
+              <div class="bg-gray-800/90 p-4 border-b border-gray-700 flex justify-between items-center pt-safe-top">
+                  <span class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                      <i class="fa-solid fa-comments text-brand-purple"></i> Active Discussions
+                  </span>
+                  <button onclick="window.toggleChat()" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-times text-lg"></i></button>
+              </div>
+              <div id="chatHubList" class="p-2 sm:p-3 flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-2">
+                  <!-- Populated dynamically -->
+              </div>
+          </div>
+
+          <!-- ================= PROPERTY CHAT VIEW ================= -->
+          <div id="chatPropertyView" class="hidden flex-col h-full w-full">
+              <div class="bg-gray-800/90 p-3 sm:p-4 border-b border-gray-700 flex justify-between items-start pt-safe-top">
+                  <div class="flex flex-col flex-1 overflow-hidden pr-2">
+                      <span class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                          <button onclick="window.toggleChatHub(true)" class="text-gray-400 hover:text-white mr-1 cursor-pointer" title="Back to Hub"><i class="fa-solid fa-arrow-left"></i></button>
+                          Property Discussion
+                      </span>
+                      <span id="chatWindowAddress" class="text-[10px] sm:text-xs text-brand-emerald font-medium mt-0.5 truncate w-full"></span>
+                  </div>
+                  <div class="flex items-center gap-3 sm:gap-4 mt-0.5 shrink-0">
+                      <button onclick="window.toggleChatPins()" class="text-brand-gold hover:text-yellow-400 cursor-pointer" title="Pinned Messages"><i class="fa-solid fa-thumbtack text-base sm:text-sm"></i></button>
+                      <button onclick="window.toggleChatSearch()" class="text-gray-400 hover:text-white cursor-pointer" title="Search"><i class="fa-solid fa-search text-base sm:text-sm"></i></button>
+                      <button onclick="window.toggleChatAttachments()" class="text-brand-cyan hover:text-cyan-400 cursor-pointer" title="View Links & Files"><i class="fa-solid fa-clipboard text-base sm:text-sm"></i></button>
+                      <button onclick="window.toggleChat()" class="text-gray-400 hover:text-white cursor-pointer ml-1 sm:ml-2"><i class="fa-solid fa-times text-xl sm:text-lg"></i></button>
+                  </div>
+              </div>
+              
+              <!-- Search Bar -->
+              <div id="chatSearchContainer" class="hidden bg-gray-900/50 p-2 sm:p-3 border-b border-gray-800 items-center gap-2">
+                  <i class="fa-solid fa-search text-gray-500 text-[10px] sm:text-xs pl-2"></i>
+                  <input type="text" id="chatSearchInput" class="flex-1 bg-transparent border-none text-[10px] sm:text-xs text-white focus:outline-none placeholder-gray-500" placeholder="Search discussion..." oninput="window.renderChatMessages(propertiesData.find(p => p.id === activePropertyId))">
+                  <button onclick="window.toggleChatSearch()" class="text-gray-500 hover:text-gray-300 pr-2 p-1"><i class="fa-solid fa-times text-[10px] sm:text-xs"></i></button>
+              </div>
+
+              <div id="chatMessages" class="p-3 sm:p-4 flex-1 overflow-y-auto flex flex-col gap-3 custom-scrollbar scroll-smooth">
+                  <!-- Messages populated dynamically -->
+              </div>
+              
+              <div class="p-3 border-t border-gray-700 bg-gray-900/50 pb-safe shrink-0">
+                  <div class="flex items-center gap-2">
+                      <input type="text" id="chatInput" class="flex-1 bg-gray-950 border border-gray-700 rounded-lg px-3 py-3 sm:py-2 text-xs text-white focus:outline-none focus:border-brand-emerald transition-colors" placeholder="Type a message..." onkeydown="if(event.key === 'Enter') window.sendChatMessage()">
+                      <button onclick="window.sendChatMessage()" class="bg-brand-emerald hover:bg-emerald-400 text-gray-900 w-10 h-10 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer shadow-md shrink-0"><i class="fa-solid fa-paper-plane text-xs sm:text-sm"></i></button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+      <!-- FAB Button (Hidden on pure mobile if we rely on nav, but let's keep it responsive) -->
+      <button id="chatFabBtn" onclick="window.toggleChat()" class="hidden md:flex w-14 h-14 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)] items-center justify-center hover:scale-105 transition-transform group relative cursor-pointer z-50 p-0 border-0 bg-transparent">
+          <div class="w-full h-full bg-[#1e2338] border border-gray-700 rounded-full flex items-center justify-center overflow-hidden shadow-inner group-hover:border-brand-purple transition-colors">
+              <img src="icon.svg" class="w-full h-full object-contain p-1 group-hover:opacity-90 transition-opacity" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
+          </div>
+          <!-- Unread Badge -->
+          <span id="chatUnreadBadge" class="absolute -top-1 -right-1 bg-brand-crimson text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border border-[#0f1423] shadow-md hidden z-10">0</span>
+      </button>
+  </div>
+
+  <button id="scrollToTopBtn" onclick="window.scrollToTop()" class="fixed z-[104] w-14 h-14 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)] flex items-center justify-center hover:scale-105 transition-all cursor-pointer opacity-0 pointer-events-none translate-y-4 p-0 border-0 bottom-[84px] md:bottom-6 right-4 md:right-24" style="transition: opacity 0.3s ease, transform 0.3s ease, right 0.3s ease;">
+      <div id="scrollToTopIcon" class="w-full h-full bg-gray-800 rounded-full flex items-center justify-center text-white">
+          <i class="fa-solid fa-arrow-up text-xl"></i>
+      </div>
+  </button>
+
   <!-- MOBILE BOTTOM NAVIGATION -->
   <nav class="md:hidden fixed bottom-0 left-0 right-0 z-[90] bg-[#0b0f19]/95 backdrop-blur-xl border-t border-gray-800 flex justify-around p-2 pb-safe shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
       <button onclick="window.switchTab('dashboard')" id="nav-mobile-dashboard" class="flex flex-col items-center justify-center w-full p-2 text-brand-emerald transition-colors">
@@ -258,6 +346,11 @@
           <i class="fa-solid fa-book-open text-lg mb-1"></i>
           <span class="text-[9px] font-bold uppercase tracking-wider">SOPs</span>
       </button>
+      <button onclick="window.toggleChatHub()" id="nav-mobile-chat" class="flex flex-col items-center justify-center w-full p-2 text-gray-500 hover:text-gray-300 transition-colors relative">
+          <i class="fa-solid fa-comments text-lg mb-1"></i>
+          <span class="text-[9px] font-bold uppercase tracking-wider">Chat</span>
+          <span id="mobileChatBadge" class="absolute top-1 right-3 bg-brand-crimson text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+      </button>
   </nav>
 
   <!-- MAIN CONTENT -->
@@ -266,10 +359,9 @@
     <!-- Header -->
     <header class="sticky top-0 md:top-2 z-[100] flex flex-col md:flex-row justify-between items-center gap-4 mb-6 sm:mb-8 bg-[#0b0f19]/95 p-3 sm:p-4 rounded-2xl border border-gray-800/80 backdrop-blur-xl shrink-0 shadow-lg">
         
-        <div class="flex items-center justify-between w-full md:w-auto flex-wrap lg:flex-nowrap">
+        <div class="flex items-center justify-between w-full md:w-auto">
             
-            <div class="flex items-center gap-4 sm:gap-5 w-full overflow-x-auto custom-scrollbar pb-1 sm:pb-0">
-                
+            <div class="flex items-center gap-3 sm:gap-4">
                 <!-- NOTIFICATION HUB (LOGO) -->
                 <div class="relative shrink-0 flex items-center justify-center" id="mainLogoContainer">
                     <button id="mainLogoBtn" onclick="window.toggleNotificationList(event); this.classList.remove('animate-jelly-pop'); void this.offsetWidth; this.classList.add('animate-jelly-pop');" class="relative cursor-pointer transition-transform hover:scale-105 group p-1 z-10" title="Notification Hub">
@@ -384,8 +476,10 @@
 
                 <div class="h-6 sm:h-8 w-px bg-gray-700 shrink-0 hidden sm:block"></div>
                 
-                <h1 class="text-base sm:text-lg font-bold text-white tracking-tight whitespace-nowrap shrink-0 hidden sm:block">Dispositions Team Dashboard</h1>
-                
+                <h1 class="text-sm sm:text-lg font-bold text-white tracking-tight whitespace-nowrap shrink-0 uppercase tracking-widest">Dispo Ops</h1>
+            </div>
+            
+            <div class="flex items-center gap-3 sm:gap-4 ml-auto">
                 <div class="h-6 sm:h-8 w-px bg-gray-700 shrink-0 hidden sm:block"></div>
 
                 <!-- ACTIVE USERS -->
@@ -395,7 +489,7 @@
                         <span class="text-[10px] font-bold text-gray-300 uppercase tracking-wider hidden sm:inline">Active Users</span>
                         <span id="activeUserCountBtn" class="bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/30 px-1.5 py-0.5 rounded text-[10px] font-black leading-none flex items-center justify-center">0</span>
                     </button>
-                    <div id="activeUsersDropdown" class="absolute right-0 sm:left-1/2 sm:-translate-x-1/2 top-full mt-3 w-48 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden">
+                    <div id="activeUsersDropdown" class="absolute right-0 top-full mt-3 w-48 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden">
                         <div class="bg-gray-800/80 px-3 py-2 border-b border-gray-700 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
                             <span>Personnel Online</span>
                             <span id="activeUserCount" class="text-brand-emerald">0</span>
@@ -405,10 +499,10 @@
                     </div>
                 </div>
 
-                <div class="h-6 sm:h-8 w-px bg-gray-700 shrink-0 hidden sm:block"></div>
+                <div class="h-6 sm:h-8 w-px bg-gray-700 shrink-0"></div>
                 
-                <!-- Recenter/Styled Logout Button -->
-                <button onclick="window.logOut()" class="flex sm:flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/60 border border-gray-700/60 text-gray-400 hover:text-brand-crimson hover:bg-brand-crimson/10 hover:border-brand-crimson/30 transition-all cursor-pointer shadow-sm shrink-0" title="Sign Out">
+                <!-- Logout Button -->
+                <button onclick="window.logOut()" class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/60 border border-gray-700/60 text-gray-400 hover:text-brand-crimson hover:bg-brand-crimson/10 hover:border-brand-crimson/30 transition-all cursor-pointer shadow-sm shrink-0" title="Sign Out">
                     <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i>
                 </button>
             </div>
@@ -573,78 +667,6 @@
             </div>
         </div>
 
-        <!-- FLOATING CHAT BUBBLE (Tied to Tracker View) -->
-        <div id="propertyChatContainer" class="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-[105] flex flex-col items-end hidden transition-all">
-            <!-- Chat Window -->
-            <div id="chatWindow" class="bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-none md:rounded-2xl w-full md:w-[400px] h-[100dvh] md:h-[600px] md:max-h-[85vh] shadow-2xl mb-0 md:mb-4 hidden flex-col overflow-hidden transition-all md:origin-bottom-right relative fixed md:absolute inset-0 md:inset-auto md:bottom-full md:right-0 z-[200] md:z-auto">
-                
-                <!-- Pins Overlay -->
-                <div id="chatPinsModal" class="hidden absolute inset-0 bg-[#0f1423]/95 backdrop-blur-md z-20 flex-col transition-all">
-                    <div class="bg-gray-800/90 p-3 border-b border-gray-700 flex justify-between items-center">
-                        <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-thumbtack text-brand-gold"></i> Pinned Messages</span>
-                        <button onclick="window.toggleChatPins()" class="text-gray-400 hover:text-white cursor-pointer p-1"><i class="fa-solid fa-times text-lg"></i></button>
-                    </div>
-                    <div id="chatPinsList" class="p-4 flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-3">
-                        <!-- Populated dynamically -->
-                    </div>
-                </div>
-
-                <!-- Attachments/Clipboard Overlay -->
-                <div id="chatAttachmentsModal" class="hidden absolute inset-0 bg-[#0f1423]/95 backdrop-blur-md z-20 flex-col transition-all">
-                    <div class="bg-gray-800/90 p-3 border-b border-gray-700 flex justify-between items-center">
-                        <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-paperclip text-brand-cyan"></i> Links & Attachments</span>
-                        <button onclick="window.toggleChatAttachments()" class="text-gray-400 hover:text-white cursor-pointer p-1"><i class="fa-solid fa-times text-lg"></i></button>
-                    </div>
-                    <div id="chatAttachmentsList" class="p-4 flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-3">
-                        <!-- Populated dynamically -->
-                    </div>
-                </div>
-
-                <div class="bg-gray-800/90 p-3 sm:p-4 border-b border-gray-700 flex justify-between items-start pt-safe-top">
-                    <div class="flex flex-col flex-1 overflow-hidden pr-2">
-                        <span class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                            <img src="icon.svg" class="w-4 h-4 sm:w-5 sm:h-5 opacity-80" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
-                            Property Discussion
-                        </span>
-                        <span id="chatWindowAddress" class="text-[10px] sm:text-xs text-brand-emerald font-medium mt-0.5 truncate w-full"></span>
-                    </div>
-                    <div class="flex items-center gap-3 sm:gap-4 mt-0.5 shrink-0">
-                        <button onclick="window.toggleChatPins()" class="text-brand-gold hover:text-yellow-400 cursor-pointer" title="Pinned Messages"><i class="fa-solid fa-thumbtack text-base sm:text-sm"></i></button>
-                        <button onclick="window.toggleChatSearch()" class="text-gray-400 hover:text-white cursor-pointer" title="Search"><i class="fa-solid fa-search text-base sm:text-sm"></i></button>
-                        <button onclick="window.toggleChatAttachments()" class="text-brand-cyan hover:text-cyan-400 cursor-pointer" title="View Links & Files"><i class="fa-solid fa-clipboard text-base sm:text-sm"></i></button>
-                        <button onclick="window.toggleChat()" class="text-gray-400 hover:text-white cursor-pointer ml-1 sm:ml-2"><i class="fa-solid fa-times text-xl sm:text-lg"></i></button>
-                    </div>
-                </div>
-                
-                <!-- Search Bar -->
-                <div id="chatSearchContainer" class="hidden bg-gray-900/50 p-2 sm:p-3 border-b border-gray-800 items-center gap-2">
-                    <i class="fa-solid fa-search text-gray-500 text-[10px] sm:text-xs pl-2"></i>
-                    <input type="text" id="chatSearchInput" class="flex-1 bg-transparent border-none text-[10px] sm:text-xs text-white focus:outline-none placeholder-gray-500" placeholder="Search discussion..." oninput="window.renderChatMessages(propertiesData.find(p => p.id === activePropertyId))">
-                    <button onclick="window.toggleChatSearch()" class="text-gray-500 hover:text-gray-300 pr-2 p-1"><i class="fa-solid fa-times text-[10px] sm:text-xs"></i></button>
-                </div>
-
-                <div id="chatMessages" class="p-3 sm:p-4 flex-1 overflow-y-auto flex flex-col gap-3 custom-scrollbar scroll-smooth">
-                    <!-- Messages populated dynamically -->
-                </div>
-                
-                <div class="p-3 border-t border-gray-700 bg-gray-900/50 pb-safe shrink-0">
-                    <div class="flex items-center gap-2">
-                        <input type="text" id="chatInput" class="flex-1 bg-gray-950 border border-gray-700 rounded-lg px-3 py-3 sm:py-2 text-xs text-white focus:outline-none focus:border-brand-emerald transition-colors" placeholder="Type a message..." onkeydown="if(event.key === 'Enter') window.sendChatMessage()">
-                        <button onclick="window.sendChatMessage()" class="bg-brand-emerald hover:bg-emerald-400 text-gray-900 w-10 h-10 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer shadow-md shrink-0"><i class="fa-solid fa-paper-plane text-xs sm:text-sm"></i></button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- FAB Button -->
-            <button id="chatFabBtn" onclick="window.toggleChat()" class="w-14 h-14 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)] flex items-center justify-center hover:scale-105 transition-transform group relative cursor-pointer z-50 p-0 border-0 bg-transparent">
-                <div class="w-full h-full bg-[#1e2338] border border-gray-700 rounded-full flex items-center justify-center overflow-hidden shadow-inner group-hover:border-brand-purple transition-colors">
-                    <img src="icon.svg" class="w-full h-full object-contain p-1 group-hover:opacity-90 transition-opacity" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
-                </div>
-                <!-- Unread Badge -->
-                <span id="chatUnreadBadge" class="absolute -top-1 -right-1 bg-brand-crimson text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border border-[#0f1423] shadow-md hidden z-10">0</span>
-            </button>
-        </div>
-
     </div>
 
     <!-- TAB: SOP REFERENCE (VISUAL TIMELINE) -->
@@ -652,11 +674,11 @@
         <div class="max-w-4xl mx-auto mt-4">
             
             <!-- Strategy Navigation Tabs -->
-            <div class="flex bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 overflow-x-auto max-w-fit mx-auto mb-6 sm:mb-10 sticky top-[80px] md:top-[100px] z-[90] backdrop-blur-xl bg-[#0b0f19]/95 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] transition-all">
-                <button onclick="window.renderSOPTimeline('Wholesale')" id="sopPill_Wholesale" class="px-4 sm:px-5 py-2 text-xs sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md">Wholesale SOP</button>
-                <button onclick="window.renderSOPTimeline('Novation')" id="sopPill_Novation" class="px-4 sm:px-5 py-2 text-xs sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center gap-2 whitespace-nowrap text-gray-300 hover:text-white">Novation SOP</button>
-                <button onclick="window.renderSOPTimeline('Creative')" id="sopPill_Creative" class="px-4 sm:px-5 py-2 text-xs sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center gap-2 whitespace-nowrap text-gray-300 hover:text-white">Creative SOP</button>
-                <button onclick="window.renderSOPTimeline('Fix & Flip')" id="sopPill_Fix & Flip" class="px-4 sm:px-5 py-2 text-xs sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center gap-2 whitespace-nowrap text-gray-300 hover:text-white">Fix & Flip SOP</button>
+            <div class="grid grid-cols-2 sm:flex bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 w-full sm:w-auto sm:max-w-fit mx-auto mb-6 sm:mb-10 sticky top-[80px] md:top-[100px] z-[90] backdrop-blur-xl bg-[#0b0f19]/95 shadow-md gap-1 sm:gap-0 transition-all">
+                <button onclick="window.renderSOPTimeline('Wholesale')" id="sopPill_Wholesale" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md">Wholesale</button>
+                <button onclick="window.renderSOPTimeline('Novation')" id="sopPill_Novation" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap text-gray-300 hover:text-white">Novation</button>
+                <button onclick="window.renderSOPTimeline('Creative')" id="sopPill_Creative" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap text-gray-300 hover:text-white">Creative</button>
+                <button onclick="window.renderSOPTimeline('Fix & Flip')" id="sopPill_Fix & Flip" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap text-gray-300 hover:text-white">Fix & Flip</button>
             </div>
 
             <!-- Dynamic Timeline Container -->
@@ -702,7 +724,8 @@
     window.currentDashboardStrategy = "All";
     window.currentDashboardSort = "edited_desc";
     window.notificationHistory = [];
-    window.selectedNotifs = new Set(); // Global Set for multi-select notifications
+    window.selectedNotifs = new Set(); 
+    window.activeUsersData = [];
 
     // --- 1. AUTHENTICATION LOGIC ---
     window.signInWithGoogle = async function() {
@@ -757,10 +780,6 @@
 
     function grantAccess() {
         if (isGatewayUnlocked) return; 
-        if (currentUser && currentUser.email) {
-            // Note: userEmailDisplay and userBadge removed from HTML per user request
-            // Just leaving this here in case we ever want to hook it back up.
-        }
 
         const btn = document.getElementById('googleAuthButton');
         if (btn) {
@@ -985,25 +1004,44 @@
         return prop.tasks[tIdx];
     }
 
-    function updateChatBadge(prop) {
-        const badge = document.getElementById('chatUnreadBadge');
-        if (!badge || !prop) return;
-        
+    function updateChatBadge(prop = null) {
+        let totalUnread = 0;
         const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
-        const readReceipts = prop.readBy || {};
-        const lastRead = readReceipts[myPrefix] || 0;
-        
-        const unreadCount = (prop.comments || []).filter(c => c.timestamp > lastRead && c.author.toLowerCase() !== myPrefix).length;
-        
-        if (unreadCount > 0 && !window.isChatOpen) {
-            badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
-            badge.classList.remove('hidden');
-            badge.classList.add('flex');
-            badge.classList.add('animate-bounce');
-            setTimeout(() => badge.classList.remove('animate-bounce'), 1000);
-        } else {
-            badge.classList.add('hidden');
-            badge.classList.remove('flex');
+
+        propertiesData.forEach(p => {
+            const lastRead = (p.readBy || {})[myPrefix] || 0;
+            const unreadCount = (p.comments || []).filter(c => c.timestamp > lastRead && c.author.toLowerCase() !== myPrefix).length;
+            totalUnread += unreadCount;
+        });
+
+        // Main Web FAB Badge
+        const fabBadge = document.getElementById('chatUnreadBadge');
+        if (fabBadge) {
+            if (totalUnread > 0 && !window.isChatOpen) {
+                fabBadge.innerText = totalUnread > 9 ? '9+' : totalUnread;
+                fabBadge.classList.remove('hidden');
+                fabBadge.classList.add('flex');
+                if (prop) { // Only bounce if updated actively
+                    fabBadge.classList.add('animate-bounce');
+                    setTimeout(() => fabBadge.classList.remove('animate-bounce'), 1000);
+                }
+            } else {
+                fabBadge.classList.add('hidden');
+                fabBadge.classList.remove('flex');
+            }
+        }
+
+        // Mobile Bottom Nav Badge
+        const mobBadge = document.getElementById('mobileChatBadge');
+        if (mobBadge) {
+            if (totalUnread > 0 && !window.isChatOpen) {
+                mobBadge.innerText = totalUnread > 9 ? '9+' : totalUnread;
+                mobBadge.classList.remove('hidden');
+                mobBadge.classList.add('flex');
+            } else {
+                mobBadge.classList.add('hidden');
+                mobBadge.classList.remove('flex');
+            }
         }
     }
 
@@ -1077,7 +1115,7 @@
         const countBtn = document.getElementById('activeUserCountBtn');
         if (!list || !count) return;
         
-        const users = window.activeUsersData || (currentUser ? [{ email: currentUser.email, sessions: { [localDeviceId]: { lastActive: Date.now(), type: 'Desktop' } } }] : []);
+        const users = (window.activeUsersData && window.activeUsersData.length > 0) ? window.activeUsersData : (currentUser ? [{ email: currentUser.email, sessions: { [localDeviceId]: { lastActive: Date.now(), type: 'Desktop' } } }] : []);
         
         let onlineCount = 0;
         let htmlStr = '';
@@ -1105,7 +1143,7 @@
                 const desktopColor = hasDesktop ? 'text-brand-emerald drop-shadow-[0_0_5px_rgba(16,185,129,0.8)]' : 'text-brand-crimson opacity-50';
 
                 htmlStr += `
-                    <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-gray-800/40 border border-gray-700/30 mb-1 last:mb-0">
+                    <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-gray-800/40 border border-gray-700/30 mb-1 last:mb-0 hover:bg-gray-800/60 transition-colors">
                         <div class="flex items-center gap-2">
                             <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></div>
                             <span class="text-[10px] font-bold ${colorClass} capitalize tracking-wide truncate max-w-[90px]">${name}</span>
@@ -1161,7 +1199,7 @@
         document.getElementById('tab-sop').classList.add('hidden');
         
         const defaultNavClasses = "px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap";
-        const mobNavs = ['nav-mobile-dashboard', 'nav-mobile-tracker', 'nav-mobile-sop'];
+        const mobNavs = ['nav-mobile-dashboard', 'nav-mobile-tracker', 'nav-mobile-sop', 'nav-mobile-chat'];
         
         document.getElementById('nav-dashboard').className = defaultNavClasses;
         document.getElementById('nav-tracker').className = defaultNavClasses;
@@ -1169,18 +1207,20 @@
         
         mobNavs.forEach(id => {
             const el = document.getElementById(id);
-            if(el) el.className = "flex flex-col items-center justify-center w-full p-2 text-gray-500 hover:text-gray-300 transition-colors";
+            if(el) {
+                el.classList.remove('text-brand-emerald');
+                el.classList.add('text-gray-500');
+            }
         });
 
         const activeNavClasses = "bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md border-transparent";
-        const activeMobClass = "flex flex-col items-center justify-center w-full p-2 text-brand-emerald transition-colors";
         
         if (tab === 'dashboard') {
             document.getElementById('tab-dashboard').classList.remove('hidden');
             document.getElementById('nav-dashboard').classList.add(...activeNavClasses.split(' '));
             document.getElementById('nav-dashboard').classList.remove('text-gray-300');
             const mob = document.getElementById('nav-mobile-dashboard');
-            if (mob) mob.className = activeMobClass;
+            if (mob) { mob.classList.remove('text-gray-500'); mob.classList.add('text-brand-emerald'); }
             
             activePropertyId = null;
             window.sectionToggleState = {};
@@ -1194,7 +1234,7 @@
             document.getElementById('nav-tracker').classList.add(...activeNavClasses.split(' '));
             document.getElementById('nav-tracker').classList.remove('text-gray-300');
             const mob = document.getElementById('nav-mobile-tracker');
-            if (mob) mob.className = activeMobClass;
+            if (mob) { mob.classList.remove('text-gray-500'); mob.classList.add('text-brand-emerald'); }
             
             renderTrackerView();
             updateGlobalAssetSelector();
@@ -1203,7 +1243,7 @@
             document.getElementById('nav-sop').classList.add(...activeNavClasses.split(' '));
             document.getElementById('nav-sop').classList.remove('text-gray-300');
             const mob = document.getElementById('nav-mobile-sop');
-            if (mob) mob.className = activeMobClass;
+            if (mob) { mob.classList.remove('text-gray-500'); mob.classList.add('text-brand-emerald'); }
             
             if(window.isChatOpen) window.toggleChat();
             window.renderSOPTimeline('Wholesale');
@@ -1644,7 +1684,7 @@
         }
     }
 
-    // --- SUPPORT STYLE CHAT LOGIC ---
+    // --- SUPPORT STYLE CHAT & GLOBAL HUB LOGIC ---
     window.toggleChat = async function(focusCommentId = null) {
         const fab = document.getElementById('chatFabBtn');
         if (fab) {
@@ -1655,14 +1695,27 @@
 
         window.isChatOpen = focusCommentId ? true : !window.isChatOpen;
         const chatWin = document.getElementById('chatWindow');
+        const hubView = document.getElementById('chatHubView');
+        const propView = document.getElementById('chatPropertyView');
         const scrollBtn = document.getElementById('scrollToTopBtn');
+        const mobChatNav = document.getElementById('nav-mobile-chat');
         
         if (window.isChatOpen) {
             chatWin.classList.remove('hidden');
             chatWin.classList.add('flex');
-            if (scrollBtn) scrollBtn.style.right = '5.5rem';
+            
+            if (mobChatNav) {
+                mobChatNav.classList.remove('text-gray-500');
+                mobChatNav.classList.add('text-brand-emerald');
+            }
             
             if (activePropertyId) {
+                // Property Chat View
+                hubView.classList.add('hidden');
+                hubView.classList.remove('flex');
+                propView.classList.remove('hidden');
+                propView.classList.add('flex');
+
                 const prop = propertiesData.find(p => p.id === activePropertyId);
                 if (prop) {
                     const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
@@ -1674,17 +1727,89 @@
                     updateChatBadge(prop);
                     renderChatMessages(prop, lastReadTime, focusCommentId);
                 }
+                setTimeout(() => {
+                    if(!focusCommentId && !window.isChatSearchOpen) document.getElementById('chatInput').focus();
+                }, 100);
+            } else {
+                // Global Hub View
+                hubView.classList.remove('hidden');
+                hubView.classList.add('flex');
+                propView.classList.add('hidden');
+                propView.classList.remove('flex');
+                window.renderChatHub();
             }
-            setTimeout(() => {
-                if(!focusCommentId && !window.isChatSearchOpen) document.getElementById('chatInput').focus();
-            }, 100);
+
         } else {
             chatWin.classList.add('hidden');
             chatWin.classList.remove('flex');
-            if (scrollBtn) scrollBtn.style.right = '1.5rem';
-            
             if(window.isChatSearchOpen) window.toggleChatSearch();
+            
+            if (mobChatNav) {
+                mobChatNav.classList.remove('text-brand-emerald');
+                mobChatNav.classList.add('text-gray-500');
+            }
         }
+    }
+    
+    window.toggleChatHub = function(forceHubOnly = false) {
+        if (forceHubOnly) activePropertyId = null;
+        
+        if (!window.isChatOpen) {
+            window.toggleChat();
+        } else if (forceHubOnly) {
+            document.getElementById('chatHubView').classList.remove('hidden');
+            document.getElementById('chatHubView').classList.add('flex');
+            document.getElementById('chatPropertyView').classList.add('hidden');
+            document.getElementById('chatPropertyView').classList.remove('flex');
+            window.renderChatHub();
+        } else {
+            window.toggleChat();
+        }
+    }
+
+    window.renderChatHub = function() {
+        const list = document.getElementById('chatHubList');
+        if (!list) return;
+
+        let hubItems = propertiesData.map(p => {
+            const comments = p.comments || [];
+            const lastCmt = comments.length > 0 ? comments[comments.length - 1] : null;
+            const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
+            const lastRead = (p.readBy || {})[myPrefix] || 0;
+            const unreadCount = comments.filter(c => c.timestamp > lastRead && c.author.toLowerCase() !== myPrefix).length;
+            
+            return {
+                id: p.id,
+                address: p.address,
+                lastComment: lastCmt,
+                unreadCount: unreadCount,
+                timestamp: lastCmt ? lastCmt.timestamp : p.dateStarted
+            };
+        }).sort((a, b) => b.timestamp - a.timestamp);
+
+        if (hubItems.length === 0) {
+            list.innerHTML = `<div class="text-center text-xs text-gray-500 mt-10 italic">No active discussions. Deploy a new asset to begin tracking!</div>`;
+            return;
+        }
+
+        list.innerHTML = hubItems.map(item => {
+            let badgeHtml = item.unreadCount > 0 ? `<span class="bg-brand-crimson text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md animate-pulse">${item.unreadCount} New</span>` : '';
+            let snippet = item.lastComment ? `<span class="font-bold text-gray-400 capitalize">${escapeHtml(item.lastComment.author)}:</span> ${escapeHtml(item.lastComment.text)}` : `<span class="italic text-gray-600">No messages yet</span>`;
+            let timeStr = item.lastComment ? timeSince(item.lastComment.timestamp) : timeSince(item.timestamp);
+            
+            return `
+            <div onclick="window.isChatOpen = false; window.openTracker('${item.id}'); window.toggleChat();" class="p-3 bg-gray-900/50 hover:bg-gray-800/80 rounded-xl border border-gray-800/80 cursor-pointer transition-colors group shadow-sm">
+                <div class="flex justify-between items-start mb-1">
+                    <h4 class="text-xs font-bold text-white group-hover:text-brand-purple transition-colors truncate pr-2 flex items-center gap-2"><i class="fa-solid fa-house-chimney text-[10px] text-gray-600"></i> ${escapeHtml(item.address)}</h4>
+                    <div class="shrink-0 flex items-center gap-2">
+                        ${badgeHtml}
+                    </div>
+                </div>
+                <p class="text-[10px] text-gray-300 line-clamp-1 mb-1 mt-1">${snippet}</p>
+                <div class="text-[9px] text-gray-500 font-mono mt-1.5 border-t border-gray-800/50 pt-1.5 inline-block w-full">${timeStr}</div>
+            </div>
+            `;
+        }).join('');
     }
 
     window.toggleChatSearch = function() {
@@ -1951,16 +2076,12 @@
     function renderTrackerView() {
         const emptyView = document.getElementById('tracker-empty');
         const contentView = document.getElementById('tracker-content');
-        const chatContainer = document.getElementById('propertyChatContainer');
-        const scrollBtn = document.getElementById('scrollToTopBtn');
         
         if(!emptyView || !contentView) return;
         
         if (!activePropertyId) {
             emptyView.classList.remove('hidden');
             contentView.classList.add('hidden');
-            if(chatContainer) chatContainer.classList.add('hidden');
-            if(scrollBtn) { scrollBtn.style.right = '1.5rem'; }
             return;
         }
 
@@ -1969,8 +2090,6 @@
 
         emptyView.classList.add('hidden');
         contentView.classList.remove('hidden');
-        if(chatContainer) chatContainer.classList.remove('hidden');
-        if(scrollBtn) { scrollBtn.style.right = '5.5rem'; }
 
         document.getElementById('tracker-address').innerText = prop.address;
         const strat = prop.exitStrategy || 'Wholesale';
@@ -2272,11 +2391,11 @@
     window.renderSOPTimeline = function(strategyName) {
         // Toggle Pills UI
         document.querySelectorAll('.sop-pill').forEach(btn => {
-            btn.className = "px-4 sm:px-5 py-2 text-xs sm:text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap sop-pill";
+            btn.className = "px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap sop-pill";
         });
         const activeBtn = document.getElementById(`sopPill_${strategyName}`);
         if(activeBtn) {
-            activeBtn.className = "px-4 sm:px-5 py-2 text-xs sm:text-sm font-bold rounded-lg cursor-pointer transition-all bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md sop-pill flex items-center gap-2 whitespace-nowrap";
+            activeBtn.className = "px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap";
         }
 
         const container = document.getElementById('sopTimelineContainer');
@@ -2682,7 +2801,6 @@
             const authModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
             const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
             
-            // Isolate messaging so a tracking reset doesn't crash the whole login screen!
             let messagingModule = null;
             try {
                 messagingModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js");
@@ -2694,40 +2812,39 @@
             firebaseAuth = authModule.getAuth(app);
             db = firestoreModule.getFirestore(app);
 
-            // Initialize Google Provider
             googleProvider = new authModule.GoogleAuthProvider();
             googleProvider.setCustomParameters({ hd: 'totalchb.com' });
             window.firebaseSignInWithPopup = authModule.signInWithPopup;
             window.firebaseSignOut = authModule.signOut;
 
-            // Initialize FCM for foreground pushes safely
             let messaging = null;
             if (messagingModule) {
                 try {
                     messaging = messagingModule.getMessaging(app);
                     messagingModule.onMessage(messaging, (payload) => {
-                        const toast = document.getElementById('pushToast');
-                        document.getElementById('pushToastTitle').innerText = payload.notification.title;
-                        document.getElementById('pushToastBody').innerText = payload.notification.body;
-                        toast.classList.remove('hidden');
-                        
-                        setTimeout(() => toast.classList.remove('translate-x-[150%]'), 50);
-                        setTimeout(() => { toast.classList.add('translate-x-[150%]'); }, 6000);
+                        window.showAppToast(payload.notification.title, payload.notification.body);
                     });
                 } catch (err) {
                     console.warn("Messaging not supported on this environment", err);
                 }
             }
+            
+            // New overlay app toast caller
+            window.showAppToast = function(title, body) {
+                const toast = document.getElementById('appToast');
+                if(!toast) return;
+                document.getElementById('appToastTitle').innerText = title;
+                document.getElementById('appToastBody').innerText = body;
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.remove('translate-x-[150%]'), 50);
+                setTimeout(() => { toast.classList.add('translate-x-[150%]'); }, 6000);
+            }
 
-            // Function to request VAPID token (UPDATED FOR EXPLICIT SW REGISTRATION)
             window.requestPushToken = async function() {
                 if(!messaging || !messagingModule) return null;
                 try {
                     const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
-                    
-                    // NEW LINE: Force the browser to bypass its cache and aggressively update the Service Worker!
                     await registration.update();
-                    
                     const permission = await Notification.requestPermission();
                     if (permission === 'granted') {
                         const token = await messagingModule.getToken(messaging, { 
@@ -2744,7 +2861,6 @@
                 return null;
             }
 
-            // Action for Enable Push Notifications button
             window.enablePush = async function() {
                 const btn = document.getElementById('enablePushBtn');
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authorizing...';
@@ -2764,14 +2880,13 @@
                 }
             }
 
-            // NEW: Action to wipe dead tokens
             window.resetPushTokens = async function() {
                 if (!currentUser || !db) return;
                 const btn = document.getElementById('enablePushBtn');
                 try {
                     const docRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
                     await firestoreModule.setDoc(docRef, {
-                        fcmTokens: [] // Wipe the array clean!
+                        fcmTokens: []
                     }, { merge: true });
                     
                     btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Wiped! Click to Link Current.';
@@ -2790,7 +2905,6 @@
                     snapshot.forEach(doc => {
                         let data = doc.data();
                         
-                        // Migration Cleanup
                         if (data.tasks) {
                             data.tasks = data.tasks.filter(t => t.id !== 'p3_7'); 
                             let p3_6 = data.tasks.find(t => t.id === 'p3_6');
@@ -2813,7 +2927,9 @@
                     if (isGatewayUnlocked) {
                         renderDashboard();
                         updateGlobalAssetSelector();
+                        updateChatBadge(); // Update global unread badge on snapshot
                         if (activePropertyId) renderTrackerView();
+                        if (window.isChatOpen && !activePropertyId) window.renderChatHub();
                     }
                 }, (error) => {
                     console.error("Snapshot error", error);
@@ -2824,13 +2940,31 @@
             window.listenToNotifications = function() {
                 if (!currentUser || !db) return;
                 const notifRef = firestoreModule.collection(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications');
-                // We order logic locally if index is missing to prevent crash
+                
+                let isInitialLoad = true;
+
                 firestoreModule.onSnapshot(notifRef, (snapshot) => {
+                    let newNotifs = [];
+                    snapshot.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            newNotifs.push(change.doc.data());
+                        }
+                    });
+
                     window.notificationHistory = [];
                     snapshot.forEach(doc => window.notificationHistory.push({ ...doc.data(), id: doc.id }));
-                    window.notificationHistory.sort((a,b) => b.createdAt - a.createdAt); // Local sort
+                    window.notificationHistory.sort((a,b) => b.createdAt - a.createdAt); 
                     updateNotificationsBadge();
                     renderNotificationList();
+
+                    // Display app-level overlay toast for newly arriving DB notifications
+                    if (!isInitialLoad && newNotifs.length > 0) {
+                        const latest = newNotifs.sort((a,b) => b.createdAt - a.createdAt)[0];
+                        if (!latest.read) {
+                            window.showAppToast(latest.title, latest.body);
+                        }
+                    }
+                    isInitialLoad = false;
                 });
             }
 
@@ -2842,7 +2976,6 @@
                 const selectedCount = window.selectedNotifs.size;
                 const totalCount = window.notificationHistory.length;
 
-                // Render dynamic header based on selection
                 if (selectedCount > 0) {
                     const isAllSelected = selectedCount === totalCount && totalCount > 0;
                     header.innerHTML = `
@@ -2956,7 +3089,6 @@
                     return { comments: true, new_assets: true, completions: true, task_turns: true, daily_brief: true, reminders: true, reminder_interval: '4' };
                 }
                 
-                // Fallback default
                 return { comments: true, new_assets: true, completions: true, task_turns: false, daily_brief: false, reminders: false, reminder_interval: '4' };
             }
 
@@ -3028,7 +3160,6 @@
                         currentUser = user;
                         grantAccess(); 
                         
-                        // Load user's unique alert settings from the Cloud
                         window.loadNotificationPreferences();
                         window.listenToNotifications();
                         
@@ -3052,9 +3183,13 @@
                                 const now = Date.now();
                                 snapshot.forEach(doc => {
                                     const data = doc.data();
-                                    if (now - data.lastActive < 300000) { 
-                                        window.activeUsersData.push(data);
+                                    let isOnline = false;
+                                    if(data.sessions) {
+                                        Object.values(data.sessions).forEach(sess => {
+                                            if (now - sess.lastActive < 300000) isOnline = true;
+                                        });
                                     }
+                                    if (isOnline) window.activeUsersData.push(data);
                                 });
                                 if(window.renderActiveUsersList) window.renderActiveUsersList();
                             });
@@ -3090,6 +3225,7 @@
         if (isGatewayUnlocked) {
             renderDashboard();
             updateGlobalAssetSelector();
+            updateChatBadge();
         }
     }
 
@@ -3105,6 +3241,7 @@
             localStorage.setItem('tchb_dispo_app_data_v9', JSON.stringify(propertiesData));
             if(!quiet) renderDashboard();
             if (activePropertyId && !quiet) renderTrackerView();
+            updateChatBadge();
         }
     }
 
@@ -3115,6 +3252,7 @@
             propertiesData = propertiesData.filter(p => p.id !== id);
             localStorage.setItem('tchb_dispo_app_data_v9', JSON.stringify(propertiesData));
             renderDashboard();
+            updateChatBadge();
         }
     }
 
