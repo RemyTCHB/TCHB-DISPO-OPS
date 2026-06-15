@@ -236,28 +236,6 @@
       </div>
   </div>
 
-  <!-- ADMIN SOP EDITOR MODAL -->
-  <div id="sopEditorModal" class="fixed inset-0 z-[130] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div class="bg-[#0f1423] border border-brand-cyan/50 shadow-[0_0_40px_rgba(6,182,212,0.2)] rounded-2xl w-[95%] sm:w-full max-w-4xl h-[85vh] flex flex-col transform transition-all relative overflow-hidden">
-          <div class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center shrink-0">
-              <span class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-code text-brand-cyan"></i> Master SOP JSON Editor</span>
-              <button onclick="window.toggleDisplay('sopEditorModal', false)" class="text-gray-400 hover:text-white cursor-pointer transition-colors p-1"><i class="fa-solid fa-times text-lg"></i></button>
-          </div>
-          <div class="p-4 flex-1 flex flex-col gap-2 overflow-hidden">
-              <div class="bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan text-xs p-3 rounded-lg flex gap-2 items-start shrink-0">
-                  <i class="fa-solid fa-circle-info mt-0.5"></i>
-                  <p><strong>Warning:</strong> You are editing the live database templates. Any changes here will affect all future deployments. Ensure valid JSON format before saving.</p>
-              </div>
-              <textarea id="sopEditorTextarea" class="flex-1 w-full bg-[#05070f] border border-gray-700 rounded-lg p-4 text-xs font-mono text-gray-300 focus:outline-none focus:border-brand-cyan transition-colors custom-scrollbar" spellcheck="false"></textarea>
-              <p id="sopEditorError" class="text-brand-crimson text-xs font-bold hidden"></p>
-          </div>
-          <div class="bg-gray-900/60 p-4 border-t border-gray-800 flex justify-end gap-3 shrink-0">
-              <button onclick="window.toggleDisplay('sopEditorModal', false)" class="px-5 py-2 text-sm font-bold text-gray-400 hover:text-white transition-colors cursor-pointer">Cancel</button>
-              <button onclick="window.saveSOPEditor()" class="px-6 py-2 text-sm font-bold bg-brand-cyan hover:bg-cyan-400 text-gray-900 rounded-lg shadow-lg transition-all cursor-pointer">Save & Sync Globally</button>
-          </div>
-      </div>
-  </div>
-
   <!-- CANVAS BACKGROUND -->
   <canvas id="gridCanvas" class="fixed inset-0 w-full h-full -z-10" style="pointer-events: none;"></canvas>
 
@@ -704,17 +682,11 @@
         <div class="max-w-4xl mx-auto mt-4">
             
             <!-- Strategy Navigation Tabs -->
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-10 sticky top-[80px] md:top-[100px] z-[90] bg-[#0b0f19]/95 backdrop-blur-xl p-2 rounded-2xl transition-all">
-                <div class="grid grid-cols-2 sm:flex bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 w-full sm:w-auto shadow-md gap-1 sm:gap-0">
-                    <button onclick="window.renderSOPTimeline('Wholesale')" id="sopPill_Wholesale" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md">Wholesale</button>
-                    <button onclick="window.renderSOPTimeline('Novation')" id="sopPill_Novation" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap text-gray-300 hover:text-white">Novation</button>
-                    <button onclick="window.renderSOPTimeline('Creative')" id="sopPill_Creative" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap text-gray-300 hover:text-white">Creative</button>
-                    <button onclick="window.renderSOPTimeline('Fix & Flip')" id="sopPill_Fix & Flip" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap text-gray-300 hover:text-white">Fix & Flip</button>
-                </div>
-                
-                <button id="adminEditSopBtn" onclick="window.openSOPEditor()" class="hidden w-full sm:w-auto px-4 py-2 text-xs font-bold bg-gray-800 hover:bg-gray-700 border border-brand-cyan/30 text-brand-cyan rounded-lg shadow-md transition-all cursor-pointer flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-code"></i> Edit Master JSON
-                </button>
+            <div class="grid grid-cols-2 sm:flex bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 w-full sm:w-auto sm:max-w-fit mx-auto mb-6 sm:mb-10 sticky top-[80px] md:top-[100px] z-[90] backdrop-blur-xl bg-[#0b0f19]/95 shadow-md gap-1 sm:gap-0 transition-all">
+                <button onclick="window.renderSOPTimeline('Wholesale')" id="sopPill_Wholesale" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md">Wholesale</button>
+                <button onclick="window.renderSOPTimeline('Novation')" id="sopPill_Novation" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap text-gray-300 hover:text-white">Novation</button>
+                <button onclick="window.renderSOPTimeline('Creative')" id="sopPill_Creative" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap text-gray-300 hover:text-white">Creative</button>
+                <button onclick="window.renderSOPTimeline('Fix & Flip')" id="sopPill_Fix & Flip" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap text-gray-300 hover:text-white">Fix & Flip</button>
             </div>
 
             <!-- Dynamic Timeline Container -->
@@ -743,7 +715,6 @@
     let propertiesData = [];
     let activePropertyId = null;
     let isGatewayUnlocked = false;
-    let isAdmin = false;
     let localDeviceId = localStorage.getItem('tchb_device_id');
     if (!localDeviceId) { localDeviceId = 'dev_' + Date.now() + Math.random().toString(36).substr(2, 9); localStorage.setItem('tchb_device_id', localDeviceId); }
 
@@ -751,7 +722,6 @@
     let currentUser = null;
     let firebaseAuth = null;
     let googleProvider = null;
-    let firebaseFirestore = null;
     let appId = 'tchb-dispo-default';
     let firebaseSavePropertyData = null;
     let firebaseRemovePropertyData = null;
@@ -801,11 +771,12 @@
     
     window.logOut = async function() {
         if (firebaseAuth) {
-            if (currentUser && db && firebaseFirestore) {
+            if (currentUser && db) {
                 try {
-                    const ref = firebaseFirestore.doc(db, 'artifacts', appId, 'public', 'data', 'active_users', currentUser.uid);
-                    await firebaseFirestore.setDoc(ref, {
-                        sessions: { [localDeviceId]: firebaseFirestore.deleteField() }
+                    const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+                    const ref = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'active_users', currentUser.uid);
+                    await firestoreModule.setDoc(ref, {
+                        sessions: { [localDeviceId]: firestoreModule.deleteField() }
                     }, { merge: true });
                 } catch(e) {}
             }
@@ -891,7 +862,7 @@
         "I": { icon: "fa-clipboard-check", color: "brand-crimson", shadow: "rgba(220,38,38,0.4)", hoverShadow: "rgba(220,38,38,0.2)", txt: "white" }
     };
 
-    let sopBlueprints = {
+    const sopBlueprints = {
         "Wholesale": [
             { id: "p1_1", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "Manually UW The Deal", weight: 6, defaultAssignee: "Carlos" },
             { id: "p1_2", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "AI UW Tool To Confirm Manual UW", weight: 2, defaultAssignee: "Carlos" },
@@ -1241,9 +1212,6 @@
             const mob = document.getElementById('nav-mobile-sop');
             if (mob) { mob.classList.remove('text-gray-500'); mob.classList.add('text-brand-emerald'); }
             
-            if(isAdmin) window.toggleDisplay('adminEditSopBtn', true, 'flex');
-            else window.toggleDisplay('adminEditSopBtn', false);
-
             if(window.isChatOpen) window.toggleChat();
             window.renderSOPTimeline('Wholesale');
         }
@@ -1869,67 +1837,471 @@
         }, 100);
     }
 
-    // --- 6. ADMIN SOP SYNC LOGIC ---
-    window.openSOPEditor = function() {
-        document.getElementById('sopEditorTextarea').value = JSON.stringify(sopBlueprints, null, 2);
-        window.toggleDisplay('sopEditorError', false);
-        window.toggleDisplay('sopEditorModal', true);
+    function renderTrackerView() {
+        const emptyView = document.getElementById('tracker-empty');
+        const contentView = document.getElementById('tracker-content');
+        if(!emptyView || !contentView) return;
+        
+        if (!activePropertyId) {
+            window.toggleDisplay('tracker-empty', true); window.toggleDisplay('tracker-content', false); return;
+        }
+
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) { activePropertyId = null; renderTrackerView(); return; }
+
+        window.toggleDisplay('tracker-empty', false); window.toggleDisplay('tracker-content', true, 'block');
+
+        document.getElementById('tracker-address').innerText = prop.address;
+        const strat = prop.exitStrategy || 'Wholesale';
+        const badge = document.getElementById('tracker-strategy-badge');
+        badge.innerText = strat; badge.className = `${getStrategyColorClass(strat)} text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded mt-1 sm:mt-0`;
+        
+        document.getElementById('tracker-date-started').innerText = `Created: ${formatEST(prop.dateStarted)}`;
+        document.getElementById('tracker-last-edited').innerText = `Updated: ${formatEST(prop.dateLastEdited)}`;
+        document.getElementById('chatWindowAddress').innerText = prop.address;
+        
+        const stats = getPropStats(prop);
+        document.getElementById('tracker-percent-text').innerText = `${stats.percent}%`;
+        document.getElementById('tracker-progress-bar').style.width = `${stats.percent}%`;
+
+        let focusedId = document.activeElement ? document.activeElement.id : null;
+        updateChatBadge(prop);
+        if (window.isChatOpen) renderChatMessages(prop);
+
+        const structure = {};
+        prop.tasks.forEach((t, i) => {
+            if (!structure[t.phase]) structure[t.phase] = {};
+            if (!structure[t.phase][t.mainTask]) structure[t.phase][t.mainTask] = [];
+            structure[t.phase][t.mainTask].push({ ...t, originalIndex: i });
+        });
+
+        const container = document.getElementById('tracker-task-container');
+        container.innerHTML = '';
+
+        const buildFeatures = (item, isSubtask, sIdx, tOriginalIndex) => {
+            const itemKey = isSubtask ? `${tOriginalIndex}_${sIdx}` : `${tOriginalIndex}`;
+            let templateActionHtml = ''; let templateBoxHtml = ''; let linkActionHtml = ''; let linkBoxHtml = '';
+
+            if (item.title.toLowerCase().includes('draft') || item.requiresDraft) {
+                const isApprovedTask = item.title.toLowerCase().includes('approved');
+                const btnLabel = isApprovedTask ? "Template" : "Draft";
+                const btnIcon = isApprovedTask ? "fa-file-circle-check" : "fa-file-pen";
+                const templateIsOpen = window.sectionToggleState[`template_${itemKey}`] === 'open';
+                
+                templateActionHtml = `<div class="w-px h-3 bg-gray-700 mx-2 hidden sm:block"></div><button onclick="window.toggleUIState('template_${itemKey}', 'templateUI_${itemKey}')" class="text-[10px] uppercase tracking-wider font-bold text-brand-cyan/70 hover:text-brand-cyan flex items-center gap-1.5 transition-colors cursor-pointer"><i class="fa-solid ${btnIcon}"></i> ${btnLabel}</button>`;
+
+                let saveMetaHtml = '<span class="text-[9px] uppercase tracking-wider text-brand-cyan opacity-50">Saves automatically on blur</span>';
+                if (item.templateLastEditedBy) {
+                    const authorColorClass = getAgentColorClass(item.templateLastEditedBy, 'text');
+                    saveMetaHtml = `<span class="text-[9px] uppercase tracking-wider text-gray-500">Last saved by <span class="${authorColorClass} font-bold">${escapeHtml(item.templateLastEditedBy)}</span> • ${formatEST(item.templateLastEditedAt)}</span>`;
+                }
+
+                templateBoxHtml = `<div id="templateUI_${itemKey}" class="${templateIsOpen ? 'block' : 'hidden'} mt-2 w-full pl-0"><textarea id="templateInput_${itemKey}" onchange="window.saveItemTemplate('${itemKey}')" class="w-full max-w-3xl h-24 bg-gray-950/50 border border-brand-cyan/30 rounded-lg p-3 text-xs text-gray-300 focus:border-brand-cyan focus:outline-none transition-colors resize-y custom-scrollbar placeholder-gray-600" placeholder="Paste text here...">${escapeHtml(item.templateText || "")}</textarea><div class="max-w-3xl flex justify-end mt-1">${saveMetaHtml}</div></div>`;
+            }
+
+            if (item.requiresLink || item.hyperlink) {
+                const linkIsOpen = window.sectionToggleState[`link_${itemKey}`] === 'open';
+                
+                if (item.hyperlink) {
+                    const href = item.hyperlink.startsWith('http') ? item.hyperlink : 'https://'+item.hyperlink;
+                    linkActionHtml = `<div class="w-px h-3 bg-gray-700 mx-2 hidden sm:block"></div><div class="flex items-center gap-1"><a href="${href}" target="_blank" class="text-[10px] uppercase tracking-wider font-bold text-brand-emerald hover:underline flex items-center gap-1 transition-colors cursor-pointer max-w-[150px] truncate" title="${escapeHtml(item.hyperlink)}"><i class="fa-solid fa-arrow-up-right-from-square"></i> Link</a><button onclick="window.toggleUIState('link_${itemKey}', 'linkUI_${itemKey}', 'flex')" class="text-gray-500 hover:text-brand-emerald px-1.5 cursor-pointer" title="Edit Link"><i class="fa-solid fa-pen text-[9px]"></i></button></div>`;
+                } else {
+                    linkActionHtml = `<div class="w-px h-3 bg-gray-700 mx-2 hidden sm:block"></div><button onclick="window.toggleUIState('link_${itemKey}', 'linkUI_${itemKey}', 'flex')" class="text-[10px] uppercase tracking-wider font-bold text-brand-emerald/70 hover:text-brand-emerald flex items-center gap-1.5 transition-colors cursor-pointer"><i class="fa-solid fa-link"></i> + Link</button>`;
+                }
+
+                linkBoxHtml = `<div id="linkUI_${itemKey}" class="${linkIsOpen ? 'flex' : 'hidden'} mt-2 w-full flex-col gap-2 pl-0"><div class="flex items-center gap-2 max-w-lg"><input type="text" id="linkInput_${itemKey}" value="${escapeHtml(item.hyperlink || "")}" class="flex-1 bg-gray-950/50 border border-brand-emerald/30 rounded-lg p-2 text-xs text-gray-300 focus:border-brand-emerald focus:outline-none transition-colors placeholder-gray-600" placeholder="https://..." onkeydown="if(event.key === 'Enter') window.saveItemLink('${itemKey}')"><button onclick="window.saveItemLink('${itemKey}')" class="bg-brand-emerald hover:bg-emerald-400 text-gray-900 px-3 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-md">Save</button><button onclick="window.clearItemLink('${itemKey}')" class="text-gray-500 hover:text-red-400 px-2 py-2 cursor-pointer transition-colors" title="Remove Link"><i class="fa-solid fa-trash"></i></button></div></div>`;
+            }
+
+            return { templateActionHtml, templateBoxHtml, linkActionHtml, linkBoxHtml };
+        };
+
+        for (const [phaseName, mainTasksMap] of Object.entries(structure)) {
+            const ui = getPhaseUI(phaseName);
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = `glass-card rounded-xl border ${ui.timelineCard} overflow-hidden mb-6 transition-all`;
+
+            sectionDiv.innerHTML = `<div class="bg-gray-900/60 p-4 border-b border-gray-800 flex items-center justify-between"><h3 class="font-bold text-white uppercase text-sm tracking-wider flex items-center gap-2"><i class="fa-solid ${ui.icon} ${ui.trackerHeaderIcon}"></i> ${phaseName}</h3></div>`;
+            const listDiv = document.createElement('div'); listDiv.className = "flex flex-col";
+
+            for (const [mainTaskName, tasks] of Object.entries(mainTasksMap)) {
+                const sectionKey = btoa(encodeURIComponent(phaseName + "_" + mainTaskName)).replace(/=/g, '');
+                const allCompleted = tasks.length > 0 && tasks.every(t => t.completed && (!t.subtasks || t.subtasks.every(s => s.completed)));
+
+                if (!window.sectionToggleState) window.sectionToggleState = {};
+                if (!window.sectionCompletionState) window.sectionCompletionState = {};
+
+                if (window.sectionCompletionState[sectionKey] !== undefined && window.sectionCompletionState[sectionKey] !== allCompleted) window.sectionToggleState[sectionKey] = allCompleted ? 'closed' : 'open';
+                else if (typeof window.sectionToggleState[sectionKey] === 'undefined') window.sectionToggleState[sectionKey] = allCompleted ? 'closed' : 'open';
+                window.sectionCompletionState[sectionKey] = allCompleted;
+
+                const isOpen = window.sectionToggleState[sectionKey] === 'open';
+                const totalWeight = tasks.reduce((sum, t) => sum + t.weight, 0);
+                const completedWeight = tasks.reduce((sum, t) => sum + (t.completed ? t.weight : 0), 0);
+                const sectionPercent = totalWeight > 0 ? Math.round((completedWeight / totalWeight) * 100) : (allCompleted ? 100 : 0);
+
+                const mainTaskContainer = document.createElement('div');
+                mainTaskContainer.className = "border-b border-gray-800/60 last:border-0";
+                
+                mainTaskContainer.innerHTML = `
+                    <div class="group bg-gray-800/40 hover:bg-brand-emerald/10 px-4 py-3 flex items-center justify-between cursor-pointer transition-colors duration-300 select-none" onclick="window.toggleUIState('${sectionKey}', 'tasks_${sectionKey}')">
+                        <h4 class="text-xs font-black text-gray-300 group-hover:text-brand-emerald uppercase tracking-widest flex items-center gap-2 transition-colors duration-300"><i id="icon_${sectionKey}" class="fa-solid fa-caret-${isOpen ? 'down' : 'right'} text-gray-600 group-hover:text-brand-emerald transition-transform duration-300 w-3 text-center"></i> ${mainTaskName}</h4>
+                        <div class="flex items-center gap-3"><span class="text-xs font-black text-gray-400">${sectionPercent}%</span><span class="${allCompleted ? 'bg-brand-emerald/10 text-brand-emerald border-brand-emerald/30' : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30'} px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider">${allCompleted ? 'COMPLETE' : 'PENDING'}</span></div>
+                    </div>
+                `;
+
+                const tasksContainer = document.createElement('div');
+                tasksContainer.id = `tasks_${sectionKey}`;
+                tasksContainer.className = `divide-y divide-gray-800/60 ${isOpen ? 'block' : 'hidden'} bg-gray-900/20`;
+
+                tasks.forEach(t => {
+                    const row = document.createElement('div'); row.id = `task_${t.id}`;
+                    row.className = `p-4 flex flex-col gap-3 transition-colors duration-500 hover:bg-gray-800/30 ${(t.completed && (!t.subtasks || t.subtasks.every(s=>s.completed))) ? 'opacity-60' : ''}`;
+                    
+                    const agentOpts = agentsList.map(a => `<option value="${a}" ${t.assignee === a ? 'selected' : ''} class="bg-gray-900 text-white">${a}</option>`).join('');
+                    const agentColor = getAgentColorClass(t.assignee, 'text');
+                    const agentBorder = getAgentColorClass(t.assignee, 'border');
+                    const agentBg = getAgentColorClass(t.assignee, 'bg');
+                    const weightColor = t.completed ? 'text-brand-emerald bg-brand-emerald/10 border-brand-emerald/30' : 'text-brand-crimson bg-gray-900 border-gray-700';
+
+                    const tFeat = buildFeatures(t, false, null, t.originalIndex);
+                    let subtasksHtml = '';
+                    if (t.subtasks && t.subtasks.length > 0) {
+                        subtasksHtml = t.subtasks.map((st, sIdx) => {
+                            const subWeightBadge = t.isSOW ? `<span class="text-[9px] font-bold text-brand-cyan bg-brand-cyan/10 border border-brand-cyan/30 px-1.5 py-0.5 rounded shadow-sm">+${(t.weight / t.subtasks.length).toFixed(1).replace(/\.0$/, '')}%</span>` : '';
+                            const isDefaultSub = st.isDefault || (t.id === 'p3_6' && st.title.includes('Boost the Post'));
+                            const sFeat = buildFeatures(st, true, sIdx, t.originalIndex);
+
+                            return `
+                            <div class="flex flex-col gap-2 pl-7 sm:pl-10 py-2 group/sub border-b border-gray-800/30 last:border-0" id="sub_row_${t.originalIndex}_${sIdx}">
+                                <div id="sub_view_${t.originalIndex}_${sIdx}" class="flex items-start gap-3 w-full">
+                                    <input type="checkbox" ${st.completed ? 'checked' : ''} onchange="window.toggleSubtask(${t.originalIndex}, ${sIdx}, this.checked)" class="w-4 h-4 mt-0.5 rounded accent-brand-purple bg-gray-900 border-gray-600 focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer shrink-0">
+                                    <div class="flex-1 min-w-0 flex flex-col gap-1">
+                                        <div class="flex justify-between items-start gap-2">
+                                            <span class="text-[11px] sm:text-xs font-medium ${st.completed ? 'text-gray-500 line-through' : 'text-gray-300'} leading-relaxed break-words whitespace-pre-wrap mt-0.5">${escapeHtml(st.title)}</span>
+                                            <div class="flex items-center gap-2 shrink-0">${subWeightBadge}<button onclick="window.toggleDisplay('sub_view_${t.originalIndex}_${sIdx}', false); window.toggleDisplay('sub_edit_${t.originalIndex}_${sIdx}', true);" class="text-gray-500 hover:text-brand-cyan transition-colors cursor-pointer px-1" title="Edit Item"><i class="fa-solid fa-pen text-[10px] sm:text-xs"></i></button></div>
+                                        </div>
+                                        <div class="flex items-center flex-wrap gap-x-2 sm:gap-x-3 gap-y-1 mt-0.5">${sFeat.linkActionHtml}${sFeat.templateActionHtml}</div>
+                                        <div class="pl-0 mt-1">${sFeat.linkBoxHtml}${sFeat.templateBoxHtml}</div>
+                                    </div>
+                                </div>
+                                <div id="sub_edit_${t.originalIndex}_${sIdx}" class="hidden flex-col gap-2 bg-gray-900/50 p-3 rounded-lg border border-brand-cyan/30 mt-1">
+                                    <textarea id="sub_input_${t.originalIndex}_${sIdx}" class="w-full bg-gray-950 border border-gray-700 rounded p-2 text-xs text-white focus:outline-none focus:border-brand-cyan transition-colors resize-y min-h-[50px] custom-scrollbar">${escapeHtml(st.title)}</textarea>
+                                    <div class="flex items-center gap-3 mt-1 px-1">
+                                        <label class="text-[10px] text-gray-400 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="editSubtaskLink_${t.originalIndex}_${sIdx}" class="accent-brand-emerald" ${st.requiresLink || st.hyperlink ? 'checked' : ''}> Require Link</label>
+                                        <label class="text-[10px] text-gray-400 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="editSubtaskDraft_${t.originalIndex}_${sIdx}" class="accent-brand-cyan" ${st.requiresDraft || st.templateText ? 'checked' : ''}> Require Draft</label>
+                                    </div>
+                                    <div class="flex justify-between items-center mt-1">
+                                        ${isDefaultSub ? '<div></div>' : `<button onclick="window.promptRemoveSubtask(${t.originalIndex}, ${sIdx})" class="text-xs font-bold text-red-500 hover:text-red-400 flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-trash-can"></i> Remove</button>`}
+                                        <div class="flex gap-2 ml-auto">
+                                            <button onclick="window.cancelEditSubtask(${t.originalIndex}, ${sIdx})" class="text-xs font-bold text-gray-400 hover:text-white px-3 py-1.5 transition-colors">Cancel</button>
+                                            <button onclick="window.saveSubtask(${t.originalIndex}, ${sIdx})" class="text-xs font-bold bg-brand-cyan hover:bg-cyan-400 text-gray-900 px-4 py-1.5 rounded-lg shadow-md transition-colors">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        }).join('');
+                    }
+
+                    const addSubtaskInputHtml = `
+                        <div id="addSubtaskUI_${t.originalIndex}" class="hidden pl-8 sm:pl-10 mt-1">
+                            <div class="flex flex-col gap-2 max-w-md bg-gray-900/50 p-3 rounded-lg border border-brand-purple/30">
+                                <textarea id="newSubtaskInput_${t.originalIndex}" placeholder="Describe subtask..." class="w-full bg-gray-950 border border-gray-700 rounded p-2 text-xs text-white focus:outline-none focus:border-brand-purple transition-colors resize-y min-h-[50px] custom-scrollbar"></textarea>
+                                <div class="flex items-center justify-between mt-1">
+                                    <div class="flex items-center gap-3"><label class="text-[10px] text-gray-400 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="newSubtaskLink_${t.originalIndex}" class="accent-brand-emerald"> Add Link</label><label class="text-[10px] text-gray-400 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="newSubtaskDraft_${t.originalIndex}" class="accent-brand-cyan"> Add Draft</label></div>
+                                    <div class="flex justify-end gap-2"><button onclick="window.toggleUIState('addSubtaskUI_${t.originalIndex}', 'addSubtaskUI_${t.originalIndex}')" class="text-xs font-bold text-gray-400 hover:text-white px-3 py-1.5 transition-colors">Cancel</button><button onclick="window.confirmAddSubtask(${t.originalIndex})" class="bg-brand-purple hover:bg-indigo-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-colors shadow-md cursor-pointer">Save</button></div>
+                                </div>
+                            </div>
+                        </div>`;
+
+                    row.innerHTML = `
+                        <div class="flex items-start gap-3 w-full pl-2 sm:pl-3 relative">
+                            <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="window.toggleTask(${t.originalIndex}, this.checked)" class="w-5 h-5 mt-0.5 rounded accent-brand-purple bg-gray-900 border-gray-600 focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer shrink-0">
+                            <div class="min-w-0 flex-1 flex flex-col gap-1.5">
+                                <div class="flex justify-between items-start gap-2">
+                                    <p class="text-sm font-bold ${t.completed ? 'text-gray-500 line-through' : 'text-gray-100'} leading-tight break-words whitespace-pre-wrap mt-0.5">${t.title}</p>
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        <select onchange="window.changeAssignee(${t.originalIndex}, this.value)" class="${agentBg} border ${agentBorder} ${agentColor} text-[10px] sm:text-xs font-bold rounded px-1.5 sm:px-2 py-1 focus:outline-none focus:ring-1 focus:ring-brand-purple cursor-pointer appearance-none text-center min-w-[70px]">${agentOpts}</select>
+                                        <span class="${weightColor} text-[10px] sm:text-xs font-black px-1.5 sm:px-2 py-1 rounded w-10 sm:w-12 text-center transition-colors">+${t.weight}%</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center flex-wrap gap-x-2 sm:gap-x-3 gap-y-2 mt-0.5"><button onclick="window.toggleUIState('addSubtaskUI_${t.originalIndex}', 'addSubtaskUI_${t.originalIndex}'); setTimeout(()=>document.getElementById('newSubtaskInput_${t.originalIndex}').focus(),50);" class="text-[10px] uppercase tracking-wider font-bold text-brand-purple/70 hover:text-brand-purple flex items-center gap-1 transition-colors cursor-pointer"><i class="fa-solid fa-plus"></i> Add Subtask</button>${tFeat.linkActionHtml}${tFeat.templateActionHtml}</div>
+                            </div>
+                        </div>
+                        <div class="pl-7 sm:pl-10 mt-2">${tFeat.linkBoxHtml}${tFeat.templateBoxHtml}</div>
+                        ${subtasksHtml}${addSubtaskInputHtml}`;
+                    tasksContainer.appendChild(row);
+                });
+                
+                mainTaskContainer.appendChild(tasksContainer);
+                listDiv.appendChild(mainTaskContainer);
+            }
+            sectionDiv.appendChild(listDiv); container.appendChild(sectionDiv);
+        }
+        if (focusedId) { const el = document.getElementById(focusedId); if(el) el.focus(); }
     }
 
-    window.saveSOPEditor = async function() {
-        const errorEl = document.getElementById('sopEditorError');
-        try {
-            const parsed = JSON.parse(document.getElementById('sopEditorTextarea').value);
-            if (typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error("Root element must be a valid JSON Object with Strategy Keys.");
-            
-            if (currentUser && db && firebaseFirestore) {
-                const docRef = firebaseFirestore.doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'blueprints');
-                await firebaseFirestore.setDoc(docRef, { data: JSON.stringify(parsed) });
-            } else {
-                sopBlueprints = parsed; // Local fallback
+    // Dynamic SOP Reference Rendering
+    window.renderSOPTimeline = function(strategyName) {
+        document.querySelectorAll('.sop-pill').forEach(btn => {
+            btn.className = "px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap sop-pill";
+        });
+        const activeBtn = document.getElementById(`sopPill_${strategyName}`);
+        if(activeBtn) activeBtn.className = "px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap";
+
+        const container = document.getElementById('sopTimelineContainer');
+        const tasks = sopBlueprints[strategyName] || [];
+        const structure = {};
+        
+        tasks.forEach(t => {
+            if (!structure[t.phase]) structure[t.phase] = {};
+            if (!structure[t.phase][t.mainTask]) structure[t.phase][t.mainTask] = [];
+            structure[t.phase][t.mainTask].push(t);
+        });
+
+        const phaseNames = Object.keys(structure);
+        let navHtml = `<div class="grid grid-cols-1 md:grid-cols-${Math.min(phaseNames.length, 4)} gap-4 mb-6 sm:mb-10 z-[80] bg-transparent p-2 sm:p-4 -mx-2 sm:-mx-4 rounded-2xl transition-all">`;
+        
+        let pIndex = 1;
+        for (const phaseName of phaseNames) {
+            const phaseId = `phase-${pIndex}`;
+            const ui = getPhaseUI(phaseName);
+            let splitName = phaseName.split(':');
+            let shortPhase = splitName[0] ? splitName[0].trim() : `Phase ${ui.roman}`;
+            let phaseDesc = splitName[1] ? splitName[1].trim() : phaseName;
+
+            navHtml += `
+                <div onclick="document.getElementById('${phaseId}').scrollIntoView({behavior: 'smooth'})" class="cursor-pointer flex items-center gap-3 bg-gray-900/60 hover:bg-gray-800/90 p-4 rounded-xl border ${ui.navWrapper} transition-all hover:-translate-y-1 shadow-sm">
+                    <span class="w-8 h-8 rounded-lg ${ui.navIcon} flex items-center justify-center font-extrabold text-sm shadow">${ui.roman}</span>
+                    <div><span class="text-gray-400 text-[9px] uppercase font-bold tracking-wider block">${shortPhase}</span><span class="text-xs font-bold text-white block">${phaseDesc}</span></div>
+                </div>`;
+            pIndex++;
+        }
+        navHtml += `</div>`;
+
+        let timelineHtml = `<div class="relative pl-6 sm:pl-10 border-l border-gray-800 space-y-12 py-4"><div class="absolute left-0 top-0 w-1 bg-gradient-to-b from-brand-crimson via-brand-purple to-brand-emerald h-full pointer-events-none -ml-px rounded-full opacity-60"></div>`;
+
+        let cardCounter = 1; pIndex = 1;
+        for (const [phaseName, mainTasksMap] of Object.entries(structure)) {
+            const phaseId = `phase-${pIndex}`; const ui = getPhaseUI(phaseName);
+            const phaseTotalWeight = Object.values(mainTasksMap).flat().reduce((sum, t) => sum + t.weight, 0);
+
+            timelineHtml += `<div id="${phaseId}" class="relative -ml-[31px] sm:-ml-[47px] mb-8 ${pIndex > 1 ? 'pt-8' : ''} scroll-mt-10 transition-all"><div class="inline-flex items-center gap-3"><span class="${ui.timelineHeader} font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4"><i class="fa-solid ${ui.icon}"></i> ${phaseName.toUpperCase()} (${phaseTotalWeight}%)</span></div></div>`;
+
+            for (const [mainTaskName, innerTasks] of Object.entries(mainTasksMap)) {
+                let itemsHtml = innerTasks.map(t => {
+                    const agentColorClass = getAgentColorClass(t.defaultAssignee, 'text');
+                    const agentBgClass = getAgentColorClass(t.defaultAssignee, 'bg');
+                    let subHtml = "";
+                    if(t.defaultSubtasks && t.defaultSubtasks.length > 0) subHtml = t.defaultSubtasks.map(st => `<div class="mt-2 pl-6 flex items-center gap-2 text-gray-400 border-l-2 border-gray-700 ml-2"><i class="fa-solid fa-level-up-alt rotate-90 text-gray-500 text-[10px]"></i> <span class="text-xs font-medium italic">Subtask: ${st}</span></div>`).join('');
+                    
+                    return `<li class="flex flex-col bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><div class="flex justify-between items-center gap-4"><span class="flex items-start gap-2 flex-1"><i class="fa-solid fa-angle-right text-gray-500 mt-0.5"></i> ${t.title}</span><span class="text-xs ${agentColorClass} ${agentBgClass} px-2 py-0.5 rounded font-bold shrink-0">${t.weight}% (${t.defaultAssignee})</span></div>${subHtml}</li>`;
+                }).join('');
+
+                timelineHtml += `<div class="relative group"><div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full ${ui.timelineDot} border-4 flex items-center justify-center font-black text-xs shadow-lg group-hover:scale-110 transition-transform">${cardCounter}</div><div class="glass-card rounded-xl p-4 sm:p-6 ${ui.timelineCard} hover:-translate-y-1 transition-all"><div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4"><h3 class="text-lg font-bold text-white">${mainTaskName}</h3></div><ul class="space-y-3 text-sm text-gray-300">${itemsHtml}</ul></div></div>`;
+                cardCounter++;
             }
-            
-            window.toggleDisplay('sopEditorModal', false);
-            if (window.showAppToast) window.showAppToast("Success", "Master SOPs have been updated globally.");
-            
-            // Re-render currently viewed SOP Timeline if active
-            const activePill = document.querySelector('.sop-pill.bg-gradient-to-r');
-            if (activePill && !document.getElementById('tab-sop').classList.contains('hidden')) {
-                window.renderSOPTimeline(activePill.id.replace('sopPill_', ''));
+            pIndex++;
+        }
+        timelineHtml += `</div>`; container.innerHTML = navHtml + timelineHtml;
+    }
+
+    // Generalized Feature Toggles (Tasks & Subtasks)
+    window.toggleUIState = function(key, elId, displayClass = 'block') {
+        const ui = document.getElementById(elId);
+        if (!window.sectionToggleState) window.sectionToggleState = {};
+        const isHidden = ui.classList.contains('hidden');
+        if (isHidden) { ui.classList.remove('hidden'); if (displayClass !== 'block') ui.classList.add(displayClass); window.sectionToggleState[key] = 'open'; }
+        else { ui.classList.add('hidden'); if (displayClass !== 'block') ui.classList.remove(displayClass); window.sectionToggleState[key] = 'closed'; }
+        
+        if(key.startsWith('Phase')) {
+            const icon = document.getElementById('icon_' + key);
+            if(icon) {
+                if(isHidden) { icon.classList.remove('fa-caret-right'); icon.classList.add('fa-caret-down'); }
+                else { icon.classList.remove('fa-caret-down'); icon.classList.add('fa-caret-right'); }
             }
-        } catch (e) {
-            errorEl.innerText = "Invalid JSON: " + e.message;
-            window.toggleDisplay('sopEditorError', true, 'block');
+        }
+        return isHidden;
+    }
+
+    window.saveItemTemplate = async function(itemKey) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        const target = getItemFromKey(prop, itemKey);
+        target.templateText = document.getElementById(`templateInput_${itemKey}`).value;
+        target.templateLastEditedBy = currentUser && currentUser.email ? currentUser.email.split('@')[0] : "Agent";
+        target.templateLastEditedAt = Date.now();
+        await window.savePropertyData(prop); 
+    }
+
+    window.saveItemLink = async function(itemKey) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        const target = getItemFromKey(prop, itemKey);
+        target.hyperlink = document.getElementById(`linkInput_${itemKey}`).value.trim();
+        await window.savePropertyData(prop);
+        window.toggleUIState('link_'+itemKey, 'linkUI_'+itemKey, 'flex');
+    }
+
+    window.clearItemLink = async function(itemKey) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        const target = getItemFromKey(prop, itemKey);
+        target.hyperlink = "";
+        await window.savePropertyData(prop);
+        window.toggleUIState('link_'+itemKey, 'linkUI_'+itemKey, 'flex');
+    }
+
+    window.cancelEditSubtask = function(taskIndex, subIndex) {
+        window.toggleDisplay(`sub_view_${taskIndex}_${subIndex}`, true);
+        window.toggleDisplay(`sub_edit_${taskIndex}_${subIndex}`, false);
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (prop) document.getElementById(`sub_input_${taskIndex}_${subIndex}`).value = prop.tasks[taskIndex].subtasks[subIndex].title;
+    }
+
+    window.saveSubtask = async function(taskIndex, subIndex) {
+        const input = document.getElementById(`sub_input_${taskIndex}_${subIndex}`).value.trim();
+        if (!input) return;
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        prop.tasks[taskIndex].subtasks[subIndex].title = input;
+        
+        const linkCheck = document.getElementById(`editSubtaskLink_${taskIndex}_${subIndex}`);
+        const draftCheck = document.getElementById(`editSubtaskDraft_${taskIndex}_${subIndex}`);
+        if (linkCheck) { prop.tasks[taskIndex].subtasks[subIndex].requiresLink = linkCheck.checked; if (!linkCheck.checked) prop.tasks[taskIndex].subtasks[subIndex].hyperlink = ""; }
+        if (draftCheck) { prop.tasks[taskIndex].subtasks[subIndex].requiresDraft = draftCheck.checked; if (!draftCheck.checked) prop.tasks[taskIndex].subtasks[subIndex].templateText = ""; }
+        await window.savePropertyData(prop);
+    }
+
+    window.promptRemoveSubtask = function(taskIndex, subIndex) {
+        pendingSOWRemove = { taskIndex, subIndex };
+        document.getElementById('removeSOWConfirmInput').value = '';
+        document.getElementById('removeSOWBtn').disabled = true;
+        document.getElementById('removeSOWBtn').className = "px-5 py-2 text-sm font-bold bg-gray-700 text-gray-500 rounded-lg shadow-lg cursor-not-allowed transition-all";
+        window.toggleDisplay('removeSOWModal', true);
+        document.getElementById('removeSOWConfirmInput').focus();
+    }
+
+    window.validateRemoveSOWInput = function() {
+        const val = document.getElementById('removeSOWConfirmInput').value;
+        const btn = document.getElementById('removeSOWBtn');
+        if (val === 'Confirm') {
+            btn.disabled = false; btn.className = "px-5 py-2 text-sm font-bold bg-brand-crimson hover:bg-red-500 text-white rounded-lg shadow-lg cursor-pointer transition-all";
+        } else {
+            btn.disabled = true; btn.className = "px-5 py-2 text-sm font-bold bg-gray-700 text-gray-500 rounded-lg shadow-lg cursor-not-allowed transition-all";
         }
     }
 
-    window.listenToBlueprints = async function() {
-        if (!currentUser || !db || !firebaseFirestore) return;
-        const docRef = firebaseFirestore.doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'blueprints');
+    window.executeRemoveSOWSubtask = async function() {
+        if (!pendingSOWRemove) return;
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        const { taskIndex, subIndex } = pendingSOWRemove;
         
-        try {
-            const snap = await firebaseFirestore.getDoc(docRef);
-            if (!snap.exists()) {
-                await firebaseFirestore.setDoc(docRef, { data: JSON.stringify(sopBlueprints) });
+        prop.tasks[taskIndex].subtasks.splice(subIndex, 1);
+        if (prop.tasks[taskIndex].subtasks.length > 0) {
+            const allDone = prop.tasks[taskIndex].subtasks.every(s => s.completed);
+            if (allDone) {
+                prop.tasks[taskIndex].completed = true;
+                const sectionKey = btoa(encodeURIComponent(prop.tasks[taskIndex].phase + "_" + prop.tasks[taskIndex].mainTask)).replace(/=/g, '');
+                if (window.sectionToggleState) window.sectionToggleState[sectionKey] = 'closed';
             }
+        } else prop.tasks[taskIndex].completed = false;
 
-            firebaseFirestore.onSnapshot(docRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    try {
-                        const parsed = JSON.parse(docSnap.data().data);
-                        sopBlueprints = parsed;
-                        
-                        if (!document.getElementById('tab-sop').classList.contains('hidden')) {
-                            const activeBtn = document.querySelector('.sop-pill.bg-gradient-to-r');
-                            if (activeBtn) window.renderSOPTimeline(activeBtn.id.replace('sopPill_', ''));
-                        }
-                    } catch (e) { console.error("Error parsing live blueprints", e); }
-                }
-            });
-        } catch(e) { console.error("Could not sync live blueprints", e); }
+        await window.savePropertyData(prop);
+        window.toggleDisplay('removeSOWModal', false); pendingSOWRemove = null;
     }
 
-    // --- 7. CLOUD FIREBASE SYNC ENGINE (DYNAMIC IMPORT) ---
+    window.toggleTask = async function(taskIndex, isCompleted) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        prop.tasks[taskIndex].completed = isCompleted;
+        await window.savePropertyData(prop);
+    }
+
+    window.changeAssignee = async function(taskIndex, newAssignee) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        prop.tasks[taskIndex].assignee = newAssignee;
+        await window.savePropertyData(prop);
+    }
+
+    window.confirmAddSubtask = async function(taskIndex) {
+        const input = document.getElementById(`newSubtaskInput_${taskIndex}`);
+        const title = input.value.trim();
+        if (!title) return;
+        
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        
+        const needsLink = document.getElementById(`newSubtaskLink_${taskIndex}`)?.checked || false;
+        const needsDraft = document.getElementById(`newSubtaskDraft_${taskIndex}`)?.checked || false;
+
+        if (!prop.tasks[taskIndex].subtasks) prop.tasks[taskIndex].subtasks = [];
+        prop.tasks[taskIndex].subtasks.push({
+            id: 'sub_' + Date.now() + Math.random().toString(36).substr(2, 5), title: title, completed: false,
+            requiresLink: needsLink, requiresDraft: needsDraft, hyperlink: "", templateText: ""
+        });
+        prop.tasks[taskIndex].completed = false; 
+        await window.savePropertyData(prop);
+    }
+
+    window.toggleSubtask = async function(taskIndex, subtaskIndex, isCompleted) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if (!prop) return;
+        prop.tasks[taskIndex].subtasks[subtaskIndex].completed = isCompleted;
+        
+        const allDone = prop.tasks[taskIndex].subtasks.every(s => s.completed);
+        if (allDone) {
+            prop.tasks[taskIndex].completed = true;
+            const sectionKey = btoa(encodeURIComponent(prop.tasks[taskIndex].phase + "_" + prop.tasks[taskIndex].mainTask)).replace(/=/g, '');
+            if (window.sectionToggleState) window.sectionToggleState[sectionKey] = 'closed';
+        } else prop.tasks[taskIndex].completed = false;
+        
+        await window.savePropertyData(prop);
+    }
+
+    // MULTI-SELECT NOTIFICATIONS ACTIONS
+    window.toggleNotificationSelection = function(id, e) {
+        if (e) e.stopPropagation();
+        if (window.selectedNotifs.has(id)) window.selectedNotifs.delete(id);
+        else window.selectedNotifs.add(id);
+        window.renderNotificationList();
+    }
+
+    window.toggleSelectAllNotifications = function(e) {
+        if (e) e.stopPropagation();
+        if (e.target.checked) window.notificationHistory.forEach(n => window.selectedNotifs.add(n.id));
+        else window.selectedNotifs.clear();
+        window.renderNotificationList();
+    }
+
+    window.deleteNotification = async function(id, e) {
+        if (e) e.stopPropagation();
+        const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+        const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+        firestoreModule.deleteDoc(ref).catch(err=>console.error(err));
+        window.selectedNotifs.delete(id);
+    }
+
+    window.deleteSelectedNotifications = async function() {
+        const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+        window.selectedNotifs.forEach(id => {
+            const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+            firestoreModule.deleteDoc(ref).catch(err=>console.error(err));
+        });
+        window.selectedNotifs.clear();
+    }
+
+    window.markSelectedNotificationsRead = async function() {
+        const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+        window.selectedNotifs.forEach(id => {
+            const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+            firestoreModule.updateDoc(ref, { read: true }).catch(err=>console.error(err));
+        });
+        window.selectedNotifs.clear();
+    }
+
+    // --- 6. CLOUD FIREBASE SYNC ENGINE (DYNAMIC IMPORT) ---
     async function initFirebase() {
         try {
             const firebaseConfig = {
@@ -1947,7 +2319,6 @@
             const appModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
             const authModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
             const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-            firebaseFirestore = firestoreModule;
             
             let messagingModule = null;
             try { messagingModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js"); } catch (err) { }
@@ -2131,6 +2502,7 @@
 
             window.markAllNotificationsRead = async function() {
                 const unread = window.notificationHistory.filter(n => !n.read);
+                const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
                 unread.forEach(n => {
                     const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', n.id);
                     firestoreModule.updateDoc(ref, { read: true }).catch(e=>console.error(e));
@@ -2139,6 +2511,7 @@
 
             window.handleNotificationClick = async function(id, extraDataStr, e) {
                 if (e) e.stopPropagation();
+                const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
                 const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
                 firestoreModule.updateDoc(ref, { read: true }).catch(e=>{});
                 window.toggleNotificationList();
@@ -2226,17 +2599,7 @@
             authModule.onAuthStateChanged(firebaseAuth, async (user) => {
                 if (user) {
                     if (user.email && user.email.endsWith('@totalchb.com')) {
-                        currentUser = user; 
-                        
-                        // Check admin permissions
-                        const adminList = ['brandy@totalchb.com', 'luke@totalchb.com', 'info@totalchb.com', 'systems@totalchb.com'];
-                        isAdmin = adminList.includes(currentUser.email.toLowerCase());
-                        
-                        grantAccess(); 
-                        
-                        // Start syncing live SOP Blueprints
-                        window.listenToBlueprints();
-
+                        currentUser = user; grantAccess(); 
                         window.loadNotificationPreferences(); window.listenToNotifications();
                         
                         if (!window.presenceInterval) {
@@ -2262,10 +2625,10 @@
                                 if(window.renderActiveUsersList) window.renderActiveUsersList();
                             });
                         }
-                    } else { await authModule.signOut(firebaseAuth); currentUser = null; isAdmin = false; }
+                    } else { await authModule.signOut(firebaseAuth); currentUser = null; }
                 } else {
                     if (window.presenceInterval) { clearInterval(window.presenceInterval); window.presenceInterval = null; }
-                    currentUser = null; isAdmin = false;
+                    currentUser = null;
                 }
             });
             
@@ -2302,7 +2665,7 @@
         }
     }
 
-    // --- 8. CURSOR & CANVAS ANIMATION LOGIC ---
+    // --- 7. CURSOR & CANVAS ANIMATION LOGIC ---
     const canvas = document.getElementById('gridCanvas');
     const ctx = canvas.getContext('2d');
     let gridSize = 55; let sparks = []; let lastSpanSpawn = 0; let lastInteractionTime = Date.now(); 
