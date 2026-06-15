@@ -243,7 +243,7 @@
   <div id="propertyChatContainer" class="fixed bottom-0 md:bottom-6 right-0 md:right-6 z-[105] flex flex-col items-end justify-end transition-all hidden w-full md:w-auto pointer-events-none">
       
       <!-- Chat Window -->
-      <div id="chatWindow" class="fixed top-0 left-0 right-0 bottom-[calc(60px+env(safe-area-inset-bottom))] md:relative md:inset-auto md:h-[600px] md:max-h-[calc(100vh-100px)] w-full md:w-[400px] pointer-events-auto z-[200] md:z-auto bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 md:rounded-2xl shadow-2xl mb-0 md:mb-4 hidden flex-col overflow-hidden transition-all md:origin-bottom-right">
+      <div id="chatWindow" class="fixed top-2 left-2 right-2 bottom-[calc(68px+env(safe-area-inset-bottom))] md:relative md:inset-auto md:h-[600px] md:max-h-[calc(100vh-100px)] w-auto md:w-[400px] pointer-events-auto z-[200] md:z-auto bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-2xl mb-0 md:mb-4 hidden flex-col overflow-hidden transition-all md:origin-bottom-right">
           
           <!-- Pins Overlay -->
           <div id="chatPinsModal" class="hidden absolute inset-0 bg-[#0f1423]/95 backdrop-blur-md z-20 flex-col transition-all">
@@ -372,12 +372,12 @@
                     </button>
                     
                     <!-- NOTIFICATIONS DROPDOWN LIST -->
-                    <div id="notificationsListDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-[420px] h-[400px] sm:h-[500px] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-left transition-all text-left">
+                    <div id="notificationsListDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-[420px] max-h-[80vh] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-left transition-all text-left">
                         <div id="notifHeaderActions" class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px] shrink-0">
                             <!-- Populated dynamically by JS based on selection state -->
                         </div>
                         
-                        <div id="notificationsListItems" class="p-0 flex flex-col flex-1 overflow-y-auto custom-scrollbar divide-y divide-gray-800">
+                        <div id="notificationsListItems" class="p-0 flex flex-col flex-1 overflow-y-auto min-h-0 custom-scrollbar divide-y divide-gray-800">
                             <!-- Dynamic Notification Items -->
                         </div>
                     </div>
@@ -482,11 +482,9 @@
                 <div class="h-6 sm:h-8 w-px bg-gray-700/80 shrink-0 hidden sm:block"></div>
                 
                 <h1 class="text-sm sm:text-lg font-bold text-white whitespace-nowrap shrink-0 uppercase tracking-widest">Dispo Ops</h1>
-            </div>
-            
-            <div class="flex items-center gap-3 sm:gap-4 ml-auto">
-                <div class="h-6 sm:h-8 w-px bg-gray-700/80 shrink-0 hidden md:block"></div>
 
+                <div class="h-6 sm:h-8 w-px bg-gray-700/80 shrink-0 hidden sm:block"></div>
+                
                 <!-- ACTIVE USERS -->
                 <div class="relative shrink-0">
                     <button onclick="window.toggleActiveUsers(event)" class="flex items-center gap-2 bg-gray-800/60 border border-gray-700/60 hover:bg-gray-700/60 rounded-lg px-2 sm:px-3 h-8 cursor-pointer transition-colors shadow-sm">
@@ -494,7 +492,7 @@
                         <span class="text-[10px] font-bold text-gray-300 uppercase tracking-wider hidden sm:inline">Active Users</span>
                         <span id="activeUserCountBtn" class="bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/30 px-1.5 py-0.5 rounded text-[10px] font-black leading-none flex items-center justify-center">0</span>
                     </button>
-                    <div id="activeUsersDropdown" class="absolute right-0 top-full mt-3 w-48 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden">
+                    <div id="activeUsersDropdown" class="absolute left-0 top-full mt-3 w-48 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden text-left">
                         <div class="bg-gray-800/80 px-3 py-2 border-b border-gray-700 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
                             <span>Personnel Online</span>
                             <span id="activeUserCount" class="text-brand-emerald">0</span>
@@ -512,18 +510,17 @@
                 </button>
             </div>
             
-        </div>
-        
-        <div class="hidden md:flex shrink-0 bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 overflow-x-auto max-w-full mt-4 md:mt-0">
-            <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-layer-group"></i> Master Dashboard
-            </button>
-            <button onclick="window.switchTab('tracker')" id="nav-tracker" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-list-check"></i> Active Deal Tracker
-            </button>
-            <button onclick="window.switchTab('sop')" id="nav-sop" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-book-open"></i> SOP Reference
-            </button>
+            <div class="hidden md:flex shrink-0 bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 overflow-x-auto max-w-full mt-4 md:mt-0">
+                <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-layer-group"></i> Master Dashboard
+                </button>
+                <button onclick="window.switchTab('tracker')" id="nav-tracker" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-list-check"></i> Active Deal Tracker
+                </button>
+                <button onclick="window.switchTab('sop')" id="nav-sop" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-book-open"></i> SOP Reference
+                </button>
+            </div>
         </div>
     </header>
 
@@ -532,37 +529,43 @@
         
         <!-- Controls Bar -->
         <div class="flex flex-col xl:flex-row justify-between xl:items-center gap-4 mb-6 sticky top-[80px] md:top-[100px] z-[90] bg-[#0b0f19]/95 backdrop-blur-xl p-4 rounded-xl border border-gray-800/60 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]">
-            <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 shrink-0">
-                <i class="fa-solid fa-satellite-dish text-brand-emerald animate-pulse"></i> Live Pipeline
-            </h2>
-            
-            <!-- Dynamic Filters & Action -->
-            <div class="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto ml-auto">
-                <div class="w-full sm:w-48 bg-gradient-to-r from-brand-crimson/5 to-brand-purple/5 border border-brand-purple/20 hover:border-brand-purple/40 rounded-lg transition-all relative flex items-center">
-                    <select id="filterStrategy" onchange="window.updateDashboardFilters()" class="w-full bg-transparent text-sm font-bold text-gray-400 hover:text-gray-200 px-3 py-2 focus:outline-none cursor-pointer appearance-none z-10 relative">
-                        <option value="All" class="bg-gray-900 text-gray-300">All Strategies</option>
-                        <option value="Wholesale" class="bg-gray-900 text-white">Wholesale</option>
-                        <option value="Fix & Flip" class="bg-gray-900 text-white">Fix & Flip</option>
-                        <option value="Creative" class="bg-gray-900 text-white">Creative</option>
-                        <option value="Novation" class="bg-gray-900 text-white">Novation</option>
-                    </select>
-                    <div class="pointer-events-none absolute right-3 text-brand-purple/60 z-0">
-                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                    </div>
-                </div>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-4 w-full xl:w-auto">
+                <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 shrink-0">
+                    <i class="fa-solid fa-satellite-dish text-brand-emerald animate-pulse"></i> Live Pipeline
+                </h2>
                 
-                <div class="w-full sm:w-48 bg-gradient-to-r from-brand-crimson/5 to-brand-purple/5 border border-brand-purple/20 hover:border-brand-purple/40 rounded-lg transition-all relative flex items-center">
-                    <select id="filterSort" onchange="window.updateDashboardFilters()" class="w-full bg-transparent text-sm font-bold text-gray-400 hover:text-gray-200 px-3 py-2 focus:outline-none cursor-pointer appearance-none z-10 relative">
-                        <option value="edited_desc" class="bg-gray-900 text-white">Recently Edited</option>
-                        <option value="edited_asc" class="bg-gray-900 text-white">Oldest Edited</option>
-                        <option value="started_desc" class="bg-gray-900 text-white">Newest Added</option>
-                        <option value="started_asc" class="bg-gray-900 text-white">Oldest Added</option>
-                    </select>
-                    <div class="pointer-events-none absolute right-3 text-brand-purple/60 z-0">
-                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                <!-- Dynamic Filters -->
+                <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+                    <div class="relative w-full sm:w-48 z-20" id="filterStrategyWrapper">
+                        <button onclick="window.toggleFilterDropdown('Strategy', event)" class="w-full bg-gradient-to-r from-brand-crimson/5 to-brand-purple/5 border border-brand-purple/20 hover:border-brand-purple/40 rounded-lg px-3 py-2 text-sm font-bold text-gray-400 hover:text-gray-200 focus:outline-none flex justify-between items-center transition-all cursor-pointer">
+                            <span id="filterStrategyLabel" class="truncate">All Strategies</span>
+                            <i id="filterStrategyIcon" class="fa-solid fa-chevron-down text-[10px] text-brand-purple/60 transition-transform duration-300"></i>
+                        </button>
+                        <div id="filterStrategyList" class="absolute left-0 top-full mt-2 w-full bg-[#0f1423] border border-brand-purple/30 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col overflow-hidden z-50">
+                            <div onclick="window.setFilterStrategy('All')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors border-b border-gray-800">All Strategies</div>
+                            <div onclick="window.setFilterStrategy('Wholesale')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors">Wholesale</div>
+                            <div onclick="window.setFilterStrategy('Fix & Flip')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors">Fix & Flip</div>
+                            <div onclick="window.setFilterStrategy('Creative')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors">Creative</div>
+                            <div onclick="window.setFilterStrategy('Novation')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors">Novation</div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative w-full sm:w-48 z-20" id="filterSortWrapper">
+                        <button onclick="window.toggleFilterDropdown('Sort', event)" class="w-full bg-gradient-to-r from-brand-crimson/5 to-brand-purple/5 border border-brand-purple/20 hover:border-brand-purple/40 rounded-lg px-3 py-2 text-sm font-bold text-gray-400 hover:text-gray-200 focus:outline-none flex justify-between items-center transition-all cursor-pointer">
+                            <span id="filterSortLabel" class="truncate">Recently Edited</span>
+                            <i id="filterSortIcon" class="fa-solid fa-chevron-down text-[10px] text-brand-purple/60 transition-transform duration-300"></i>
+                        </button>
+                        <div id="filterSortList" class="absolute left-0 top-full mt-2 w-full bg-[#0f1423] border border-brand-purple/30 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col overflow-hidden z-50">
+                            <div onclick="window.setFilterSort('edited_desc', 'Recently Edited')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors">Recently Edited</div>
+                            <div onclick="window.setFilterSort('edited_asc', 'Oldest Edited')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors">Oldest Edited</div>
+                            <div onclick="window.setFilterSort('started_desc', 'Newest Added')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors">Newest Added</div>
+                            <div onclick="window.setFilterSort('started_asc', 'Oldest Added')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors">Oldest Added</div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="flex w-full xl:w-auto mt-2 xl:mt-0 ml-auto justify-end">
                 <button onclick="window.toggleDisplay('newAssetModal', true); document.getElementById('newAssetAddressInput').focus();" class="w-full sm:w-auto shrink-0 bg-brand-emerald/10 border border-brand-emerald hover:bg-brand-emerald text-brand-emerald hover:text-gray-900 font-bold py-2 px-4 rounded-xl transition-all cursor-pointer flex justify-center items-center gap-2 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                     <i class="fa-solid fa-plus"></i> Deploy New Asset Tracker
                 </button>
@@ -1070,6 +1073,73 @@
         }
     }
 
+    // New Dashboard Filters Custom Dropdowns
+    window.toggleFilterDropdown = function(type, e) {
+        if(e) e.stopPropagation();
+        const list = document.getElementById(`filter${type}List`);
+        const icon = document.getElementById(`filter${type}Icon`);
+        
+        ['Strategy', 'Sort'].forEach(t => {
+            if (t !== type) {
+                document.getElementById(`filter${t}List`)?.classList.add('hidden');
+                document.getElementById(`filter${t}List`)?.classList.remove('flex');
+                document.getElementById(`filter${t}Icon`)?.classList.remove('rotate-180');
+            }
+        });
+        if(list.classList.contains('hidden')) {
+            list.classList.remove('hidden'); list.classList.add('flex');
+            icon.classList.add('rotate-180');
+        } else {
+            list.classList.add('hidden'); list.classList.remove('flex');
+            icon.classList.remove('rotate-180');
+        }
+    }
+
+    window.setFilterStrategy = function(val) {
+        window.currentDashboardStrategy = val;
+        document.getElementById('filterStrategyLabel').innerText = val === 'All' ? 'All Strategies' : val;
+        window.toggleFilterDropdown('Strategy');
+        renderDashboard();
+    }
+
+    window.setFilterSort = function(val, label) {
+        window.currentDashboardSort = val;
+        document.getElementById('filterSortLabel').innerText = label;
+        window.toggleFilterDropdown('Sort');
+        renderDashboard();
+    }
+
+    // New Task Agent Select Dropdown
+    window.toggleAgentDropdown = function(taskId, e) {
+        if(e) e.stopPropagation();
+        const list = document.getElementById(`agentList_${taskId}`);
+        const icon = document.getElementById(`agentIcon_${taskId}`);
+        
+        document.querySelectorAll('.agent-dropdown-list').forEach(el => {
+            if (el.id !== `agentList_${taskId}`) {
+                el.classList.add('hidden'); el.classList.remove('flex');
+                const otherIcon = document.getElementById(el.id.replace('agentList_', 'agentIcon_'));
+                if(otherIcon) otherIcon.classList.remove('rotate-180');
+            }
+        });
+
+        if(list.classList.contains('hidden')) {
+            list.classList.remove('hidden'); list.classList.add('flex');
+            icon.classList.add('rotate-180');
+        } else {
+            list.classList.add('hidden'); list.classList.remove('flex');
+            icon.classList.remove('rotate-180');
+        }
+    }
+
+    window.handleAgentSelection = function(taskIndex, assigneeName) {
+        window.changeAssignee(taskIndex, assigneeName);
+        const list = document.getElementById(`agentList_${taskIndex}`);
+        if(list && !list.classList.contains('hidden')) {
+            window.toggleAgentDropdown(taskIndex);
+        }
+    }
+
     document.addEventListener('click', (e) => {
         const activeUsersDropdown = document.getElementById('activeUsersDropdown');
         if (activeUsersDropdown && !activeUsersDropdown.classList.contains('hidden') && !e.target.closest('#activeUsersDropdown') && !e.target.closest('[onclick*="toggleActiveUsers"]')) {
@@ -1087,6 +1157,24 @@
         if(assetDrop && !assetDrop.classList.contains('hidden') && !e.target.closest('#globalAssetSelectorWrapper')) {
             window.toggleDisplay('globalAssetDropdownList', false);
             document.getElementById('globalAssetDropdownIcon').classList.remove('rotate-180');
+        }
+        
+        ['Strategy', 'Sort'].forEach(type => {
+            const list = document.getElementById(`filter${type}List`);
+            if(list && !list.classList.contains('hidden') && !e.target.closest(`#filter${type}Wrapper`)) {
+                list.classList.add('hidden'); list.classList.remove('flex');
+                document.getElementById(`filter${type}Icon`)?.classList.remove('rotate-180');
+            }
+        });
+
+        if (!e.target.closest('.agent-selector-wrapper')) {
+            document.querySelectorAll('.agent-dropdown-list').forEach(el => {
+                if (!el.classList.contains('hidden')) {
+                    el.classList.add('hidden'); el.classList.remove('flex');
+                    const icon = document.getElementById(el.id.replace('agentList_', 'agentIcon_'));
+                    if(icon) icon.classList.remove('rotate-180');
+                }
+            });
         }
     });
 
@@ -1436,12 +1524,6 @@
         }
     }
 
-    window.updateDashboardFilters = function() {
-        window.currentDashboardStrategy = document.getElementById('filterStrategy').value;
-        window.currentDashboardSort = document.getElementById('filterSort').value;
-        renderDashboard();
-    }
-
     function renderDashboard() {
         const tbody = document.getElementById('dashboard-tbody');
         const emptyState = document.getElementById('empty-state');
@@ -1540,20 +1622,27 @@
     }
 
     window.openTracker = function(propId, scrollToTaskId = null, forceOpenSectionKey = null) {
-        if (activePropertyId !== propId) {
+        let changed = activePropertyId !== propId;
+        if (changed) {
             window.sectionToggleState = {}; window.sectionCompletionState = {};
-            if(window.isChatOpen) window.toggleChat(); 
         }
+        
         activePropertyId = propId;
         if (forceOpenSectionKey && forceOpenSectionKey !== 'null') {
             if (!window.sectionToggleState) window.sectionToggleState = {};
             window.sectionToggleState[forceOpenSectionKey] = 'open';
         }
+        
         if(document.getElementById('tab-tracker').classList.contains('hidden')) {
             window.switchTab('tracker');
         } else {
             renderTrackerView(); updateGlobalAssetSelector();
         }
+        
+        if (window.isChatOpen && changed) {
+            window.isChatOpen = false; window.toggleChat(); 
+        }
+
         if (scrollToTaskId && scrollToTaskId !== 'null') {
             setTimeout(() => {
                 const el = document.getElementById('task_' + scrollToTaskId);
@@ -1594,6 +1683,7 @@
                     await window.savePropertyData(prop, true); 
                     updateChatBadge(prop);
                     renderChatMessages(prop, lastReadTime, focusCommentId);
+                    document.getElementById('chatWindowAddress').innerText = prop.address;
                 }
                 setTimeout(() => { if(!focusCommentId && !window.isChatSearchOpen) document.getElementById('chatInput').focus(); }, 100);
             } else {
@@ -1609,6 +1699,13 @@
         }
     }
     
+    window.openPropertyChatOnly = function(propId) {
+        activePropertyId = propId;
+        updateGlobalAssetSelector();
+        window.isChatOpen = false;
+        window.toggleChat();
+    }
+
     window.toggleChatHub = function(forceHubOnly = false) {
         if (forceHubOnly) activePropertyId = null;
         if (!window.isChatOpen) { window.toggleChat(); }
@@ -1643,7 +1740,7 @@
             let snippet = item.lastComment ? `<span class="font-bold text-gray-400 capitalize">${escapeHtml(item.lastComment.author)}:</span> ${escapeHtml(item.lastComment.text)}` : `<span class="italic text-gray-600">No messages yet</span>`;
             
             return `
-            <div onclick="window.isChatOpen = false; window.openTracker('${item.id}'); window.toggleChat();" class="p-3 bg-gray-900/50 hover:bg-gray-800/80 rounded-xl border border-gray-800/80 cursor-pointer transition-colors group shadow-sm">
+            <div onclick="window.openPropertyChatOnly('${item.id}')" class="p-3 bg-gray-900/50 hover:bg-gray-800/80 rounded-xl border border-gray-800/80 cursor-pointer transition-colors group shadow-sm">
                 <div class="flex justify-between items-start mb-1">
                     <h4 class="text-xs font-bold text-white group-hover:text-brand-purple transition-colors truncate pr-2 flex items-center gap-2"><i class="fa-solid fa-house-chimney text-[10px] text-gray-600"></i> ${escapeHtml(item.address)}</h4>
                     <div class="shrink-0 flex items-center gap-2">${badgeHtml}</div>
@@ -1957,11 +2054,26 @@
                     const row = document.createElement('div'); row.id = `task_${t.id}`;
                     row.className = `p-4 flex flex-col gap-3 transition-colors duration-500 hover:bg-gray-800/30 ${(t.completed && (!t.subtasks || t.subtasks.every(s=>s.completed))) ? 'opacity-60' : ''}`;
                     
-                    const agentOpts = agentsList.map(a => `<option value="${a}" ${t.assignee === a ? 'selected' : ''} class="bg-gray-900 text-white">${a}</option>`).join('');
                     const agentColor = getAgentColorClass(t.assignee, 'text');
                     const agentBorder = getAgentColorClass(t.assignee, 'border');
                     const agentBg = getAgentColorClass(t.assignee, 'bg');
                     const weightColor = t.completed ? 'text-brand-emerald bg-brand-emerald/10 border-brand-emerald/30' : 'text-brand-crimson bg-gray-900 border-gray-700';
+
+                    const agentListHtml = agentsList.map(a => `<div onclick="window.handleAgentSelection(${t.originalIndex}, '${a}')" class="px-4 py-2 text-[10px] sm:text-xs font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors border-b border-gray-800/50 group flex justify-between items-center">
+                        <span>${a}</span>
+                        ${t.assignee === a ? '<div class="w-1.5 h-1.5 rounded-full bg-brand-emerald shrink-0"></div>' : ''}
+                    </div>`).join('');
+
+                    const assigneeHtml = `
+                    <div class="relative z-10 w-full sm:w-auto agent-selector-wrapper" id="agentSelectorWrapper_${t.originalIndex}">
+                        <button onclick="window.toggleAgentDropdown(${t.originalIndex}, event)" class="${agentBg} border ${agentBorder} ${agentColor} text-[10px] sm:text-xs font-bold rounded px-1.5 sm:px-2 py-1 flex justify-between items-center gap-1.5 cursor-pointer transition-all min-w-[70px]">
+                            <span id="agentLabel_${t.originalIndex}" class="flex-1 text-center">${t.assignee}</span>
+                            <i id="agentIcon_${t.originalIndex}" class="fa-solid fa-chevron-down text-[8px] transition-transform duration-300 opacity-70"></i>
+                        </button>
+                        <div id="agentList_${t.originalIndex}" class="agent-dropdown-list absolute right-0 top-full mt-1 w-32 bg-[#0f1423] border border-gray-600 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] hidden flex-col max-h-48 overflow-y-auto custom-scrollbar z-50 overflow-hidden text-left py-1">
+                            ${agentListHtml}
+                        </div>
+                    </div>`;
 
                     const tFeat = buildFeatures(t, false, null, t.originalIndex);
                     let subtasksHtml = '';
@@ -2020,7 +2132,7 @@
                                 <div class="flex justify-between items-start gap-2">
                                     <p class="text-sm font-bold ${t.completed ? 'text-gray-500 line-through' : 'text-gray-100'} leading-tight break-words whitespace-pre-wrap mt-0.5">${t.title}</p>
                                     <div class="flex items-center gap-2 shrink-0">
-                                        <select onchange="window.changeAssignee(${t.originalIndex}, this.value)" class="${agentBg} border ${agentBorder} ${agentColor} text-[10px] sm:text-xs font-bold rounded px-1.5 sm:px-2 py-1 focus:outline-none focus:ring-1 focus:ring-brand-purple cursor-pointer appearance-none text-center min-w-[70px]">${agentOpts}</select>
+                                        ${assigneeHtml}
                                         <span class="${weightColor} text-[10px] sm:text-xs font-black px-1.5 sm:px-2 py-1 rounded w-10 sm:w-12 text-center transition-colors">+${t.weight}%</span>
                                     </div>
                                 </div>
