@@ -3,12 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- LINK THE MANIFEST TO TURN THIS INTO A MOBILE APP -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0b0f19">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  
   <title>TCHB DISPO OPS</title>
   
   <link rel="icon" type="image/svg+xml" href="icon.svg">
@@ -113,7 +107,7 @@
 </head>
 <body class="font-sans antialiased relative selection:bg-brand-crimson selection:text-white capitalize">
 
-  <!-- TAILWIND SAFELIST -->
+  <!-- TAILWIND SAFELIST (Forces compilation of dynamic phase & strategy classes once and for all) -->
   <div class="hidden bg-brand-crimson bg-brand-crimson/20 border-brand-crimson border-brand-crimson/30 text-brand-crimson shadow-[0_0_15px_rgba(220,38,38,0.4)] group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] bg-brand-purple bg-brand-purple/20 border-brand-purple border-brand-purple/30 text-brand-purple shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] bg-brand-emerald bg-brand-emerald/20 border-brand-emerald border-brand-emerald/30 border-brand-emerald/50 text-brand-emerald text-gray-900 shadow-[0_0_15px_rgba(16,185,129,0.4)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] bg-brand-cyan bg-brand-cyan/20 border-brand-cyan border-brand-cyan/30 border-brand-cyan/50 text-brand-cyan shadow-[0_0_15px_rgba(6,182,212,0.4)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.2)] bg-brand-gold bg-brand-gold/20 border-brand-gold border-brand-gold/30 border-brand-gold/50 text-brand-gold bg-pink-500/20 text-pink-400 border-pink-500/50"></div>
 
   <!-- FOREGROUND PUSH TOAST -->
@@ -285,9 +279,15 @@
                             
                             <div class="p-4 space-y-5 max-h-[60vh] overflow-y-auto custom-scrollbar">
                                 
-                                <button id="enablePushBtn" onclick="window.enablePush()" class="w-full bg-gradient-to-r from-brand-purple to-brand-cyan hover:from-indigo-500 hover:to-cyan-400 text-white text-xs font-bold py-3 px-4 rounded-lg shadow-md transition-all cursor-pointer flex justify-center items-center gap-2">
-                                    <i class="fa-regular fa-bell animate-shake"></i> Enable Device Push Notifications
-                                </button>
+                                <!-- ENABLE PUSH & WIPE DEVICES BUTTONS -->
+                                <div class="flex gap-2">
+                                    <button id="enablePushBtn" onclick="window.enablePush()" class="flex-1 bg-gradient-to-r from-brand-purple to-brand-cyan hover:from-indigo-500 hover:to-cyan-400 text-white text-xs font-bold py-3 px-4 rounded-lg shadow-md transition-all cursor-pointer flex justify-center items-center gap-2">
+                                        <i class="fa-regular fa-bell animate-shake"></i> Enable Device Push
+                                    </button>
+                                    <button onclick="window.resetPushTokens()" class="bg-gray-800 hover:bg-brand-crimson/20 hover:text-brand-crimson hover:border-brand-crimson text-gray-400 border border-gray-700 text-xs font-bold py-3 px-4 rounded-lg transition-all cursor-pointer flex justify-center items-center shrink-0" title="Wipe Old Devices">
+                                        <i class="fa-solid fa-mobile-screen-button relative"><i class="fa-solid fa-xmark absolute -bottom-1 -right-2 text-[10px] text-brand-crimson"></i></i>
+                                    </button>
+                                </div>
 
                                 <div class="flex items-center justify-between border-t border-gray-800 pt-4">
                                     <div class="pr-3">
@@ -916,6 +916,7 @@
         const readReceipts = prop.readBy || {};
         const lastRead = readReceipts[myPrefix] || 0;
         
+        // Count messages strictly sent BY OTHERS after my last read time
         const unreadCount = (prop.comments || []).filter(c => c.timestamp > lastRead && c.author.toLowerCase() !== myPrefix).length;
         
         if (unreadCount > 0 && !window.isChatOpen) {
@@ -993,7 +994,7 @@
         const innerIcon = document.getElementById('scrollToTopIcon');
         if (innerIcon) {
             innerIcon.classList.remove('animate-rocket-up');
-            void innerIcon.offsetWidth; 
+            void innerIcon.offsetWidth; // trigger reflow
             innerIcon.classList.add('animate-rocket-up');
         }
         setTimeout(() => {
@@ -1042,7 +1043,7 @@
             document.getElementById('nav-sop').classList.remove('text-gray-300');
             if(window.isChatOpen) window.toggleChat();
             if(scrollBtn) scrollBtn.style.bottom = '1.5rem';
-            window.renderSOPTimeline('Wholesale');
+            window.renderSOPTimeline('Wholesale'); // Default load
         }
     }
 
@@ -1073,9 +1074,10 @@
     function parseSOWCSV(csvText) {
         if (!csvText) return [];
         const rows = csvText.split('\n').filter(r => r.trim().length > 0);
-        if (rows.length <= 1) return []; 
+        if (rows.length <= 1) return []; // Only headers or empty
         const dataRows = rows.slice(1);
         return dataRows.map((row, i) => {
+            // Simple split handling quotes optionally
             const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.trim().replace(/^"|"$/g, ''));
             const task = cols[0] || `SOW Item ${i+1}`;
             const detail = cols[1] ? ` - ${cols[1]}` : '';
@@ -1108,6 +1110,7 @@
             };
         });
 
+        // Inject SOW tasks if provided for Fix & Flip
         if (strategy === "Fix & Flip" && csvContent) {
             const sowItems = parseSOWCSV(csvContent);
             if (sowItems.length > 0) {
@@ -1118,6 +1121,7 @@
                     isDefault: true
                 }));
                 
+                // Adjust weights: SOW gets 30%, take 10% from Rough-In, Finishes, and Final Polish
                 tasks.forEach(t => {
                     if (t.mainTask === "Rough-In & Trades" || t.mainTask === "Finishes" || t.mainTask === "Final Polish") {
                         t.weight = Math.max(5, t.weight - 10);
@@ -1468,7 +1472,7 @@
         const fab = document.getElementById('chatFabBtn');
         if (fab) {
             fab.classList.remove('animate-jelly-pop');
-            void fab.offsetWidth; 
+            void fab.offsetWidth; // trigger reflow
             fab.classList.add('animate-jelly-pop');
         }
 
@@ -1479,12 +1483,14 @@
             chatWin.classList.remove('hidden');
             chatWin.classList.add('flex');
             
+            // Log read receipt
             if (activePropertyId) {
                 const prop = propertiesData.find(p => p.id === activePropertyId);
                 if (prop) {
                     const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
                     prop.readBy = prop.readBy || {};
                     prop.readBy[myPrefix] = Date.now();
+                    // Save quietly to update DB without wrecking local focus
                     await window.savePropertyData(prop, true); 
                     updateChatBadge(prop);
                     renderChatMessages(prop);
@@ -1525,7 +1531,7 @@
         prop.readBy[myPrefix] = Date.now();
 
         input.value = '';
-        await window.savePropertyData(prop); 
+        await window.savePropertyData(prop); // Triggers re-render which updates chat naturally
     }
 
     function renderChatMessages(prop) {
@@ -1551,6 +1557,7 @@
             const authorColorClass = getAgentColorClass(authorLower, 'text');
             const isMe = myPrefix === authorLower;
             
+            // Determine who has read this specific message
             const readers = Object.entries(prop.readBy || {})
                 .filter(([u, t]) => t >= c.timestamp && u !== authorLower)
                 .map(x => x[0]);
@@ -1611,10 +1618,12 @@
         document.getElementById('tracker-percent-text').innerText = `${stats.percent}%`;
         document.getElementById('tracker-progress-bar').style.width = `${stats.percent}%`;
 
+        // Preserve focus state during re-render
         let focusedId = document.activeElement ? document.activeElement.id : null;
 
         renderChatMessages(prop);
 
+        // Group tasks by Phase -> MainTask
         const structure = {};
         prop.tasks.forEach((t, i) => {
             if (!structure[t.phase]) structure[t.phase] = {};
@@ -1625,6 +1634,7 @@
         const container = document.getElementById('tracker-task-container');
         container.innerHTML = '';
 
+        // --- 3. STANDARD TASKS WORKFLOW ---
         for (const [phaseName, mainTasksMap] of Object.entries(structure)) {
             const ui = getPhaseUI(phaseName);
             
@@ -2150,12 +2160,6 @@
             firebaseAuth = authModule.getAuth(app);
             db = firestoreModule.getFirestore(app);
 
-            // Initialize Google Provider
-            googleProvider = new authModule.GoogleAuthProvider();
-            googleProvider.setCustomParameters({ hd: 'totalchb.com' });
-            window.firebaseSignInWithPopup = authModule.signInWithPopup;
-            window.firebaseSignOut = authModule.signOut;
-
             // Initialize FCM for foreground pushes
             let messaging = null;
             try {
@@ -2211,10 +2215,27 @@
                     }, { merge: true });
                     
                     btn.innerHTML = '<i class="fa-solid fa-check"></i> Device Linked Successfully!';
-                    btn.className = "w-full bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
+                    btn.className = "flex-1 bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
                 } else {
                     btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Setup Failed (Check Console)';
-                    btn.className = "w-full bg-brand-crimson/20 text-brand-crimson border border-brand-crimson/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
+                    btn.className = "flex-1 bg-brand-crimson/20 text-brand-crimson border border-brand-crimson/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
+                }
+            }
+
+            // NEW: Action to wipe dead tokens
+            window.resetPushTokens = async function() {
+                if (!currentUser || !db) return;
+                const btn = document.getElementById('enablePushBtn');
+                try {
+                    const docRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
+                    await firestoreModule.setDoc(docRef, {
+                        fcmTokens: [] // Wipe the array clean!
+                    }, { merge: true });
+                    
+                    btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Wiped! Click to Link Current.';
+                    btn.className = "flex-1 bg-brand-gold/20 text-brand-gold border border-brand-gold/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
+                } catch(e) {
+                    console.error("Token Reset Failed:", e);
                 }
             }
 
