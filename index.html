@@ -243,7 +243,7 @@
   <div id="propertyChatContainer" class="fixed bottom-0 md:bottom-6 right-0 md:right-6 z-[105] flex flex-col items-end justify-end transition-all hidden w-full md:w-auto pointer-events-none">
       
       <!-- Chat Window -->
-      <div id="chatWindow" class="fixed top-2 left-2 right-2 bottom-[calc(68px+env(safe-area-inset-bottom))] md:relative md:inset-auto md:h-[600px] md:max-h-[calc(100vh-100px)] w-auto md:w-[400px] pointer-events-auto z-[200] md:z-auto bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-2xl mb-0 md:mb-4 hidden flex-col overflow-hidden transition-all md:origin-bottom-right">
+      <div id="chatWindow" class="fixed top-2 left-2 right-2 bottom-[calc(76px+env(safe-area-inset-bottom))] md:relative md:inset-auto md:h-[600px] md:max-h-[calc(100vh-100px)] w-auto md:w-[400px] pointer-events-auto z-[200] md:z-auto bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-2xl mb-0 md:mb-4 hidden flex-col overflow-hidden transition-all md:origin-bottom-right">
           
           <!-- Pins Overlay -->
           <div id="chatPinsModal" class="hidden absolute inset-0 bg-[#0f1423]/95 backdrop-blur-md z-20 flex-col transition-all">
@@ -348,7 +348,7 @@
           <i class="fa-solid fa-book-open text-lg mb-1"></i>
           <span class="text-[9px] font-bold uppercase tracking-wider">SOPs</span>
       </button>
-      <button onclick="window.toggleChatHub()" id="nav-mobile-chat" class="flex flex-col items-center justify-center w-full p-2 text-gray-500 hover:text-gray-300 transition-colors relative">
+      <button onclick="window.toggleChatHub()" id="nav-mobile-chat" class="flex flex-col items-center justify-center w-full p-2 text-brand-crimson transition-colors relative">
           <i class="fa-solid fa-comments text-lg mb-1"></i>
           <span class="text-[9px] font-bold uppercase tracking-wider">Chat</span>
           <span id="mobileChatBadge" class="absolute top-1 right-3 bg-brand-crimson text-white text-[8px] font-black w-4 h-4 rounded-full items-center justify-center hidden">0</span>
@@ -372,7 +372,7 @@
                     </button>
                     
                     <!-- NOTIFICATIONS DROPDOWN LIST -->
-                    <div id="notificationsListDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-[420px] max-h-[80vh] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-left transition-all text-left">
+                    <div id="notificationsListDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-[420px] h-[400px] sm:h-[500px] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-left transition-all text-left">
                         <div id="notifHeaderActions" class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px] shrink-0">
                             <!-- Populated dynamically by JS based on selection state -->
                         </div>
@@ -1078,20 +1078,26 @@
         if(e) e.stopPropagation();
         const list = document.getElementById(`filter${type}List`);
         const icon = document.getElementById(`filter${type}Icon`);
+        const wrapper = document.getElementById(`filter${type}Wrapper`);
         
         ['Strategy', 'Sort'].forEach(t => {
             if (t !== type) {
                 document.getElementById(`filter${t}List`)?.classList.add('hidden');
                 document.getElementById(`filter${t}List`)?.classList.remove('flex');
                 document.getElementById(`filter${t}Icon`)?.classList.remove('rotate-180');
+                document.getElementById(`filter${t}Wrapper`)?.classList.remove('z-[60]');
+                document.getElementById(`filter${t}Wrapper`)?.classList.add('z-20');
             }
         });
+
         if(list.classList.contains('hidden')) {
             list.classList.remove('hidden'); list.classList.add('flex');
             icon.classList.add('rotate-180');
+            if(wrapper) { wrapper.classList.remove('z-20'); wrapper.classList.add('z-[60]'); }
         } else {
             list.classList.add('hidden'); list.classList.remove('flex');
             icon.classList.remove('rotate-180');
+            if(wrapper) { wrapper.classList.remove('z-[60]'); wrapper.classList.add('z-20'); }
         }
     }
 
@@ -1114,6 +1120,7 @@
         if(e) e.stopPropagation();
         const list = document.getElementById(`agentList_${taskId}`);
         const icon = document.getElementById(`agentIcon_${taskId}`);
+        const wrapper = document.getElementById(`agentSelectorWrapper_${taskId}`);
         
         document.querySelectorAll('.agent-dropdown-list').forEach(el => {
             if (el.id !== `agentList_${taskId}`) {
@@ -1122,13 +1129,20 @@
                 if(otherIcon) otherIcon.classList.remove('rotate-180');
             }
         });
+        document.querySelectorAll('.agent-selector-wrapper').forEach(el => {
+            if (el.id !== `agentSelectorWrapper_${taskId}`) {
+                el.classList.remove('z-[60]'); el.classList.add('z-10');
+            }
+        });
 
         if(list.classList.contains('hidden')) {
             list.classList.remove('hidden'); list.classList.add('flex');
             icon.classList.add('rotate-180');
+            if(wrapper) { wrapper.classList.remove('z-10'); wrapper.classList.add('z-[60]'); }
         } else {
             list.classList.add('hidden'); list.classList.remove('flex');
             icon.classList.remove('rotate-180');
+            if(wrapper) { wrapper.classList.remove('z-[60]'); wrapper.classList.add('z-10'); }
         }
     }
 
@@ -1141,10 +1155,13 @@
     }
 
     document.addEventListener('click', (e) => {
+        // Active Users Dropdown
         const activeUsersDropdown = document.getElementById('activeUsersDropdown');
         if (activeUsersDropdown && !activeUsersDropdown.classList.contains('hidden') && !e.target.closest('#activeUsersDropdown') && !e.target.closest('[onclick*="toggleActiveUsers"]')) {
             activeUsersDropdown.classList.add('hidden');
         }
+
+        // Notification Dropdowns
         const notifListDropdown = document.getElementById('notificationsListDropdown');
         if (notifListDropdown && !notifListDropdown.classList.contains('hidden') && !e.target.closest('#notificationsListDropdown') && !e.target.closest('#mainLogoBtn')) {
             notifListDropdown.classList.add('hidden');
@@ -1153,20 +1170,26 @@
         if (notifSettingsDropdown && !notifSettingsDropdown.classList.contains('hidden') && !e.target.closest('#notifSettingsDropdown') && !e.target.closest('#mainLogoBtn') && !e.target.closest('[onclick*="toggleNotificationSettings"]')) {
             notifSettingsDropdown.classList.add('hidden');
         }
+
+        // Global Tracker Asset Dropdown
         const assetDrop = document.getElementById('globalAssetDropdownList');
         if(assetDrop && !assetDrop.classList.contains('hidden') && !e.target.closest('#globalAssetSelectorWrapper')) {
             window.toggleDisplay('globalAssetDropdownList', false);
-            document.getElementById('globalAssetDropdownIcon').classList.remove('rotate-180');
+            document.getElementById('globalAssetDropdownIcon')?.classList.remove('rotate-180');
         }
         
+        // Filter Dropdowns
         ['Strategy', 'Sort'].forEach(type => {
             const list = document.getElementById(`filter${type}List`);
             if(list && !list.classList.contains('hidden') && !e.target.closest(`#filter${type}Wrapper`)) {
                 list.classList.add('hidden'); list.classList.remove('flex');
                 document.getElementById(`filter${type}Icon`)?.classList.remove('rotate-180');
+                document.getElementById(`filter${type}Wrapper`)?.classList.remove('z-[60]');
+                document.getElementById(`filter${type}Wrapper`)?.classList.add('z-20');
             }
         });
 
+        // Agent Assignee Dropdowns
         if (!e.target.closest('.agent-selector-wrapper')) {
             document.querySelectorAll('.agent-dropdown-list').forEach(el => {
                 if (!el.classList.contains('hidden')) {
@@ -1175,6 +1198,14 @@
                     if(icon) icon.classList.remove('rotate-180');
                 }
             });
+            document.querySelectorAll('.agent-selector-wrapper').forEach(el => {
+                el.classList.remove('z-[60]'); el.classList.add('z-10');
+            });
+        }
+
+        // Close Chat Box on outside click
+        if (window.isChatOpen && !e.target.closest('#chatWindow') && !e.target.closest('#chatFabBtn') && !e.target.closest('#nav-mobile-chat') && !e.target.closest('[onclick*="toggleChat"]') && !e.target.closest('[onclick*="openPropertyChatOnly"]') && !e.target.closest('[onclick*="toggleChatHub"]')) {
+            window.toggleChat();
         }
     });
 
@@ -1261,7 +1292,7 @@
         window.toggleDisplay('tab-sop', false);
         
         const defaultNavClasses = "px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap";
-        const mobNavs = ['nav-mobile-dashboard', 'nav-mobile-tracker', 'nav-mobile-sop', 'nav-mobile-chat'];
+        const mobNavs = ['nav-mobile-dashboard', 'nav-mobile-tracker', 'nav-mobile-sop'];
         
         document.getElementById('nav-dashboard').className = defaultNavClasses;
         document.getElementById('nav-tracker').className = defaultNavClasses;
@@ -1667,7 +1698,7 @@
         
         if (window.isChatOpen) {
             window.toggleDisplay('chatWindow', true);
-            if (mobChatNav) { mobChatNav.classList.remove('text-gray-500'); mobChatNav.classList.add('text-brand-emerald'); }
+            if (mobChatNav) { mobChatNav.classList.remove('text-brand-crimson'); mobChatNav.classList.add('text-brand-gold'); }
             
             if (activePropertyId) {
                 window.toggleDisplay('chatHubView', false);
@@ -1695,7 +1726,7 @@
         } else {
             window.toggleDisplay('chatWindow', false);
             if(window.isChatSearchOpen) window.toggleChatSearch();
-            if (mobChatNav) { mobChatNav.classList.remove('text-brand-emerald'); mobChatNav.classList.add('text-gray-500'); }
+            if (mobChatNav) { mobChatNav.classList.remove('text-brand-gold'); mobChatNav.classList.add('text-brand-crimson'); }
         }
     }
     
