@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- LINK THE MANIFEST TO TURN THIS INTO A MOBILE APP -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
   <title>TCHB DISPO OPS</title>
   
   <link rel="icon" type="image/svg+xml" href="icon.svg">
@@ -258,7 +264,7 @@
             <!-- RIGHT SIDE CONTROLS -->
             <div class="flex items-center gap-3 shrink-0">
                 
-                <!-- Logged In User Display Badge (Fixed Height & Truncated Text) -->
+                <!-- Logged In User Display Badge -->
                 <div id="userBadge" class="hidden items-center gap-2 bg-gray-800/60 border border-gray-700/60 rounded-lg px-2.5 h-8">
                     <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse shrink-0"></div>
                     <span id="userEmailDisplay" class="text-[10px] font-bold text-gray-300 lowercase tracking-wide truncate max-w-[130px]"></span>
@@ -282,9 +288,9 @@
                             
                             <div class="p-4 space-y-5 max-h-[60vh] overflow-y-auto custom-scrollbar">
                                 
-                                <!-- ENABLE PUSH BUTTON -->
+                                <!-- ENABLE PUSH BUTTON (Now uses Native Frontend API) -->
                                 <button id="enablePushBtn" onclick="window.enablePush()" class="w-full bg-gradient-to-r from-brand-purple to-brand-cyan hover:from-indigo-500 hover:to-cyan-400 text-white text-xs font-bold py-3 px-4 rounded-lg shadow-md transition-all cursor-pointer flex justify-center items-center gap-2">
-                                    <i class="fa-regular fa-bell animate-shake"></i> Enable Device Push Notifications
+                                    <i class="fa-regular fa-bell animate-shake"></i> Enable Native Push Alerts
                                 </button>
 
                                 <!-- Toggle Item -->
@@ -645,6 +651,8 @@
     window.pendingCSVContent = null;
     window.currentDashboardStrategy = "All";
     window.currentDashboardSort = "edited_desc";
+
+    let sessionLoginTime = Date.now(); // Used to filter out old notifications
 
     // --- 1. AUTHENTICATION LOGIC ---
     window.signInWithGoogle = async function() {
@@ -1190,6 +1198,11 @@
         if (!currentUser) { propertiesData.unshift(newProp); }
         await window.savePropertyData(newProp);
         
+        // PUSH NOTIFICATION (Frontend trigger)
+        if(window.sendFrontendPush) {
+            window.sendFrontendPush('new_assets', 'New Asset Deployed 🚀', `${address} has been initialized in the ${strategy} pipeline.`);
+        }
+        
         window.closeAssetModal();
         
         if(document.getElementById('tab-tracker').classList.contains('hidden')) {
@@ -1537,7 +1550,12 @@
         prop.readBy[myPrefix] = Date.now();
 
         input.value = '';
-        await window.savePropertyData(prop); // Triggers re-render which updates chat naturally
+        await window.savePropertyData(prop); 
+
+        // PUSH NOTIFICATION (Frontend trigger for offline users)
+        if(window.sendFrontendPush) {
+            window.sendFrontendPush('comments', 'New Comment on ' + prop.address, `${authorName} says: "${text}"`);
+        }
     }
 
     function renderChatMessages(prop) {
@@ -1906,7 +1924,6 @@
             const ui = getPhaseUI(phaseName);
             const phaseTotalWeight = Object.values(mainTasksMap).flat().reduce((sum, t) => sum + t.weight, 0);
 
-            // Replaced the broken absolute anchor with direct IDs and scroll-margins
             timelineHtml += `
                 <div id="${phaseId}" class="relative -ml-[31px] sm:-ml-[47px] mb-8 ${pIndex > 1 ? 'pt-8' : ''} scroll-mt-10 transition-all">
                     <div class="inline-flex items-center gap-3">
@@ -2075,8 +2092,21 @@
     window.toggleTask = async function(taskIndex, isCompleted) {
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
+        
+        const wasCompleteBefore = prop.tasks[taskIndex].completed;
         prop.tasks[taskIndex].completed = isCompleted;
         await window.savePropertyData(prop);
+
+        // FRONTEND PUSH: Check if this action completed an entire phase
+        if (isCompleted && !wasCompleteBefore && window.sendFrontendPush) {
+            const phaseName = prop.tasks[taskIndex].phase;
+            const allTasksInPhase = prop.tasks.filter(t => t.phase === phaseName);
+            const isPhaseCompleteNow = allTasksInPhase.every(t => t.completed && (!t.subtasks || t.subtasks.every(s => s.completed)));
+            
+            if (isPhaseCompleteNow) {
+                window.sendFrontendPush('completions', 'Phase Complete! ✅', `${prop.address} just reached 100% for ${phaseName}.`);
+            }
+        }
     }
 
     window.changeAssignee = async function(taskIndex, newAssignee) {
@@ -2120,12 +2150,17 @@
     window.toggleSubtask = async function(taskIndex, subtaskIndex, isCompleted) {
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
+        
+        const wasTaskCompleteBefore = prop.tasks[taskIndex].completed;
         prop.tasks[taskIndex].subtasks[subtaskIndex].completed = isCompleted;
         
+        let isTaskCompleteNow = false;
+
         if (prop.tasks[taskIndex].isSOW) {
             const allDone = prop.tasks[taskIndex].subtasks.every(s => s.completed);
             if (allDone) {
                 prop.tasks[taskIndex].completed = true;
+                isTaskCompleteNow = true;
                 const sectionKey = btoa(encodeURIComponent(prop.tasks[taskIndex].phase + "_" + prop.tasks[taskIndex].mainTask)).replace(/=/g, '');
                 if (window.sectionToggleState) window.sectionToggleState[sectionKey] = 'closed';
             } else {
@@ -2134,6 +2169,17 @@
         }
         
         await window.savePropertyData(prop);
+
+        // FRONTEND PUSH: Check if completing this subtask triggered phase completion
+        if (isTaskCompleteNow && !wasTaskCompleteBefore && window.sendFrontendPush) {
+            const phaseName = prop.tasks[taskIndex].phase;
+            const allTasksInPhase = prop.tasks.filter(t => t.phase === phaseName);
+            const isPhaseCompleteNow = allTasksInPhase.every(t => t.completed && (!t.subtasks || t.subtasks.every(s => s.completed)));
+            
+            if (isPhaseCompleteNow) {
+                window.sendFrontendPush('completions', 'Phase Complete! ✅', `${prop.address} just reached 100% for ${phaseName}.`);
+            }
+        }
     }
 
     window.deleteSubtask = async function(taskIndex, subtaskIndex) {
@@ -2161,80 +2207,99 @@
             const appModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
             const authModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
             const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-            const messagingModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js");
 
             const app = appModule.initializeApp(firebaseConfig);
             firebaseAuth = authModule.getAuth(app);
             db = firestoreModule.getFirestore(app);
 
-            // Initialize Google Provider (For Authentication)
+            // Initialize Google Provider
             googleProvider = new authModule.GoogleAuthProvider();
             googleProvider.setCustomParameters({ hd: 'totalchb.com' });
             window.firebaseSignInWithPopup = authModule.signInWithPopup;
             window.firebaseSignOut = authModule.signOut;
 
-            // Initialize FCM for foreground pushes
-            let messaging = null;
-            try {
-                messaging = messagingModule.getMessaging(app);
-                messagingModule.onMessage(messaging, (payload) => {
-                    const toast = document.getElementById('pushToast');
-                    document.getElementById('pushToastTitle').innerText = payload.notification.title;
-                    document.getElementById('pushToastBody').innerText = payload.notification.body;
-                    toast.classList.remove('hidden');
-                    
-                    setTimeout(() => toast.classList.remove('translate-x-[150%]'), 50);
-                    setTimeout(() => { toast.classList.add('translate-x-[150%]'); }, 6000);
-                });
-            } catch (err) {
-                console.warn("Messaging not supported on this environment", err);
-            }
-
-            // Function to request VAPID token
-            window.requestPushToken = async function() {
-                if(!messaging) return null;
-                try {
-                    // Explicitly register the Service Worker
-                    const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-                    
-                    const permission = await Notification.requestPermission();
-                    if (permission === 'granted') {
-                        const token = await messagingModule.getToken(messaging, { 
-                            vapidKey: "BAOBgrEDGG_WLKRjNEXU_L2_kHZrWTVFGUxN5gm7Udkkh9p0l2Tc8sTZhErN_dZmpxD-EzjEnNfhYX7R3XHrRhw",
-                            serviceWorkerRegistration: registration
-                        });
-                        return token;
-                    } else {
-                        console.warn("User blocked notifications.");
-                    }
-                } catch(e) { console.error("Token failed", e); }
-                return null;
-            }
-
-            // Action for Enable Push Notifications button
+            // --- NATIVE FRONTEND NOTIFICATION ENGINE ---
             window.enablePush = async function() {
                 const btn = document.getElementById('enablePushBtn');
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authorizing...';
-                
-                const token = await window.requestPushToken();
-                if (token && currentUser && db) {
-                    const docRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
-                    await firestoreModule.setDoc(docRef, {
-                        fcmTokens: firestoreModule.arrayUnion(token)
-                    }, { merge: true });
-                    
-                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Device Linked Successfully!';
-                    btn.className = "w-full bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
-                } else {
-                    btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Setup Failed (Check Console)';
-                    btn.className = "w-full bg-brand-crimson/20 text-brand-crimson border border-brand-crimson/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
+                try {
+                    const permission = await Notification.requestPermission();
+                    if (permission === 'granted') {
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i> Native Notifications Enabled!';
+                        btn.className = "w-full bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
+                    } else {
+                        btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Permission Denied by Browser';
+                        btn.className = "w-full bg-brand-crimson/20 text-brand-crimson border border-brand-crimson/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
+                    }
+                } catch(e) {
+                    console.error("Native Push Error:", e);
                 }
             }
 
+            // Function to dispatch alerts to everyone via Database
+            window.sendFrontendPush = async function(prefKey, title, body) {
+                if (!db || !currentUser) return;
+                const notifRef = firestoreModule.collection(db, 'artifacts', appId, 'public', 'data', 'global_notifications');
+                await firestoreModule.addDoc(notifRef, {
+                    type: prefKey,
+                    title: title,
+                    body: body,
+                    timestamp: Date.now(),
+                    sender: currentUser.email
+                });
+            }
+
+            // Function to listen for incoming alerts from others
+            window.listenToNotifications = function() {
+                if (!db || !currentUser) return;
+                const notifRef = firestoreModule.collection(db, 'artifacts', appId, 'public', 'data', 'global_notifications');
+                
+                firestoreModule.onSnapshot(notifRef, (snapshot) => {
+                    snapshot.docChanges().forEach(async (change) => {
+                        if (change.type === 'added') {
+                            const data = change.doc.data();
+                            // Only show if it was created AFTER you logged in, and you didn't send it yourself
+                            if (data.timestamp > sessionLoginTime && data.sender !== currentUser.email) {
+                                
+                                // Fetch this user's current settings
+                                const docRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
+                                const snap = await firestoreModule.getDoc(docRef);
+                                let allowNotif = false;
+                                if(snap.exists()) {
+                                    const prefs = snap.data();
+                                    if(prefs[data.type] === true) allowNotif = true;
+                                }
+
+                                if(allowNotif) {
+                                    // 1. Show In-App Toast
+                                    const toast = document.getElementById('pushToast');
+                                    document.getElementById('pushToastTitle').innerText = data.title;
+                                    document.getElementById('pushToastBody').innerText = data.body;
+                                    toast.classList.remove('hidden');
+                                    setTimeout(() => toast.classList.remove('translate-x-[150%]'), 50);
+                                    setTimeout(() => { toast.classList.add('translate-x-[150%]'); }, 6000);
+
+                                    // 2. Trigger OS Native Notification (if allowed by browser/OS)
+                                    if (Notification.permission === 'granted') {
+                                        new Notification(data.title, {
+                                            body: data.body,
+                                            icon: '/icon.svg'
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+
+            // Listen to Properties Map
             window.listenToProperties = function() {
                 if (!currentUser) return;
-                const propsRef = firestoreModule.collection(db, 'artifacts', appId, 'public', 'data', 'properties');
                 
+                // Start listening to the global alert channel
+                window.listenToNotifications();
+
+                const propsRef = firestoreModule.collection(db, 'artifacts', appId, 'public', 'data', 'properties');
                 firestoreModule.onSnapshot(propsRef, (snapshot) => {
                     propertiesData = [];
                     snapshot.forEach(doc => {
@@ -2256,7 +2321,6 @@
                                 }
                             }
                         }
-                        
                         propertiesData.push(data);
                     });
                     
@@ -2286,14 +2350,10 @@
                 }
             };
 
-            // Helper for role-based notification defaults
             function getDefaultPrefs(email) {
                 const mail = (email || '').toLowerCase();
                 const agents = ['carlos@totalchb.com', 'yanna@totalchb.com', 'moe@totalchb.com', 'sara@totalchb.com'];
-                
-                // If they are an Agent, they get task alerts. Everyone else (Admins) defaults to false.
                 const isAgent = agents.includes(mail);
-                
                 return {
                     comments: true,
                     new_assets: true,
@@ -2305,7 +2365,6 @@
                 };
             }
 
-            // Cloud Data Integration for Notification Preferences
             window.loadNotificationPreferences = async function() {
                 if (!currentUser || !db) return;
                 try {
@@ -2317,9 +2376,8 @@
 
                     if(snap.exists()) {
                         const dbData = snap.data();
-                        data = { ...defaults, ...dbData }; // Merge saved data over the defaults
+                        data = { ...defaults, ...dbData }; 
                     } else {
-                        // First time login! Seed the database with role defaults so the backend has them immediately
                         await firestoreModule.setDoc(docRef, {
                             email: currentUser.email,
                             ...defaults,
@@ -2327,17 +2385,22 @@
                         });
                     }
 
-                    // Apply to UI Dropdown
                     document.getElementById('pref_comments').checked = data.comments;
                     document.getElementById('pref_new_assets').checked = data.new_assets;
                     document.getElementById('pref_completions').checked = data.completions;
                     document.getElementById('pref_task_turns').checked = data.task_turns;
                     document.getElementById('pref_daily_brief').checked = data.daily_brief;
-                    
                     document.getElementById('pref_reminders').checked = data.reminders;
                     document.getElementById('pref_reminder_interval').disabled = !data.reminders;
                     if (data.reminder_interval) document.getElementById('pref_reminder_interval').value = data.reminder_interval;
                     
+                    // Check if browser already granted native permission
+                    if (Notification.permission === 'granted') {
+                        const btn = document.getElementById('enablePushBtn');
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i> Native Notifications Enabled!';
+                        btn.className = "w-full bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
+                    }
+
                 } catch(e) { console.error("Pref load error", e); }
             }
 
@@ -2376,7 +2439,6 @@
                         currentUser = user;
                         grantAccess(); 
                         
-                        // Load user's unique alert settings from the Cloud
                         window.loadNotificationPreferences();
                         
                         if (!window.presenceInterval) {
@@ -2454,7 +2516,6 @@
             renderDashboard();
         }
     }
-
 
     // --- 5. CURSOR & CANVAS ANIMATION LOGIC ---
     const canvas = document.getElementById('gridCanvas');
