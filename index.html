@@ -389,7 +389,7 @@
                     <span class="text-[10px] font-bold text-gray-300 uppercase tracking-wider hidden sm:inline">Active Users</span>
                     <span id="activeUserCountBtn" class="bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/30 px-1.5 py-0.5 rounded text-[10px] font-black leading-none flex items-center justify-center">0</span>
                 </button>
-                <div id="activeUsersDropdown" class="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-56 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden">
+                <div id="activeUsersDropdown" class="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-48 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden">
                     <div class="bg-gray-800/80 px-3 py-2 border-b border-gray-700 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
                         <span>Personnel Online</span>
                         <span id="activeUserCount" class="text-brand-emerald">0</span>
@@ -1064,27 +1064,36 @@
 
         users.forEach(u => {
             const now = Date.now();
-            let activeIcons = [];
+            let hasMobile = false;
+            let hasDesktop = false;
+
             if (u.sessions) {
                 Object.values(u.sessions).forEach(sess => {
                     if (now - sess.lastActive < 300000) {
-                        const icon = getDeviceIcon(sess.type);
-                        if (!activeIcons.includes(icon)) activeIcons.push(icon);
+                        if (sess.type === 'Mobile') hasMobile = true;
+                        else hasDesktop = true;
                     }
                 });
             }
-            if (activeIcons.length > 0) {
+            
+            if (hasMobile || hasDesktop) {
                 onlineCount++;
                 const name = u.email.split('@')[0];
                 const colorClass = getAgentColorClass(name, 'text');
                 
+                const mobileColor = hasMobile ? 'text-brand-emerald drop-shadow-[0_0_5px_rgba(16,185,129,0.8)]' : 'text-brand-crimson opacity-50';
+                const desktopColor = hasDesktop ? 'text-brand-emerald drop-shadow-[0_0_5px_rgba(16,185,129,0.8)]' : 'text-brand-crimson opacity-50';
+
                 htmlStr += `
-                    <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-gray-800/40 border border-gray-700/30">
+                    <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-gray-800/40 border border-gray-700/30 mb-1 last:mb-0">
                         <div class="flex items-center gap-2">
                             <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></div>
-                            <span class="text-[10px] font-bold ${colorClass} capitalize tracking-wide truncate max-w-[120px]">${name}</span>
+                            <span class="text-[10px] font-bold ${colorClass} capitalize tracking-wide truncate max-w-[90px]">${name}</span>
                         </div>
-                        <div class="flex items-center gap-1.5 shrink-0">${activeIcons.join('')}</div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <i class="fa-solid fa-mobile-screen text-[10px] ${mobileColor}" title="Mobile"></i>
+                            <i class="fa-solid fa-desktop text-[10px] ${desktopColor}" title="Desktop"></i>
+                        </div>
                     </div>
                 `;
             }
@@ -1874,7 +1883,7 @@
                 readReceiptHtml = `<div class="text-[9px] text-gray-500 ${isMe ? 'text-right' : 'text-left'} mt-1 flex items-center gap-1 ${isMe ? 'justify-end' : 'justify-start'} pointer-events-none"><i class="fa-solid fa-check-double text-brand-cyan/70"></i> Read by: ${readers.join(', ')}</div>`;
             }
 
-            const pinActionHtml = `<button onclick="event.stopPropagation(); window.togglePinComment('${c.id}')" class="mx-2 text-gray-500 hover:text-brand-gold ${c.pinned ? 'text-brand-gold opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity cursor-pointer z-10 relative" title="${c.pinned ? 'Unpin' : 'Pin'} Message"><i class="fa-solid fa-thumbtack text-[9px]"></i></button>`;
+            const pinActionHtml = `<button onclick="event.stopPropagation(); window.togglePinComment('${c.id}')" class="mx-2 text-gray-500 hover:text-brand-gold ${c.pinned ? 'text-brand-gold opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity cursor-pointer z-10 relative pointer-events-auto" title="${c.pinned ? 'Unpin' : 'Pin'} Message"><i class="fa-solid fa-thumbtack text-[9px]"></i></button>`;
 
             let wrapperClass = `group flex flex-col ${isMe ? 'items-end' : 'items-start'} mb-1 ${isHighlight ? 'highlight-comment' : ''}`;
             let jumpOnClick = '';
@@ -1886,9 +1895,9 @@
 
             return `
             <div id="chat_msg_${c.id}" class="${wrapperClass}" ${jumpOnClick}>
-                <div class="flex items-center w-full ${isMe ? 'justify-end' : 'justify-start'} pointer-events-none">
+                <div class="flex items-center w-full ${isMe ? 'justify-end' : 'justify-start'} mb-1">
                     ${isMe ? pinActionHtml : ''}
-                    <span class="text-[9px] font-bold ${authorColorClass} mb-0.5 px-1">${escapeHtml(c.author)} • ${formatEST(c.timestamp)}</span>
+                    <span class="text-[9px] font-bold ${authorColorClass} px-1">${escapeHtml(c.author)} • ${formatEST(c.timestamp)}</span>
                     ${!isMe ? pinActionHtml : ''}
                 </div>
                 <div class="${isMe ? 'bg-brand-emerald/10 border-brand-emerald/30' : 'bg-gray-800/60 border-gray-700/50'} border rounded-xl px-3 py-2 max-w-[90%] shadow-sm ${isSearching ? 'pointer-events-none' : ''}">
@@ -2143,6 +2152,12 @@
                                 <!-- Edit Mode -->
                                 <div id="sub_edit_${t.originalIndex}_${sIdx}" class="hidden flex-col gap-2 bg-gray-900/50 p-3 rounded-lg border border-brand-cyan/30 mt-1">
                                     <textarea id="sub_input_${t.originalIndex}_${sIdx}" class="w-full bg-gray-950 border border-gray-700 rounded p-2 text-xs text-white focus:outline-none focus:border-brand-cyan transition-colors resize-y min-h-[50px] custom-scrollbar">${escapeHtml(st.title)}</textarea>
+                                    
+                                    <div class="flex items-center gap-3 mt-1 px-1">
+                                        <label class="text-[10px] text-gray-400 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="editSubtaskLink_${t.originalIndex}_${sIdx}" class="accent-brand-emerald" ${st.requiresLink || st.hyperlink ? 'checked' : ''}> Require Link</label>
+                                        <label class="text-[10px] text-gray-400 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="editSubtaskDraft_${t.originalIndex}_${sIdx}" class="accent-brand-cyan" ${st.requiresDraft || st.templateText ? 'checked' : ''}> Require Draft</label>
+                                    </div>
+
                                     <div class="flex justify-between items-center mt-1">
                                         ${isDefaultSub ? '<div></div>' : `<button onclick="window.promptRemoveSubtask(${t.originalIndex}, ${sIdx})" class="text-xs font-bold text-red-500 hover:text-red-400 flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-trash-can"></i> Remove</button>`}
                                         <div class="flex gap-2 ml-auto">
@@ -2422,6 +2437,19 @@
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
         prop.tasks[taskIndex].subtasks[subIndex].title = input;
+        
+        const linkCheck = document.getElementById(`editSubtaskLink_${taskIndex}_${subIndex}`);
+        const draftCheck = document.getElementById(`editSubtaskDraft_${taskIndex}_${subIndex}`);
+        
+        if (linkCheck) {
+            prop.tasks[taskIndex].subtasks[subIndex].requiresLink = linkCheck.checked;
+            if (!linkCheck.checked) prop.tasks[taskIndex].subtasks[subIndex].hyperlink = "";
+        }
+        if (draftCheck) {
+            prop.tasks[taskIndex].subtasks[subIndex].requiresDraft = draftCheck.checked;
+            if (!draftCheck.checked) prop.tasks[taskIndex].subtasks[subIndex].templateText = "";
+        }
+
         await window.savePropertyData(prop);
     }
 
