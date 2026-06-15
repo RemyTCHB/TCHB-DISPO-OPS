@@ -386,7 +386,14 @@
                 <h1 class="text-sm sm:text-lg font-bold text-white tracking-tight whitespace-nowrap shrink-0">Dispositions Team Dashboard</h1>
             </div>
             
+            <!-- RIGHT SIDE METRICS AND CONTROLS -->
             <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                <!-- RESTORED USER BADGE -->
+                <div id="userBadge" class="hidden items-center gap-2 bg-gray-800/60 border border-gray-700/60 rounded-lg px-2 sm:px-2.5 h-8 shadow-sm">
+                    <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse shrink-0"></div>
+                    <span id="userEmailDisplay" class="text-[10px] font-bold text-gray-300 lowercase tracking-wide truncate max-w-[90px] sm:max-w-[130px]"></span>
+                </div>
+
                 <div class="h-6 sm:h-8 w-px bg-gray-700 hidden sm:block shrink-0"></div>
                 
                 <div class="relative shrink-0">
@@ -998,7 +1005,7 @@
         const unreadCount = (prop.comments || []).filter(c => c.timestamp > lastRead && c.author.toLowerCase() !== myPrefix).length;
         
         if (unreadCount > 0 && !window.isChatOpen) {
-            badge.innerText = unreadCount; 
+            badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
             badge.classList.remove('hidden');
             badge.classList.add('flex');
             badge.classList.add('animate-bounce');
@@ -1212,6 +1219,7 @@
         }
     }
 
+    // Modal Dynamic CSV Upload Logic
     window.handleStrategyChange = function() {
         const strat = document.getElementById('newAssetStrategyInput').value;
         const csvBox = document.getElementById('csvUploadWrapper');
@@ -1258,14 +1266,6 @@
                 completed: false,
                 isDefault: true
             })) : [];
-            
-            const titleLower = task.title.toLowerCase();
-            const mainLower = task.mainTask.toLowerCase();
-            let reqLink = false;
-            if (mainLower.includes('underwriting') || mainLower.includes('uw') || titleLower.includes('format the data') || titleLower.includes('comps') || titleLower.includes('photos & videos')) {
-                reqLink = true;
-            }
-
             return {
                 id: task.id,
                 phase: task.phase,
@@ -1276,8 +1276,6 @@
                 completed: false,
                 subtasks: subtasks,
                 templateText: "",
-                hyperlink: "",
-                requiresLink: reqLink,
                 templateLastEditedBy: null,
                 templateLastEditedAt: null
             };
@@ -1308,7 +1306,6 @@
                     assignee: "Moe",
                     completed: false,
                     subtasks: subtasks,
-                    hyperlink: "",
                     isSOW: true
                 });
             }
@@ -1659,10 +1656,12 @@
 
         window.isChatOpen = focusCommentId ? true : !window.isChatOpen;
         const chatWin = document.getElementById('chatWindow');
+        const scrollBtn = document.getElementById('scrollToTopBtn');
         
         if (window.isChatOpen) {
             chatWin.classList.remove('hidden');
             chatWin.classList.add('flex');
+            if (scrollBtn) scrollBtn.style.right = '5.5rem';
             
             if (activePropertyId) {
                 const prop = propertiesData.find(p => p.id === activePropertyId);
@@ -1683,6 +1682,7 @@
         } else {
             chatWin.classList.add('hidden');
             chatWin.classList.remove('flex');
+            if (scrollBtn) scrollBtn.style.right = '1.5rem';
             
             if(window.isChatSearchOpen) window.toggleChatSearch();
         }
@@ -1953,6 +1953,7 @@
         const emptyView = document.getElementById('tracker-empty');
         const contentView = document.getElementById('tracker-content');
         const chatContainer = document.getElementById('propertyChatContainer');
+        const scrollBtn = document.getElementById('scrollToTopBtn');
         
         if(!emptyView || !contentView) return;
         
@@ -1960,6 +1961,7 @@
             emptyView.classList.remove('hidden');
             contentView.classList.add('hidden');
             if(chatContainer) chatContainer.classList.add('hidden');
+            if(scrollBtn) { scrollBtn.style.right = '1.5rem'; }
             return;
         }
 
@@ -1969,6 +1971,7 @@
         emptyView.classList.add('hidden');
         contentView.classList.remove('hidden');
         if(chatContainer) chatContainer.classList.remove('hidden');
+        if(scrollBtn) { scrollBtn.style.right = '5.5rem'; }
 
         document.getElementById('tracker-address').innerText = prop.address;
         const strat = prop.exitStrategy || 'Wholesale';
@@ -2146,6 +2149,7 @@
                     const agentBg = getAgentColorClass(t.assignee, 'bg');
 
                     const weightColor = t.completed ? 'text-brand-emerald bg-brand-emerald/10 border-brand-emerald/30' : 'text-brand-crimson bg-gray-900 border-gray-700';
+                    const paddingAdjust = "pl-6 sm:pl-8";
 
                     const tFeat = buildFeatures(t, false, null, t.originalIndex);
 
@@ -2681,6 +2685,7 @@
             const authModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
             const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
             
+            // Isolate messaging so a tracking reset doesn't crash the whole login screen!
             let messagingModule = null;
             try {
                 messagingModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js");
@@ -2692,11 +2697,13 @@
             firebaseAuth = authModule.getAuth(app);
             db = firestoreModule.getFirestore(app);
 
+            // Initialize Google Provider
             googleProvider = new authModule.GoogleAuthProvider();
             googleProvider.setCustomParameters({ hd: 'totalchb.com' });
             window.firebaseSignInWithPopup = authModule.signInWithPopup;
             window.firebaseSignOut = authModule.signOut;
 
+            // Initialize FCM for foreground pushes safely
             let messaging = null;
             if (messagingModule) {
                 try {
@@ -2715,10 +2722,13 @@
                 }
             }
 
+            // Function to request VAPID token (UPDATED FOR EXPLICIT SW REGISTRATION)
             window.requestPushToken = async function() {
                 if(!messaging || !messagingModule) return null;
                 try {
                     const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
+                    
+                    // NEW LINE: Force the browser to bypass its cache and aggressively update the Service Worker!
                     await registration.update();
                     
                     const permission = await Notification.requestPermission();
@@ -2728,6 +2738,8 @@
                             serviceWorkerRegistration: registration
                         });
                         return token;
+                    } else {
+                        console.warn("User blocked notifications.");
                     }
                 } catch(e) { 
                     console.error("FCM Token Generation Failed:", e); 
@@ -2735,6 +2747,7 @@
                 return null;
             }
 
+            // Action for Enable Push Notifications button
             window.enablePush = async function() {
                 const btn = document.getElementById('enablePushBtn');
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authorizing...';
@@ -2743,24 +2756,25 @@
                 if (token && currentUser && db) {
                     const docRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
                     await firestoreModule.setDoc(docRef, {
-                        fcmTokensMap: { [localDeviceId]: token }
+                        fcmTokens: firestoreModule.arrayUnion(token)
                     }, { merge: true });
                     
                     btn.innerHTML = '<i class="fa-solid fa-check"></i> Device Linked Successfully!';
                     btn.className = "flex-1 bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
                 } else {
-                    btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Setup Failed';
+                    btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Setup Failed (Check Console)';
                     btn.className = "flex-1 bg-brand-crimson/20 text-brand-crimson border border-brand-crimson/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
                 }
             }
 
+            // NEW: Action to wipe dead tokens
             window.resetPushTokens = async function() {
                 if (!currentUser || !db) return;
                 const btn = document.getElementById('enablePushBtn');
                 try {
                     const docRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
                     await firestoreModule.setDoc(docRef, {
-                        fcmTokensMap: firestoreModule.deleteField()
+                        fcmTokens: [] // Wipe the array clean!
                     }, { merge: true });
                     
                     btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Wiped! Click to Link Current.';
@@ -2779,6 +2793,7 @@
                     snapshot.forEach(doc => {
                         let data = doc.data();
                         
+                        // Migration Cleanup
                         if (data.tasks) {
                             data.tasks = data.tasks.filter(t => t.id !== 'p3_7'); 
                             let p3_6 = data.tasks.find(t => t.id === 'p3_6');
@@ -3016,6 +3031,7 @@
                         currentUser = user;
                         grantAccess(); 
                         
+                        // Load user's unique alert settings from the Cloud
                         window.loadNotificationPreferences();
                         window.listenToNotifications();
                         
@@ -3036,7 +3052,13 @@
                             const activeUsersRef = firestoreModule.collection(db, 'artifacts', appId, 'public', 'data', 'active_users');
                             firestoreModule.onSnapshot(activeUsersRef, (snapshot) => {
                                 window.activeUsersData = [];
-                                snapshot.forEach(doc => { window.activeUsersData.push(doc.data()); });
+                                const now = Date.now();
+                                snapshot.forEach(doc => {
+                                    const data = doc.data();
+                                    if (now - data.lastActive < 300000) { 
+                                        window.activeUsersData.push(data);
+                                    }
+                                });
                                 if(window.renderActiveUsersList) window.renderActiveUsersList();
                             });
                         }
