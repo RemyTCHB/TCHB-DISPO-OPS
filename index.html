@@ -257,20 +257,25 @@
             
             <div class="h-8 w-px bg-gray-700 hidden md:block shrink-0"></div>
             
+            <!-- RIGHT SIDE CONTROLS -->
             <div class="flex items-center gap-3 shrink-0">
                 
+                <!-- Logged In User Display Badge (Fixed Height & Truncated Text) -->
                 <div id="userBadge" class="hidden items-center gap-2 bg-gray-800/60 border border-gray-700/60 rounded-lg px-2.5 h-8">
                     <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse shrink-0"></div>
                     <span id="userEmailDisplay" class="text-[10px] font-bold text-gray-300 lowercase tracking-wide truncate max-w-[130px]"></span>
                 </div>
 
+                <!-- STACKED: Notification Bell & Logout Button -->
                 <div class="flex flex-col justify-between items-center h-8 shrink-0 py-0.5">
                     
+                    <!-- Notification Preferences Center -->
                     <div class="relative flex items-center justify-center shrink-0">
                         <button onclick="window.toggleNotificationSettings(event)" class="text-[11px] text-gray-500 hover:text-brand-cyan transition-colors cursor-pointer leading-none block" title="Alert Preferences">
                             <i class="fa-solid fa-bell"></i>
                         </button>
                         
+                        <!-- Notification Settings Dropdown -->
                         <div id="notifSettingsDropdown" class="absolute right-0 top-full mt-5 w-72 sm:w-80 bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-right transition-all text-left">
                             <div class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center">
                                 <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-sliders text-brand-cyan"></i> Alert Preferences</span>
@@ -279,10 +284,12 @@
                             
                             <div class="p-4 space-y-5 max-h-[60vh] overflow-y-auto custom-scrollbar">
                                 
+                                <!-- ENABLE PUSH BUTTON -->
                                 <button id="enablePushBtn" onclick="window.enablePush()" class="w-full bg-gradient-to-r from-brand-purple to-brand-cyan hover:from-indigo-500 hover:to-cyan-400 text-white text-xs font-bold py-3 px-4 rounded-lg shadow-md transition-all cursor-pointer flex justify-center items-center gap-2">
                                     <i class="fa-regular fa-bell animate-shake"></i> Enable Device Push Notifications
                                 </button>
 
+                                <!-- Toggle Item -->
                                 <div class="flex items-center justify-between border-t border-gray-800 pt-4">
                                     <div class="pr-3">
                                         <p class="text-xs font-bold text-gray-200">Offline Comment Alerts</p>
@@ -293,6 +300,7 @@
                                       <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-cyan"></div>
                                     </label>
                                 </div>
+                                <!-- Toggle Item -->
                                 <div class="flex items-center justify-between">
                                     <div class="pr-3">
                                         <p class="text-xs font-bold text-gray-200">New Asset Deployments</p>
@@ -303,6 +311,7 @@
                                       <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-cyan"></div>
                                     </label>
                                 </div>
+                                <!-- Toggle Item -->
                                 <div class="flex items-center justify-between">
                                     <div class="pr-3">
                                         <p class="text-xs font-bold text-gray-200">Phase Completions</p>
@@ -313,6 +322,7 @@
                                       <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-cyan"></div>
                                     </label>
                                 </div>
+                                <!-- Toggle Item -->
                                 <div class="flex items-center justify-between">
                                     <div class="pr-3">
                                         <p class="text-xs font-bold text-brand-emerald"><i class="fa-solid fa-arrow-turn-down rotate-90 mr-1"></i> Task Turn Alerts</p>
@@ -323,6 +333,7 @@
                                       <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-emerald"></div>
                                     </label>
                                 </div>
+                                <!-- Toggle Item -->
                                 <div class="flex items-center justify-between border-t border-gray-800 pt-4">
                                     <div class="pr-3">
                                         <p class="text-xs font-bold text-brand-gold"><i class="fa-regular fa-sun mr-1"></i> 10 AM Daily Briefing</p>
@@ -333,6 +344,7 @@
                                       <div class="w-8 h-4 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-gold"></div>
                                     </label>
                                 </div>
+                                <!-- Toggle Item w/ Sub Menu -->
                                 <div class="flex flex-col border-t border-gray-800 pt-4">
                                     <div class="flex items-center justify-between mb-2">
                                         <div class="pr-3">
@@ -361,6 +373,7 @@
                         </div>
                     </div>
 
+                    <!-- Logout Button -->
                     <button onclick="window.logOut()" class="text-[11px] text-gray-500 hover:text-brand-crimson transition-colors cursor-pointer leading-none block" title="Sign Out">
                         <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     </button>
@@ -369,18 +382,21 @@
             
             <div class="h-8 w-px bg-gray-700 hidden md:block shrink-0"></div>
             
+            <!-- ACTIVE USERS TOGGLE (Fixed Height) -->
             <div class="relative shrink-0">
                 <button onclick="window.toggleActiveUsers(event)" class="flex items-center gap-2 bg-gray-800/60 border border-gray-700/60 hover:bg-gray-700/60 rounded-lg px-3 h-8 cursor-pointer transition-colors shadow-sm">
                     <i class="fa-solid fa-users text-brand-emerald text-[10px]"></i>
                     <span class="text-[10px] font-bold text-gray-300 uppercase tracking-wider hidden sm:inline">Active Users</span>
                     <span id="activeUserCountBtn" class="bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/30 px-1.5 py-0.5 rounded text-[10px] font-black leading-none flex items-center justify-center">0</span>
                 </button>
+                <!-- DROPDOWN -->
                 <div id="activeUsersDropdown" class="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-52 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden">
                     <div class="bg-gray-800/80 px-3 py-2 border-b border-gray-700 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
                         <span>Personnel Online</span>
                         <span id="activeUserCount" class="text-brand-emerald">0</span>
                     </div>
                     <div id="activeUsersList" class="flex flex-col max-h-48 overflow-y-auto p-1.5 gap-1">
+                        <!-- Populated by JS -->
                     </div>
                 </div>
             </div>
@@ -1894,6 +1910,7 @@
             const ui = getPhaseUI(phaseName);
             const phaseTotalWeight = Object.values(mainTasksMap).flat().reduce((sum, t) => sum + t.weight, 0);
 
+            // Replaced the broken absolute anchor with direct IDs and scroll-margins
             timelineHtml += `
                 <div id="${phaseId}" class="relative -ml-[31px] sm:-ml-[47px] mb-8 ${pIndex > 1 ? 'pt-8' : ''} scroll-mt-10 transition-all">
                     <div class="inline-flex items-center gap-3">
@@ -2154,6 +2171,12 @@
             firebaseAuth = authModule.getAuth(app);
             db = firestoreModule.getFirestore(app);
 
+            // Initialize Google Provider (For Authentication)
+            googleProvider = new authModule.GoogleAuthProvider();
+            googleProvider.setCustomParameters({ hd: 'totalchb.com' });
+            window.firebaseSignInWithPopup = authModule.signInWithPopup;
+            window.firebaseSignOut = authModule.signOut;
+
             // Initialize FCM for foreground pushes
             let messaging = null;
             try {
@@ -2171,17 +2194,15 @@
                 console.warn("Messaging not supported on this environment", err);
             }
 
-            // Function to request VAPID token (UPDATED FOR EXPLICIT SW REGISTRATION)
+            // Function to request VAPID token
             window.requestPushToken = async function() {
                 if(!messaging) return null;
                 try {
-                    // 1. Explicitly register the Service Worker first
-                    const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
+                    // Explicitly register the Service Worker
+                    const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
                     
-                    // 2. Request permission from the user
                     const permission = await Notification.requestPermission();
                     if (permission === 'granted') {
-                        // 3. Get the token using our specific Service Worker registration
                         const token = await messagingModule.getToken(messaging, { 
                             vapidKey: "BAOBgrEDGG_WLKRjNEXU_L2_kHZrWTVFGUxN5gm7Udkkh9p0l2Tc8sTZhErN_dZmpxD-EzjEnNfhYX7R3XHrRhw",
                             serviceWorkerRegistration: registration
@@ -2190,9 +2211,7 @@
                     } else {
                         console.warn("User blocked notifications.");
                     }
-                } catch(e) { 
-                    console.error("FCM Token Generation Failed:", e); 
-                }
+                } catch(e) { console.error("Token failed", e); }
                 return null;
             }
 
