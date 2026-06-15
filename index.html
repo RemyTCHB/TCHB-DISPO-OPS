@@ -320,8 +320,8 @@
       
       <!-- FAB Button -->
       <button id="chatFabBtn" onclick="window.toggleChat()" class="hidden md:flex w-14 h-14 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)] items-center justify-center hover:scale-105 transition-transform group relative cursor-pointer z-50 p-0 border-0 bg-transparent pointer-events-auto mt-4 mr-4 mb-[84px] md:mr-0 md:mb-0">
-          <div class="w-full h-full bg-[#1e2338] border border-gray-700 rounded-full flex items-center justify-center overflow-hidden shadow-inner group-hover:border-brand-purple transition-colors">
-              <img src="icon.svg" class="w-full h-full object-contain p-1 group-hover:opacity-90 transition-opacity" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
+          <div class="w-full h-full bg-[#1e2338] border border-gray-700 rounded-full flex items-center justify-center overflow-hidden shadow-inner group-hover:border-brand-purple transition-colors p-0">
+              <img src="icon.svg" class="w-full h-full object-cover group-hover:opacity-90 transition-opacity rounded-full" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
           </div>
           <!-- Unread Badge -->
           <span id="chatUnreadBadge" class="absolute -top-1 -right-1 bg-brand-crimson text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border border-[#0f1423] shadow-md hidden z-10">0</span>
@@ -383,7 +383,7 @@
                     </div>
 
                     <!-- SETTINGS PANEL -->
-                    <div id="notifSettingsDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-[420px] h-auto max-h-[85vh] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[121] overflow-hidden origin-top-left transition-all text-left">
+                    <div id="notifSettingsDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-[420px] h-[400px] sm:h-[500px] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[121] overflow-hidden origin-top-left transition-all text-left">
                         <div class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px]">
                             <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-sliders text-brand-cyan"></i> Notification Settings</span>
                             <button onclick="window.toggleNotificationSettings(event)" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Back</button>
@@ -1057,8 +1057,7 @@
     window.toggleNotificationList = function(e) {
         if(e) e.stopPropagation();
         window.toggleDisplay('notifSettingsDropdown', false);
-        const drop = document.getElementById('notificationsListDropdown');
-        if (drop) drop.classList.toggle('hidden');
+        window.toggleDisplay('notificationsListDropdown');
     }
 
     window.toggleNotificationSettings = function(e) {
@@ -1300,7 +1299,10 @@
         
         mobNavs.forEach(id => {
             const el = document.getElementById(id);
-            if(el) { el.classList.remove('text-brand-emerald'); el.classList.add('text-gray-500'); }
+            if(el) { 
+                el.classList.remove('text-brand-emerald'); 
+                el.classList.add('text-gray-500', 'hover:text-gray-300'); 
+            }
         });
 
         const activeNavClasses = "bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md border-transparent";
@@ -1310,7 +1312,7 @@
             document.getElementById('nav-dashboard').classList.add(...activeNavClasses.split(' '));
             document.getElementById('nav-dashboard').classList.remove('text-gray-300');
             const mob = document.getElementById('nav-mobile-dashboard');
-            if (mob) { mob.classList.remove('text-gray-500'); mob.classList.add('text-brand-emerald'); }
+            if (mob) { mob.classList.remove('text-gray-500', 'hover:text-gray-300'); mob.classList.add('text-brand-emerald'); }
             
             activePropertyId = null;
             window.sectionToggleState = {}; window.sectionCompletionState = {};
@@ -1321,7 +1323,7 @@
             document.getElementById('nav-tracker').classList.add(...activeNavClasses.split(' '));
             document.getElementById('nav-tracker').classList.remove('text-gray-300');
             const mob = document.getElementById('nav-mobile-tracker');
-            if (mob) { mob.classList.remove('text-gray-500'); mob.classList.add('text-brand-emerald'); }
+            if (mob) { mob.classList.remove('text-gray-500', 'hover:text-gray-300'); mob.classList.add('text-brand-emerald'); }
             
             renderTrackerView(); updateGlobalAssetSelector();
         } else if (tab === 'sop') {
@@ -1329,7 +1331,7 @@
             document.getElementById('nav-sop').classList.add(...activeNavClasses.split(' '));
             document.getElementById('nav-sop').classList.remove('text-gray-300');
             const mob = document.getElementById('nav-mobile-sop');
-            if (mob) { mob.classList.remove('text-gray-500'); mob.classList.add('text-brand-emerald'); }
+            if (mob) { mob.classList.remove('text-gray-500', 'hover:text-gray-300'); mob.classList.add('text-brand-emerald'); }
             
             if(window.isChatOpen) window.toggleChat();
             window.renderSOPTimeline('Wholesale');
