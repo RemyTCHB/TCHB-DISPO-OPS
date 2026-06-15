@@ -116,7 +116,7 @@
       </div>
   </div>
 
-  <!-- SCROLL TO TOP BUTTON (Dynamic Positioned horizontally next to FAB) -->
+  <!-- SCROLL TO TOP BUTTON -->
   <button id="scrollToTopBtn" onclick="window.scrollToTop()" class="fixed right-6 z-[104] w-14 h-14 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.5)] flex items-center justify-center hover:scale-105 transition-all cursor-pointer opacity-0 pointer-events-none translate-y-4 p-0 border-0" style="bottom: 1.5rem; transition: opacity 0.3s ease, transform 0.3s ease, right 0.3s ease;">
       <div id="scrollToTopIcon" class="w-full h-full bg-gray-800 rounded-full flex items-center justify-center text-white">
           <i class="fa-solid fa-arrow-up text-xl"></i>
@@ -242,143 +242,138 @@
     
     <!-- Header -->
     <header class="sticky top-0 md:top-2 z-[100] flex flex-col md:flex-row justify-between items-center gap-4 mb-8 bg-[#0b0f19]/95 p-4 rounded-2xl border border-gray-800/80 backdrop-blur-xl shrink-0 shadow-lg">
+        
         <div class="flex items-center gap-5 flex-wrap lg:flex-nowrap">
-            <img src="icon.svg" alt="TCHB Icon" class="h-10 w-10 object-contain shrink-0" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
             
+            <!-- NEW NOTIFICATION HUB (LOGO) -->
+            <div class="relative shrink-0 flex items-center justify-center" id="mainLogoContainer">
+                <button id="mainLogoBtn" onclick="window.toggleNotificationList(event); this.classList.remove('animate-jelly-pop'); void this.offsetWidth; this.classList.add('animate-jelly-pop');" class="relative cursor-pointer transition-transform hover:scale-105 group p-1 z-10" title="Notification Hub">
+                    <img src="icon.svg" alt="TCHB Icon" class="h-10 w-10 object-contain drop-shadow-md group-hover:drop-shadow-[0_0_15px_rgba(16,185,129,0.5)] transition-all" onerror="this.src='https://placehold.co/40x40/111827/ffffff?text=T'">
+                    <span id="notifUnreadBadge" class="absolute -top-1 -right-1 bg-brand-crimson text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-[#0f1423] shadow-md hidden z-20">0</span>
+                </button>
+                
+                <!-- NOTIFICATIONS DROPDOWN LIST -->
+                <div id="notificationsListDropdown" class="absolute left-0 top-full mt-4 w-80 sm:w-96 bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-left transition-all text-left">
+                    <div id="notifHeaderActions" class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px]">
+                        <!-- Populated dynamically by JS based on selection state -->
+                    </div>
+                    
+                    <div id="notificationsListItems" class="p-0 flex flex-col max-h-[60vh] overflow-y-auto custom-scrollbar divide-y divide-gray-800">
+                        <!-- Dynamic Notification Items -->
+                    </div>
+                </div>
+
+                <!-- SETTINGS PANEL -->
+                <div id="notifSettingsDropdown" class="absolute left-0 top-full mt-4 w-72 sm:w-80 bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[121] overflow-hidden origin-top-left transition-all text-left">
+                    <div class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px]">
+                        <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-sliders text-brand-cyan"></i> Alert Preferences</span>
+                        <button onclick="window.toggleNotificationSettings(event)" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                    </div>
+                    
+                    <div class="p-4 space-y-5 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                        <div class="flex gap-2">
+                            <button id="enablePushBtn" onclick="window.enablePush()" class="flex-1 bg-gradient-to-r from-brand-purple to-brand-cyan hover:from-indigo-500 hover:to-cyan-400 text-white text-xs font-bold py-3 px-4 rounded-lg shadow-md transition-all cursor-pointer flex justify-center items-center gap-2">
+                                <i class="fa-regular fa-bell animate-shake"></i> Enable Device Push
+                            </button>
+                            <button onclick="window.resetPushTokens()" class="bg-gray-800 hover:bg-brand-crimson/20 hover:text-brand-crimson hover:border-brand-crimson text-gray-400 border border-gray-700 text-xs font-bold py-3 px-4 rounded-lg transition-all cursor-pointer flex justify-center items-center shrink-0" title="Wipe Old Devices">
+                                <i class="fa-solid fa-mobile-screen-button relative"><i class="fa-solid fa-xmark absolute -bottom-1 -right-2 text-[10px] text-brand-crimson"></i></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-gray-800 pt-4">
+                            <div class="pr-3">
+                                <p class="text-xs font-bold text-gray-200">Offline Comment Alerts</p>
+                                <p class="text-[9px] text-gray-500">Receive alerts for new unread property discussions.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                <input type="checkbox" id="pref_comments" class="sr-only peer">
+                                <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-cyan"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="pr-3">
+                                <p class="text-xs font-bold text-gray-200">New Asset Deployments</p>
+                                <p class="text-[9px] text-gray-500">Alert when a new property tracker is initialized.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                <input type="checkbox" id="pref_new_assets" class="sr-only peer">
+                                <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-cyan"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="pr-3">
+                                <p class="text-xs font-bold text-gray-200">Phase Completions</p>
+                                <p class="text-[9px] text-gray-500">Notify the team when major pipeline phases reach 100%.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                <input type="checkbox" id="pref_completions" class="sr-only peer">
+                                <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-cyan"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="pr-3">
+                                <p class="text-xs font-bold text-brand-emerald"><i class="fa-solid fa-arrow-turn-down rotate-90 mr-1"></i> Task Turn Alerts</p>
+                                <p class="text-[9px] text-gray-500">Instant alert when the next workflow step is assigned to you.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                <input type="checkbox" id="pref_task_turns" class="sr-only peer">
+                                <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-emerald"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-gray-800 pt-4">
+                            <div class="pr-3">
+                                <p class="text-xs font-bold text-brand-gold"><i class="fa-regular fa-sun mr-1"></i> 10 AM Daily Briefing</p>
+                                <p class="text-[9px] text-gray-500">Morning summary of your pending tasks for the day.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                <input type="checkbox" id="pref_daily_brief" class="sr-only peer">
+                                <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-gold"></div>
+                            </label>
+                        </div>
+                        <div class="flex flex-col border-t border-gray-800 pt-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="pr-3">
+                                    <p class="text-xs font-bold text-brand-crimson"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Overdue Reminders</p>
+                                    <p class="text-[9px] text-gray-500">Recurring nudges for tasks sitting on your desk.</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                    <input type="checkbox" id="pref_reminders" class="sr-only peer" onchange="document.getElementById('pref_reminder_interval').disabled = !this.checked">
+                                    <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-crimson"></div>
+                                </label>
+                            </div>
+                            <select id="pref_reminder_interval" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-2 text-[10px] font-bold text-gray-300 focus:outline-none focus:border-brand-crimson transition-colors cursor-pointer appearance-none disabled:opacity-50 disabled:cursor-not-allowed">
+                                <option value="2">Every 2 Hours</option>
+                                <option value="4" selected>Every 4 Hours</option>
+                                <option value="8">Every 8 Hours</option>
+                                <option value="24">Once a Day (24 Hours)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="p-3 border-t border-gray-700 bg-gray-900/50 flex justify-end">
+                        <button id="savePrefsBtn" onclick="window.saveNotificationPreferences()" class="bg-brand-cyan hover:bg-cyan-400 text-gray-900 text-xs font-bold py-2 px-4 rounded-lg shadow-md transition-colors cursor-pointer w-full flex justify-center items-center gap-2">
+                            Save Preferences
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="h-8 w-px bg-gray-700 hidden md:block shrink-0"></div>
             
             <h1 class="text-lg font-bold text-white tracking-tight whitespace-nowrap shrink-0">Dispositions Team Dashboard</h1>
             
             <div class="h-8 w-px bg-gray-700 hidden md:block shrink-0"></div>
             
+            <!-- RIGHT SIDE METRICS AND CONTROLS -->
             <div class="flex items-center gap-3 shrink-0">
-                
                 <div id="userBadge" class="hidden items-center gap-2 bg-gray-800/60 border border-gray-700/60 rounded-lg px-2.5 h-8">
                     <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse shrink-0"></div>
                     <span id="userEmailDisplay" class="text-[10px] font-bold text-gray-300 lowercase tracking-wide truncate max-w-[130px]"></span>
                 </div>
 
-                <div class="flex flex-col justify-between items-center h-8 shrink-0 py-0.5">
-                    
-                    <!-- NEW NOTIFICATION BELL & LIST -->
-                    <div class="relative flex items-center justify-center shrink-0" id="notifBellContainer">
-                        <button onclick="window.toggleNotificationList(event)" class="text-[11px] text-gray-500 hover:text-brand-cyan transition-colors cursor-pointer leading-none block relative" title="Alerts & Preferences">
-                            <i class="fa-solid fa-bell"></i>
-                            <span id="notifUnreadBadge" class="absolute -top-1 -right-1 bg-brand-crimson text-white text-[8px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center border border-[#0f1423] shadow-md hidden z-10">0</span>
-                        </button>
-                        
-                        <div id="notificationsListDropdown" class="absolute right-0 top-full mt-5 w-80 sm:w-96 bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-right transition-all text-left">
-                            <div class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center">
-                                <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-bell text-brand-emerald"></i> Notifications</span>
-                                <div class="flex gap-3 items-center">
-                                    <button onclick="window.markAllNotificationsRead()" class="text-[10px] text-gray-400 hover:text-brand-cyan uppercase font-bold tracking-widest cursor-pointer transition-colors">Mark Read</button>
-                                    <button onclick="window.toggleNotificationSettings(event)" class="text-gray-400 hover:text-brand-cyan cursor-pointer transition-colors" title="Settings"><i class="fa-solid fa-gear"></i></button>
-                                </div>
-                            </div>
-                            
-                            <div id="notificationsListItems" class="p-0 flex flex-col max-h-[60vh] overflow-y-auto custom-scrollbar divide-y divide-gray-800">
-                                <!-- Dynamic Notification Items -->
-                            </div>
-                        </div>
-
-                        <!-- SETTINGS PANEL -->
-                        <div id="notifSettingsDropdown" class="absolute right-0 top-full mt-5 w-72 sm:w-80 bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[121] overflow-hidden origin-top-right transition-all text-left">
-                            <div class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center">
-                                <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-sliders text-brand-cyan"></i> Alert Preferences</span>
-                                <button onclick="window.toggleNotificationSettings(event)" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-arrow-left"></i> Back</button>
-                            </div>
-                            
-                            <div class="p-4 space-y-5 max-h-[60vh] overflow-y-auto custom-scrollbar">
-                                <div class="flex gap-2">
-                                    <button id="enablePushBtn" onclick="window.enablePush()" class="flex-1 bg-gradient-to-r from-brand-purple to-brand-cyan hover:from-indigo-500 hover:to-cyan-400 text-white text-xs font-bold py-3 px-4 rounded-lg shadow-md transition-all cursor-pointer flex justify-center items-center gap-2">
-                                        <i class="fa-regular fa-bell animate-shake"></i> Enable Device Push
-                                    </button>
-                                    <button onclick="window.resetPushTokens()" class="bg-gray-800 hover:bg-brand-crimson/20 hover:text-brand-crimson hover:border-brand-crimson text-gray-400 border border-gray-700 text-xs font-bold py-3 px-4 rounded-lg transition-all cursor-pointer flex justify-center items-center shrink-0" title="Wipe Old Devices">
-                                        <i class="fa-solid fa-mobile-screen-button relative"><i class="fa-solid fa-xmark absolute -bottom-1 -right-2 text-[10px] text-brand-crimson"></i></i>
-                                    </button>
-                                </div>
-                                <div class="flex items-center justify-between border-t border-gray-800 pt-4">
-                                    <div class="pr-3">
-                                        <p class="text-xs font-bold text-gray-200">Offline Comment Alerts</p>
-                                        <p class="text-[9px] text-gray-500">Receive alerts for new unread property discussions.</p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                      <input type="checkbox" id="pref_comments" class="sr-only peer">
-                                      <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-cyan"></div>
-                                    </label>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div class="pr-3">
-                                        <p class="text-xs font-bold text-gray-200">New Asset Deployments</p>
-                                        <p class="text-[9px] text-gray-500">Alert when a new property tracker is initialized.</p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                      <input type="checkbox" id="pref_new_assets" class="sr-only peer">
-                                      <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-cyan"></div>
-                                    </label>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div class="pr-3">
-                                        <p class="text-xs font-bold text-gray-200">Phase Completions</p>
-                                        <p class="text-[9px] text-gray-500">Notify the team when major pipeline phases reach 100%.</p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                      <input type="checkbox" id="pref_completions" class="sr-only peer">
-                                      <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-cyan"></div>
-                                    </label>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <div class="pr-3">
-                                        <p class="text-xs font-bold text-brand-emerald"><i class="fa-solid fa-arrow-turn-down rotate-90 mr-1"></i> Task Turn Alerts</p>
-                                        <p class="text-[9px] text-gray-500">Instant alert when the next workflow step is assigned to you.</p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                      <input type="checkbox" id="pref_task_turns" class="sr-only peer">
-                                      <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-emerald"></div>
-                                    </label>
-                                </div>
-                                <div class="flex items-center justify-between border-t border-gray-800 pt-4">
-                                    <div class="pr-3">
-                                        <p class="text-xs font-bold text-brand-gold"><i class="fa-regular fa-sun mr-1"></i> 10 AM Daily Briefing</p>
-                                        <p class="text-[9px] text-gray-500">Morning summary of your pending tasks for the day.</p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                      <input type="checkbox" id="pref_daily_brief" class="sr-only peer">
-                                      <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-gold"></div>
-                                    </label>
-                                </div>
-                                <div class="flex flex-col border-t border-gray-800 pt-4">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <div class="pr-3">
-                                            <p class="text-xs font-bold text-brand-crimson"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Overdue Reminders</p>
-                                            <p class="text-[9px] text-gray-500">Recurring nudges for tasks sitting on your desk.</p>
-                                        </div>
-                                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                                          <input type="checkbox" id="pref_reminders" class="sr-only peer" onchange="document.getElementById('pref_reminder_interval').disabled = !this.checked">
-                                          <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-crimson"></div>
-                                        </label>
-                                    </div>
-                                    <select id="pref_reminder_interval" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-2 text-[10px] font-bold text-gray-300 focus:outline-none focus:border-brand-crimson transition-colors cursor-pointer appearance-none disabled:opacity-50 disabled:cursor-not-allowed">
-                                        <option value="2">Every 2 Hours</option>
-                                        <option value="4" selected>Every 4 Hours</option>
-                                        <option value="8">Every 8 Hours</option>
-                                        <option value="24">Once a Day (24 Hours)</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="p-3 border-t border-gray-700 bg-gray-900/50 flex justify-end">
-                                <button id="savePrefsBtn" onclick="window.saveNotificationPreferences()" class="bg-brand-cyan hover:bg-cyan-400 text-gray-900 text-xs font-bold py-2 px-4 rounded-lg shadow-md transition-colors cursor-pointer w-full flex justify-center items-center gap-2">
-                                    Save Preferences
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="window.logOut()" class="text-[11px] text-gray-500 hover:text-brand-crimson transition-colors cursor-pointer leading-none block" title="Sign Out">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    </button>
-                </div>
+                <!-- Recenter/Styled Logout Button -->
+                <button onclick="window.logOut()" class="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/60 border border-gray-700/60 text-gray-400 hover:text-brand-crimson hover:bg-brand-crimson/10 hover:border-brand-crimson/30 transition-all cursor-pointer shadow-sm" title="Sign Out">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i>
+                </button>
             </div>
             
             <div class="h-8 w-px bg-gray-700 hidden md:block shrink-0"></div>
@@ -401,6 +396,7 @@
             
             <div class="h-8 w-px bg-gray-700 hidden xl:block shrink-0"></div>
         </div>
+        
         <div class="flex shrink-0 bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 overflow-x-auto max-w-full mt-4 md:mt-0">
             <button onclick="window.switchTab('dashboard')" id="nav-dashboard" class="px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md flex items-center gap-2 whitespace-nowrap">
                 <i class="fa-solid fa-layer-group"></i> Master Dashboard
@@ -687,6 +683,7 @@
     window.currentDashboardStrategy = "All";
     window.currentDashboardSort = "edited_desc";
     window.notificationHistory = [];
+    window.selectedNotifs = new Set(); // Global Set for multi-select notifications
 
     // --- 1. AUTHENTICATION LOGIC ---
     window.signInWithGoogle = async function() {
@@ -1032,8 +1029,14 @@
         if(e) e.stopPropagation();
         const drop = document.getElementById('notifSettingsDropdown');
         const list = document.getElementById('notificationsListDropdown');
-        if (list && !list.classList.contains('hidden')) list.classList.add('hidden');
-        if (drop) drop.classList.toggle('hidden');
+        
+        if (drop.classList.contains('hidden')) {
+            if (list) list.classList.add('hidden');
+            drop.classList.remove('hidden');
+        } else {
+            drop.classList.add('hidden');
+            if (list) list.classList.remove('hidden');
+        }
     }
 
     document.addEventListener('click', (e) => {
@@ -1042,11 +1045,11 @@
             activeUsersDropdown.classList.add('hidden');
         }
         const notifListDropdown = document.getElementById('notificationsListDropdown');
-        if (notifListDropdown && !notifListDropdown.classList.contains('hidden') && !e.target.closest('#notificationsListDropdown') && !e.target.closest('[onclick*="toggleNotificationList"]')) {
+        if (notifListDropdown && !notifListDropdown.classList.contains('hidden') && !e.target.closest('#notificationsListDropdown') && !e.target.closest('#mainLogoBtn')) {
             notifListDropdown.classList.add('hidden');
         }
         const notifSettingsDropdown = document.getElementById('notifSettingsDropdown');
-        if (notifSettingsDropdown && !notifSettingsDropdown.classList.contains('hidden') && !e.target.closest('#notifSettingsDropdown') && !e.target.closest('[onclick*="toggleNotificationSettings"]')) {
+        if (notifSettingsDropdown && !notifSettingsDropdown.classList.contains('hidden') && !e.target.closest('#notifSettingsDropdown') && !e.target.closest('#mainLogoBtn') && !e.target.closest('[onclick*="toggleNotificationSettings"]')) {
             notifSettingsDropdown.classList.add('hidden');
         }
     });
@@ -2588,6 +2591,53 @@
         await window.savePropertyData(prop);
     }
 
+    // MULTI-SELECT NOTIFICATIONS ACTIONS
+    window.toggleNotificationSelection = function(id, e) {
+        if (e) e.stopPropagation();
+        if (window.selectedNotifs.has(id)) {
+            window.selectedNotifs.delete(id);
+        } else {
+            window.selectedNotifs.add(id);
+        }
+        window.renderNotificationList();
+    }
+
+    window.toggleSelectAllNotifications = function(e) {
+        if (e) e.stopPropagation();
+        if (e.target.checked) {
+            window.notificationHistory.forEach(n => window.selectedNotifs.add(n.id));
+        } else {
+            window.selectedNotifs.clear();
+        }
+        window.renderNotificationList();
+    }
+
+    window.deleteNotification = async function(id, e) {
+        if (e) e.stopPropagation();
+        const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+        const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+        firestoreModule.deleteDoc(ref).catch(err=>console.error(err));
+        window.selectedNotifs.delete(id);
+    }
+
+    window.deleteSelectedNotifications = async function() {
+        const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+        window.selectedNotifs.forEach(id => {
+            const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+            firestoreModule.deleteDoc(ref).catch(err=>console.error(err));
+        });
+        window.selectedNotifs.clear();
+    }
+
+    window.markSelectedNotificationsRead = async function() {
+        const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+        window.selectedNotifs.forEach(id => {
+            const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+            firestoreModule.updateDoc(ref, { read: true }).catch(err=>console.error(err));
+        });
+        window.selectedNotifs.clear();
+    }
+
     // --- 4. CLOUD FIREBASE SYNC ENGINE (DYNAMIC IMPORT) ---
     async function initFirebase() {
         try {
@@ -2741,7 +2791,7 @@
                 // We order logic locally if index is missing to prevent crash
                 firestoreModule.onSnapshot(notifRef, (snapshot) => {
                     window.notificationHistory = [];
-                    snapshot.forEach(doc => window.notificationHistory.push(doc.data()));
+                    snapshot.forEach(doc => window.notificationHistory.push({ ...doc.data(), id: doc.id }));
                     window.notificationHistory.sort((a,b) => b.createdAt - a.createdAt); // Local sort
                     updateNotificationsBadge();
                     renderNotificationList();
@@ -2750,23 +2800,60 @@
 
             window.renderNotificationList = function() {
                 const list = document.getElementById('notificationsListItems');
-                if (!list) return;
+                const header = document.getElementById('notifHeaderActions');
+                if (!list || !header) return;
 
-                if (window.notificationHistory.length === 0) {
+                const selectedCount = window.selectedNotifs.size;
+                const totalCount = window.notificationHistory.length;
+
+                // Render dynamic header based on selection
+                if (selectedCount > 0) {
+                    const isAllSelected = selectedCount === totalCount && totalCount > 0;
+                    header.innerHTML = `
+                        <div class="flex items-center gap-3 w-full">
+                            <input type="checkbox" ${isAllSelected ? 'checked' : ''} onchange="window.toggleSelectAllNotifications(event)" class="w-4 h-4 rounded accent-brand-emerald bg-gray-900 border-gray-600 cursor-pointer">
+                            <span class="text-xs font-bold text-white">${selectedCount} Selected</span>
+                            <div class="flex gap-4 ml-auto items-center">
+                                <button onclick="window.markSelectedNotificationsRead()" class="text-gray-400 hover:text-brand-cyan transition-colors" title="Mark Read"><i class="fa-solid fa-envelope-open-text text-[14px]"></i></button>
+                                <button onclick="window.deleteSelectedNotifications()" class="text-gray-400 hover:text-brand-crimson transition-colors" title="Delete"><i class="fa-solid fa-trash-can text-[14px]"></i></button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    header.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            ${totalCount > 0 ? `<input type="checkbox" onchange="window.toggleSelectAllNotifications(event)" class="w-4 h-4 rounded accent-brand-emerald bg-gray-900 border-gray-600 cursor-pointer" title="Select All">` : ''}
+                            <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-bell text-brand-emerald"></i> Notifications</span>
+                        </div>
+                        <div class="flex gap-4 items-center">
+                            ${totalCount > 0 ? `<button onclick="window.markAllNotificationsRead()" class="text-[10px] text-gray-400 hover:text-brand-cyan uppercase font-bold tracking-widest cursor-pointer transition-colors" title="Mark All Read"><i class="fa-solid fa-check-double text-[14px]"></i></button>` : ''}
+                            <button onclick="window.toggleNotificationSettings(event)" class="text-gray-400 hover:text-brand-cyan cursor-pointer transition-colors" title="Settings"><i class="fa-solid fa-gear text-[14px]"></i></button>
+                        </div>
+                    `;
+                }
+
+                if (totalCount === 0) {
                     list.innerHTML = `<div class="p-6 text-center text-xs text-gray-500 italic">You're all caught up!</div>`;
                     return;
                 }
 
                 list.innerHTML = window.notificationHistory.map(n => {
                     const extraDataStr = encodeURIComponent(JSON.stringify(n.extraData || {}));
+                    const isSelected = window.selectedNotifs.has(n.id);
                     return `
-                    <div onclick="window.handleNotificationClick('${n.id}', '${extraDataStr}')" class="p-4 flex gap-3 hover:bg-gray-800/40 cursor-pointer transition-colors group ${!n.read ? 'bg-gray-800/20' : 'opacity-70'}">
-                        <div class="mt-1 w-2 h-2 rounded-full shrink-0 ${!n.read ? 'bg-brand-emerald' : 'bg-transparent border border-gray-600'}"></div>
-                        <div>
-                            <h5 class="text-xs font-bold ${!n.read ? 'text-white' : 'text-gray-300'}">${escapeHtml(n.title)}</h5>
+                    <div class="p-4 flex gap-3 hover:bg-gray-800/40 transition-colors group ${!n.read ? 'bg-gray-800/20' : 'opacity-70'} ${isSelected ? 'bg-brand-emerald/5' : ''}">
+                        <div class="flex items-start mt-0.5">
+                            <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="window.toggleNotificationSelection('${n.id}', event)" class="w-4 h-4 rounded accent-brand-emerald bg-gray-900 border-gray-600 focus:ring-brand-emerald focus:ring-offset-0 focus:ring-1 cursor-pointer">
+                        </div>
+                        <div onclick="window.handleNotificationClick('${n.id}', '${extraDataStr}', event)" class="flex-1 cursor-pointer">
+                            <h5 class="text-xs font-bold ${!n.read ? 'text-white' : 'text-gray-300'} flex items-center gap-2">
+                                ${!n.read ? '<div class="w-1.5 h-1.5 rounded-full bg-brand-emerald shrink-0"></div>' : ''}
+                                ${escapeHtml(n.title)}
+                            </h5>
                             <p class="text-[10px] text-gray-400 mt-1 leading-relaxed">${escapeHtml(n.body)}</p>
                             <span class="text-[9px] text-gray-500 mt-2 block">${timeSince(n.createdAt)}</span>
                         </div>
+                        <button onclick="window.deleteNotification('${n.id}', event)" class="text-gray-600 hover:text-brand-crimson opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer shrink-0 mt-0.5" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
                     </div>`;
                 }).join('');
             }
@@ -2780,7 +2867,8 @@
                 });
             }
 
-            window.handleNotificationClick = async function(id, extraDataStr) {
+            window.handleNotificationClick = async function(id, extraDataStr, e) {
+                if (e) e.stopPropagation();
                 const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
                 const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
                 firestoreModule.updateDoc(ref, { read: true }).catch(e=>console.error(e));
