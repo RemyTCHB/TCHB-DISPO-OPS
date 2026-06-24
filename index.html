@@ -996,7 +996,8 @@
         const lockContainer = document.getElementById('gateLockIconContainer');
         if (lockIcon && lockContainer) {
             lockIcon.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path>';
-            lockIcon.className = "w-6 h-6 text-brand-emerald transition-all duration-300 scale-110";
+            // Fix: Use setAttribute for SVGs instead of .className
+            lockIcon.setAttribute('class', "w-6 h-6 text-brand-emerald transition-all duration-300 scale-110");
             lockContainer.className = "mx-auto w-14 h-14 rounded-full bg-brand-emerald/10 flex items-center justify-center border border-brand-emerald/20 mb-4 animate-bounce";
         }
 
