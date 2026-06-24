@@ -23,7 +23,11 @@
         extend: {
           fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
           colors: {
-            brand: { purple: '#4f46e5', crimson: '#dc2626', emerald: '#10b981', gold: '#f59e0b', cyan: '#06b6d4', bgDark: '#0b0f19', cardBg: '#111827' }
+            brand: { 
+                purple: '#4f46e5', crimson: '#dc2626', emerald: '#10b981', gold: '#f59e0b', cyan: '#06b6d4', 
+                amber: '#f59e0b', blue: '#3b82f6', pink: '#ec4899', 
+                bgDark: '#0b0f19', cardBg: '#111827' 
+            }
           }
         }
       }
@@ -104,7 +108,6 @@
     }
     .highlight-comment { animation: highlight-fade 3s ease-out forwards; border-radius: 8px; }
 
-    /* Fix for iOS bottom bar covering fixed elements */
     .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
     .pt-safe-top { padding-top: env(safe-area-inset-top); }
   </style>
@@ -112,7 +115,7 @@
 <body class="font-sans antialiased relative selection:bg-brand-crimson selection:text-white capitalize">
 
   <!-- TAILWIND SAFE LIST FOR DYNAMIC CLASSES -->
-  <div class="hidden bg-brand-crimson bg-brand-crimson/20 border-brand-crimson border-brand-crimson/30 text-brand-crimson shadow-[0_0_15px_rgba(220,38,38,0.4)] group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] bg-brand-purple bg-brand-purple/20 border-brand-purple border-brand-purple/30 text-brand-purple shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] bg-brand-emerald bg-brand-emerald/20 border-brand-emerald border-brand-emerald/30 border-brand-emerald/50 text-brand-emerald text-gray-900 shadow-[0_0_15px_rgba(16,185,129,0.4)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] bg-brand-cyan bg-brand-cyan/20 border-brand-cyan border-brand-cyan/30 border-brand-cyan/50 text-brand-cyan shadow-[0_0_15px_rgba(6,182,212,0.4)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.2)] bg-brand-gold bg-brand-gold/20 border-brand-gold border-brand-gold/30 border-brand-gold/50 text-brand-gold bg-pink-500/20 text-pink-400 border-pink-500/50 bg-red-400/10 text-red-400 border-red-400/50 bg-green-400/10 text-green-400 border-green-400/50 text-blue-400 border-blue-400/50 bg-blue-400/10 text-yellow-500 border-yellow-500/50 bg-yellow-500/10 grid-cols-2"></div>
+  <div class="hidden bg-brand-crimson bg-brand-crimson/20 border-brand-crimson border-brand-crimson/30 text-brand-crimson shadow-[0_0_15px_rgba(220,38,38,0.4)] group-hover:shadow-[0_0_25px_rgba(220,38,38,0.2)] bg-brand-purple bg-brand-purple/20 border-brand-purple border-brand-purple/30 text-brand-purple shadow-[0_0_15px_rgba(79,70,229,0.4)] group-hover:shadow-[0_0_25px_rgba(79,70,229,0.2)] bg-brand-emerald bg-brand-emerald/20 border-brand-emerald border-brand-emerald/30 border-brand-emerald/50 text-brand-emerald text-gray-900 shadow-[0_0_15px_rgba(16,185,129,0.4)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)] bg-brand-cyan bg-brand-cyan/20 border-brand-cyan border-brand-cyan/30 border-brand-cyan/50 text-brand-cyan shadow-[0_0_15px_rgba(6,182,212,0.4)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.2)] bg-brand-gold bg-brand-gold/20 border-brand-gold border-brand-gold/30 border-brand-gold/50 text-brand-gold bg-pink-500/20 text-pink-400 border-pink-500/50 bg-red-400/10 text-red-400 border-red-400/50 bg-green-400/10 text-green-400 border-green-400/50 text-blue-400 border-blue-400/50 bg-blue-400/10 text-yellow-500 border-yellow-500/50 bg-yellow-500/10 text-orange-500 bg-orange-500/10 border-orange-500/50 bg-brand-amber text-brand-amber border-brand-amber bg-brand-blue text-brand-blue border-brand-blue bg-brand-pink text-brand-pink border-brand-pink shadow-[0_0_15px_rgba(245,158,11,0.4)] shadow-[0_0_25px_rgba(245,158,11,0.2)] shadow-[0_0_15px_rgba(59,130,246,0.4)] shadow-[0_0_25px_rgba(59,130,246,0.2)] shadow-[0_0_15px_rgba(236,72,153,0.4)] shadow-[0_0_25px_rgba(236,72,153,0.2)] bg-brand-amber/20 bg-brand-blue/20 bg-brand-pink/20 grid-cols-2"></div>
 
   <!-- FOREGROUND PUSH TOAST -->
   <div id="appToast" class="fixed top-4 right-4 z-[9999] bg-[#0f1423]/95 backdrop-blur-xl border border-brand-emerald rounded-2xl shadow-[0_10px_40px_rgba(16,185,129,0.3)] p-4 hidden transform transition-all duration-500 translate-x-[150%] flex items-start gap-3 w-[90%] sm:w-80 cursor-pointer max-w-full" onclick="this.classList.add('translate-x-[150%]')">
@@ -271,7 +274,6 @@
                   <button onclick="window.toggleDisplay('chatPinsModal', false)" class="text-gray-400 hover:text-white cursor-pointer p-1"><i class="fa-solid fa-times text-lg"></i></button>
               </div>
               <div id="chatPinsList" class="p-4 flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-3">
-                  <!-- Populated dynamically -->
               </div>
           </div>
 
@@ -282,7 +284,6 @@
                   <button onclick="window.toggleDisplay('chatAttachmentsModal', false)" class="text-gray-400 hover:text-white cursor-pointer p-1"><i class="fa-solid fa-times text-lg"></i></button>
               </div>
               <div id="chatAttachmentsList" class="p-4 flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-3">
-                  <!-- Populated dynamically -->
               </div>
           </div>
 
@@ -295,7 +296,6 @@
                   <button onclick="window.toggleChat()" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-times text-lg"></i></button>
               </div>
               <div id="chatHubList" class="p-2 sm:p-3 flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-2">
-                  <!-- Populated dynamically -->
               </div>
           </div>
 
@@ -325,7 +325,6 @@
               </div>
 
               <div id="chatMessages" class="p-3 sm:p-4 flex-1 overflow-y-auto flex flex-col gap-3 custom-scrollbar scroll-smooth">
-                  <!-- Messages populated dynamically -->
               </div>
               
               <div class="p-3 border-t border-gray-700 bg-gray-900/50 shrink-0">
@@ -379,9 +378,7 @@
     
     <!-- Header -->
     <header class="sticky top-0 md:top-2 z-[100] flex flex-col md:flex-row justify-between items-center gap-4 mb-6 sm:mb-8 bg-[#0b0f19]/95 p-3 sm:p-4 rounded-2xl border border-gray-800/80 backdrop-blur-xl shrink-0 shadow-lg">
-        
         <div class="flex items-center justify-between w-full">
-            
             <div class="flex items-center gap-3 sm:gap-4 shrink-0">
                 <!-- NOTIFICATION HUB (LOGO) -->
                 <div class="relative shrink-0 flex items-center justify-center" id="mainLogoContainer">
@@ -392,13 +389,8 @@
                     
                     <!-- NOTIFICATIONS DROPDOWN LIST -->
                     <div id="notificationsListDropdown" class="absolute left-0 top-full mt-4 w-[90vw] sm:w-[420px] h-[400px] sm:h-[500px] bg-[#0f1423]/95 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col z-[120] overflow-hidden origin-top-left transition-all text-left">
-                        <div id="notifHeaderActions" class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px] shrink-0">
-                            <!-- Populated dynamically by JS based on selection state -->
-                        </div>
-                        
-                        <div id="notificationsListItems" class="p-0 flex flex-col flex-1 overflow-y-auto min-h-0 custom-scrollbar divide-y divide-gray-800">
-                            <!-- Dynamic Notification Items -->
-                        </div>
+                        <div id="notifHeaderActions" class="bg-gray-800/80 px-4 py-3 border-b border-gray-700 flex justify-between items-center min-h-[52px] shrink-0"></div>
+                        <div id="notificationsListItems" class="p-0 flex flex-col flex-1 overflow-y-auto min-h-0 custom-scrollbar divide-y divide-gray-800"></div>
                     </div>
 
                     <!-- SETTINGS PANEL -->
@@ -542,7 +534,7 @@
                         <span class="text-[10px] font-bold text-gray-300 uppercase tracking-wider hidden sm:inline">Active Users</span>
                         <span id="activeUserCountBtn" class="bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/30 px-1.5 py-0.5 rounded text-[10px] font-black leading-none flex items-center justify-center">0</span>
                     </button>
-                    <div id="activeUsersDropdown" class="absolute left-0 top-full mt-3 w-48 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] overflow-hidden text-left">
+                    <div id="activeUsersDropdown" class="absolute left-0 top-full mt-3 w-48 bg-[#0f1423] border border-gray-700 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] hidden flex-col z-[100] text-left">
                         <div class="bg-gray-800/80 px-3 py-2 border-b border-gray-700 text-[10px] font-bold text-gray-400 uppercase tracking-wider flex justify-between items-center">
                             <span>Personnel Online</span>
                             <span id="activeUserCount" class="text-brand-emerald">0</span>
@@ -637,7 +629,6 @@
                         </tr>
                     </thead>
                     <tbody id="dashboard-tbody" class="text-sm text-gray-300 divide-y divide-gray-800">
-                        <!-- Rendered dynamically -->
                     </tbody>
                 </table>
             </div>
@@ -660,14 +651,12 @@
             <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto">
                 <span class="text-xs font-bold text-gray-400 uppercase tracking-wider shrink-0"><i class="fa-solid fa-crosshairs mr-1"></i> Targeted Asset:</span>
                 
-                <!-- Custom Dropdown for Active Deals -->
                 <div class="relative w-full sm:w-80 z-20" id="globalAssetSelectorWrapper">
                     <button onclick="window.toggleAssetDropdown(event)" class="w-full bg-gradient-to-r from-brand-crimson/5 to-brand-purple/5 border border-brand-purple/20 hover:border-brand-purple/40 rounded-lg px-3 py-2 text-sm font-bold text-gray-400 hover:text-gray-200 focus:outline-none flex justify-between items-center transition-all cursor-pointer">
                         <span id="globalAssetSelectorLabel" class="truncate">-- Select an Active Deal --</span>
                         <i id="globalAssetDropdownIcon" class="fa-solid fa-chevron-down text-[10px] text-brand-purple/60 transition-transform duration-300"></i>
                     </button>
                     <div id="globalAssetDropdownList" class="absolute left-0 top-full mt-2 w-full bg-[#0f1423] border border-brand-purple/30 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col max-h-64 overflow-y-auto custom-scrollbar z-50">
-                        <!-- Options populated dynamically -->
                     </div>
                 </div>
 
@@ -677,7 +666,6 @@
             </button>
         </div>
 
-        <!-- Empty State For Tracker -->
         <div id="tracker-empty" class="flex-1 flex flex-col items-center justify-center p-8 sm:p-12 text-center glass-card rounded-2xl border border-gray-800">
             <i class="fa-solid fa-magnifying-glass-location text-4xl text-gray-600 mb-4"></i>
             <h3 class="text-xl font-bold text-white mb-2">No Asset Selected</h3>
@@ -687,9 +675,7 @@
             </button>
         </div>
 
-        <!-- Active Content -->
         <div id="tracker-content" class="hidden space-y-6">
-            <!-- Tracker Header -->
             <div class="glass-card p-5 sm:p-6 rounded-2xl border border-gray-800 flex flex-col md:flex-row justify-between md:items-end gap-6 relative overflow-hidden z-10">
                 <div class="absolute -right-20 -top-20 w-64 h-64 bg-brand-purple/10 rounded-full blur-3xl pointer-events-none"></div>
                 
@@ -718,7 +704,6 @@
 
             <!-- Task List Container -->
             <div class="grid grid-cols-1 gap-6 pb-12 z-10 relative" id="tracker-task-container">
-                <!-- Dynamically injected sections -->
             </div>
             
             <div class="flex justify-center pt-4 pb-12 z-10 relative">
@@ -733,19 +718,13 @@
     <!-- TAB: SOP REFERENCE (VISUAL TIMELINE) -->
     <div id="tab-sop" class="flex-1 hidden space-y-6 pb-12">
         <div class="max-w-4xl mx-auto mt-4">
-            
-            <!-- Strategy Navigation Tabs -->
             <div class="grid grid-cols-2 sm:flex bg-gradient-to-r from-brand-crimson/10 to-brand-purple/10 p-1 rounded-xl border border-brand-purple/30 w-full sm:w-auto sm:max-w-fit mx-auto mb-6 sm:mb-10 sticky top-[80px] md:top-[100px] z-[90] backdrop-blur-xl bg-[#0b0f19]/95 shadow-md gap-1 sm:gap-0 transition-all">
                 <button onclick="window.renderSOPTimeline('Wholesale')" id="sopPill_Wholesale" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md">Wholesale</button>
                 <button onclick="window.renderSOPTimeline('Novation')" id="sopPill_Novation" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap text-gray-300 hover:text-white">Novation</button>
                <button onclick="window.renderSOPTimeline('Fix & Flip')" id="sopPill_Fix & Flip" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap text-gray-300 hover:text-white">Fix & Flip</button>
                 <button onclick="window.renderSOPTimeline('Creative')" id="sopPill_Creative" class="px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap text-gray-300 hover:text-white">Creative</button>
-               
             </div>
-
-            <!-- Dynamic Timeline Container -->
             <div id="sopTimelineContainer">
-               <!-- Rendered dynamically via JS to include Nav Cards + Map -->
             </div>
         </div>
     </div>
@@ -757,14 +736,159 @@
 
   </div>
 
-  <!-- External Floating Dashboard Tooltip -->
   <div id="dashboard-tooltip" class="fixed hidden w-max max-w-[250px] sm:max-w-[300px] bg-[#0f1423] border border-brand-emerald/40 text-white text-xs p-3 sm:p-4 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.15)] z-[999999] whitespace-normal text-left pointer-events-none transition-opacity duration-200 opacity-0">
       <span class="text-brand-emerald font-bold block mb-1 sm:mb-1.5 uppercase tracking-wider text-[9px] sm:text-[10px]"><i class="fa-solid fa-bolt mr-1"></i> Target Action</span>
       <span id="dashboard-tooltip-text" class="leading-relaxed text-gray-200 font-medium text-[10px] sm:text-xs"></span>
   </div>
 
-  <!-- JAVASCRIPT LOGIC (DYNAMIC SYNC & FIREBASE) -->
-  <script>
+  <!-- JAVASCRIPT LOGIC -->
+  <script type="module">
+    // --- IMPORT FIREBASE ONCE GLOBALLY ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, onSnapshot, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, arrayUnion, enableIndexedDbPersistence, deleteField } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    let getMessaging, getToken, onMessage;
+    try {
+        const msgModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js");
+        getMessaging = msgModule.getMessaging; getToken = msgModule.getToken; onMessage = msgModule.onMessage;
+    } catch(err) {}
+
+    // --- HARDCODED APP CONFIGURATION (To be migrated to Firestore later) ---
+    const AppConfig = {
+        agentsList: ["Carlos", "Yanna", "Moe", "Sarah", "Monz", "Chris", "Remy", "Brandy", "Luke"],
+        agentColors: {
+            "carlos": { text: "text-yellow-500", border: "border-yellow-500/50", bg: "bg-yellow-500/10" },
+            "moe": { text: "text-blue-400", border: "border-blue-400/50", bg: "bg-blue-400/10" },
+            "yanna": { text: "text-purple-400", border: "border-purple-400/50", bg: "bg-purple-400/10" },
+            "sarah": { text: "text-pink-400", border: "border-pink-400/50", bg: "bg-pink-400/10" },
+            "sara": { text: "text-pink-400", border: "border-pink-400/50", bg: "bg-pink-400/10" },
+            "monz": { text: "text-red-400", border: "border-red-400/50", bg: "bg-red-400/10" },
+            "chris": { text: "text-green-400", border: "border-green-400/50", bg: "bg-green-400/10" },
+            "remy": { text: "text-orange-500", border: "border-orange-500/50", bg: "bg-orange-500/10" },
+            "brandy": { text: "text-gray-400", border: "border-gray-400/50", bg: "bg-gray-400/10" },
+            "luke": { text: "text-teal-400", border: "border-teal-400/50", bg: "bg-teal-400/10" },
+            "completed": { text: "text-brand-emerald", border: "border-brand-emerald/50", bg: "bg-brand-emerald/10" }
+        },
+        strategyColors: {
+            "Wholesale": "bg-brand-emerald/20 text-brand-emerald border-brand-emerald/50",
+            "Fix & Flip": "bg-brand-cyan/20 text-brand-cyan border-brand-cyan/50",
+            "Novation": "bg-brand-gold/20 text-brand-gold border-brand-gold/50",
+            "Creative": "bg-brand-purple/20 text-brand-purple border-brand-purple/50"
+        },
+        PHASE_STYLES: {
+            "VII": { icon: "fa-trophy", color: "brand-amber", shadow: "rgba(245,158,11,0.4)", hoverShadow: "rgba(245,158,11,0.2)", txt: "gray-900" },
+            "VI": { icon: "fa-crown", color: "brand-blue", shadow: "rgba(59,130,246,0.4)", hoverShadow: "rgba(59,130,246,0.2)", txt: "white" },
+            "V": { icon: "fa-star", color: "brand-pink", shadow: "rgba(236,72,153,0.4)", hoverShadow: "rgba(236,72,153,0.2)", txt: "white" },
+            "IV": { icon: "fa-chart-pie", color: "brand-cyan", shadow: "rgba(6,182,212,0.4)", hoverShadow: "rgba(6,182,212,0.2)", txt: "gray-900" },
+            "III": { icon: "fa-rocket", color: "brand-emerald", shadow: "rgba(16,185,129,0.4)", hoverShadow: "rgba(16,185,129,0.2)", txt: "gray-900" },
+            "II": { icon: "fa-bullseye", color: "brand-purple", shadow: "rgba(79,70,229,0.4)", hoverShadow: "rgba(79,70,229,0.2)", txt: "white" },
+            "I": { icon: "fa-clipboard-check", color: "brand-crimson", shadow: "rgba(220,38,38,0.4)", hoverShadow: "rgba(220,38,38,0.2)", txt: "white" }
+        },
+        sopBlueprints: {
+            "Wholesale": [
+                { id: "ws_1", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "Manually UW The Deal", weight: 6, defaultAssignee: "Carlos", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "ws_2", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "AI UW Tool To Confirm Manual UW", weight: 2, defaultAssignee: "Carlos" },
+                { id: "ws_3", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Intake Call with Seller", weight: 4, defaultAssignee: "Monz" },
+                { id: "ws_4", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Confirming Access", weight: 1, defaultAssignee: "Monz" },
+                { id: "ws_5", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Getting Runner For Access", weight: 1, defaultAssignee: "Chris", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "ws_6", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Obtaining Marketing Assets", weight: 4, defaultAssignee: "Monz", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "ws_7", phase: "Phase I: Deal Intake", mainTask: "Search Entire CRM", title: "Search Entire CRM For Seller Number(s) (Disqualified or DND'd)", weight: 2, defaultAssignee: "Sarah" },
+                { id: "ws_8", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At least 3 Local Investors that bought $10K - $15K from purchase price", weight: 2, defaultAssignee: "Carlos" },
+                { id: "ws_9", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3 Local Investors - for ARV Comps", weight: 2, defaultAssignee: "Carlos" },
+                { id: "ws_10", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3-5 Local investors w/ Active Leases in the area", weight: 2, defaultAssignee: "Carlos" },
+                { id: "ws_11", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Pull The Data From (Investorbase - etc)", weight: 2, defaultAssignee: "Moe" },
+                { id: "ws_12", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "ws_13", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Upload The Data To CRM", weight: 1, defaultAssignee: "Sarah" },
+                { id: "ws_14", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Create Text Blast Draft", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
+                { id: "ws_15", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
+                { id: "ws_16", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Pull The Data From (Zillow - realtor.com - etc.)", weight: 2, defaultAssignee: "Moe" },
+                { id: "ws_17", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah" },
+                { id: "ws_18", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
+                { id: "ws_19", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Create Text Blast Draft", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
+                { id: "ws_20", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 1, defaultAssignee: "Sarah" },
+                { id: "ws_21", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Join All Relevant FB Groups", weight: 4, defaultAssignee: "Moe" },
+                { id: "ws_22", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Create FB Post Draft", weight: 1, defaultAssignee: "Moe", draftsAndHyperlinks: ["Draft"] },
+                { id: "ws_23", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Get The FB Post Draft Approved", weight: 1, defaultAssignee: "Moe", draftsAndHyperlinks: ["Draft"] },
+                { id: "ws_24", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Description", weight: 2, defaultAssignee: "Yanna" },
+                { id: "ws_25", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Photos & Videos (if applicable)", weight: 2, defaultAssignee: "Yanna" },
+                { id: "ws_26", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Comps", weight: 2, defaultAssignee: "Yanna" },
+                { id: "ws_27", phase: "Phase III: Marketing Execution", mainTask: "Call & Market To Buyers / Realtors", title: "Execute Calls & Marketing (Buyers / Realtors)", weight: 10, defaultAssignee: "Carlos" },
+                { id: "ws_28", phase: "Phase III: Marketing Execution", mainTask: "Investor Bulk/Individual Text Blast", title: "Execute SMS Deployment (Investors)", weight: 10, defaultAssignee: "Sarah" },
+                { id: "ws_29", phase: "Phase III: Marketing Execution", mainTask: "Realtor Bulk/Individual Text Blast", title: "Execute SMS Deployment (Realtors)", weight: 10, defaultAssignee: "Sarah" },
+                { id: "ws_30", phase: "Phase III: Marketing Execution", mainTask: "Post On InvestorLift", title: "Calling Inquiries / Interest On Subject Deal", weight: 5, defaultAssignee: "Yanna" },
+                { id: "ws_31", phase: "Phase III: Marketing Execution", mainTask: "Post On InvestorLift", title: "Calling ALL Artemis Mode Buyers", weight: 5, defaultAssignee: "Yanna" },
+                { id: "ws_32", phase: "Phase III: Marketing Execution", mainTask: "Post On Facebook", title: "Reach Out To Investors That Expressed Interest In Other Deals", weight: 10, defaultAssignee: "Moe", defaultSubtasks: ["Boost the Post (If Needed)"] }
+            ],
+            "Fix & Flip": [
+                { id: "ff_1", phase: "Phase I: Deal Prep", mainTask: "Deal Analysis", title: "Inspection", weight: 3, defaultAssignee: "Carlos" },
+                { id: "ff_2", phase: "Phase I: Deal Prep", mainTask: "Deal Analysis", title: "Create Full ARV Comps", weight: 1, defaultAssignee: "Carlos" },
+                { id: "ff_3", phase: "Phase I: Deal Prep", mainTask: "Deal Analysis", title: "Create SOW", weight: 5, defaultAssignee: "Brandy" },
+                { id: "ff_4", phase: "Phase I: Deal Prep", mainTask: "Lender Selection", title: "Shopping deal to Private and Hard Money Lenders", weight: 3, defaultAssignee: "Brandy" },
+                { id: "ff_5", phase: "Phase I: Deal Prep", mainTask: "Lender Selection", title: "Confirms Lender", weight: 2, defaultAssignee: "Brandy" },
+                { id: "ff_6", phase: "Phase I: Deal Prep", mainTask: "Lender Selection", title: "Deal submitted to Lender", weight: 1, defaultAssignee: "Monz" },
+                { id: "ff_7", phase: "Phase I: Deal Prep", mainTask: "Contractor Selection", title: "Contractor Selection", weight: 3, dropdownOptions: [{ title: "Local Contractor", defaultAssignee: "Brandy" }, { title: "Non-Local Contractor", defaultAssignee: "Chris" }] },
+                { id: "ff_8", phase: "Phase I: Deal Prep", mainTask: "Deal Submission", title: "TC Submits deal to Title - Await Closing", weight: 2, defaultAssignee: "Monz" },
+                { id: "ff_9", phase: "Phase II: Remodelling", mainTask: "Utilities/HOA", title: "Turn on all utilities and setup auto-pay where available", weight: 10, defaultAssignee: "Chris" },
+                { id: "ff_10", phase: "Phase II: Remodelling", mainTask: "Utilities/HOA", title: "Get HOA auto-pay info if applicable", weight: 10, defaultAssignee: "Chris" },
+                { id: "ff_11", phase: "Phase II: Remodelling", mainTask: "Contractor Selection", title: "Select Contractor", weight: 10, dropdownOptions: [{ title: "Local Contractor", defaultAssignee: "Brandy" }, { title: "Non-Local Contractor", defaultAssignee: "Chris" }] },
+                { id: "ff_12", phase: "Phase II: Remodelling", mainTask: "Determine Specialized needs", title: "Determine Specialized needs", weight: 5, defaultAssignee: "Brandy" },
+                { id: "ff_13", phase: "Phase II: Remodelling", mainTask: "Determine Specialized needs", title: "Gets quotes - Minimum 2-3", weight: 5, defaultAssignee: "Chris" },
+                { id: "ff_14", phase: "Phase III: Listing Prep", mainTask: "Select Listing Source", title: "Select Listing Source", weight: 2, dropdownOptions: [{ title: "If property is in South or Central Florida (Beaches or Stellar) Jodi is listing agent", defaultAssignee: "Chris" }, { title: "If property is in North Carolina - Reach out to Allison-ENRG Realty to determine if we list", defaultAssignee: "Monz" }, { title: "Contact Chris Dahl to determine if he has a referral", defaultAssignee: "Brandy" }, { title: "Go onto Facebook Realtor Referral group Brandy sent and post referral needed", defaultAssignee: "Yanna" }, { title: "Source a local listing agent", defaultAssignee: "Yanna" }], draftsAndHyperlinks: ["Hyperlink"] },
+                { id: "ff_15", phase: "Phase III: Listing Prep", mainTask: "Prepare property for Listing", title: "Have property professionally cleaned", weight: 3, defaultAssignee: "Chris" },
+                { id: "ff_16", phase: "Phase III: Listing Prep", mainTask: "Prepare property for Listing", title: "Get listing pics", weight: 2, defaultAssignee: "Chris", defaultSubtasks: ["Get Approved Floor Plan"], draftsAndHyperlinks: ["Hyperlink"] },
+                { id: "ff_17", phase: "Phase III: Listing Prep", mainTask: "Prepare listing", title: "Prepare listing", weight: 2, dropdownOptions: [{ title: "Create listing if we are self-managing", defaultAssignee: "Yanna" }, { title: "Realtor prepares listing", defaultAssignee: "Yanna" }] },
+                { id: "ff_18", phase: "Phase III: Listing Prep", mainTask: "Prepare listing", title: "Final review to confirm remarks/photos prior to listing", weight: 1, defaultAssignee: "Luke" },
+                { id: "ff_19", phase: "Phase IV: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Pull The Data From (Zillow - realtor.com - etc.)", weight: 2, defaultAssignee: "Moe" },
+                { id: "ff_20", phase: "Phase IV: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "ff_21", phase: "Phase IV: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah" },
+                { id: "ff_22", phase: "Phase IV: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
+                { id: "ff_23", phase: "Phase IV: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
+                { id: "ff_24", phase: "Phase V: Marketing Execution", mainTask: "Agent Outreach", title: "Blast and direct to listing agent", weight: 2, defaultAssignee: "Sarah" },
+                { id: "ff_25", phase: "Phase VI: Listing Mgmt", mainTask: "Showing Coordination", title: "MLS Phone number setup", weight: 2, defaultAssignee: "Remy", draftsAndHyperlinks: ["Draft"] },
+                { id: "ff_26", phase: "Phase VI: Listing Mgmt", mainTask: "Showing Coordination", title: "Showing Time Setup", weight: 4, defaultAssignee: "Yanna", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "ff_27", phase: "Phase VI: Listing Mgmt", mainTask: "Showing Coordination", title: "Showing Confirmation with Seller", weight: 4, defaultAssignee: "Monz", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "ff_28", phase: "Phase VII: Contract", mainTask: "Contract Negotiation", title: "Receive from Agent", weight: 5, defaultAssignee: "Brandy", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "ff_29", phase: "Phase VII: Contract", mainTask: "Contract Negotiation", title: "Docusign/Westsign", weight: 5, defaultAssignee: "Brandy", draftsAndHyperlinks: ["Draft", "Hyperlink"] }
+            ],
+            "Novation": [
+                { id: "nv_1", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "Manually UW The Deal", weight: 6, defaultAssignee: "Carlos", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "nv_2", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "AI UW Tool To Confirm Manual UW", weight: 2, defaultAssignee: "Carlos" },
+                { id: "nv_3", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Intake Call with Seller", weight: 4, defaultAssignee: "Monz" },
+                { id: "nv_4", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Confirming Access", weight: 1, defaultAssignee: "Monz" },
+                { id: "nv_5", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Getting Runner For Access", weight: 1, defaultAssignee: "Chris", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "nv_6", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Obtaining Marketing Assets", weight: 4, defaultAssignee: "Monz", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "nv_7", phase: "Phase I: Deal Intake", mainTask: "Search Entire CRM", title: "Search Entire CRM For Seller Number(s) (Disqualified or DND'd)", weight: 2, defaultAssignee: "Sarah" },
+                { id: "nv_8", phase: "Phase II: Listing Prep", mainTask: "Select Listing Source", title: "Select Listing Source", weight: 20, dropdownOptions: [{ title: "If property is in South or Central Florida (Beaches or Stellar) Jodi is listing agent", defaultAssignee: "Chris" }, { title: "If property is in North Carolina - Reach out to Allison-ENRG Realty to determine if we list", defaultAssignee: "Monz" }, { title: "Contact Chris Dahl to determine if he has a referral", defaultAssignee: "Brandy" }, { title: "Go onto Facebook Realtor Referral group Brandy sent and post referral needed", defaultAssignee: "Yanna" }, { title: "Source a local listing agent", defaultAssignee: "Yanna" }] },
+                { id: "nv_9", phase: "Phase II: Listing Prep", mainTask: "Prepare property for Listing", title: "Based on seller photos we determine next steps", weight: 4, defaultAssignee: "Brandy", draftsAndHyperlinks: ["Hyperlink"] },
+                { id: "nv_10", phase: "Phase II: Listing Prep", mainTask: "", title: "Inspection - Full or Runner pics to see what we are working with", weight: 3, defaultAssignee: "Chris", draftsAndHyperlinks: ["Hyperlink"] },
+                { id: "nv_11", phase: "Phase II: Listing Prep", mainTask: "", title: "Send contractors for quotes on items we know need changing", weight: 4, defaultAssignee: "Chris" },
+                { id: "nv_12", phase: "Phase II: Listing Prep", mainTask: "", title: "Have property either cleaned by seller or professionally cleaned", weight: 4, defaultAssignee: "Chris" },
+                { id: "nv_13", phase: "Phase II: Listing Prep", mainTask: "Prepare property for Listing", title: "Get listing pics", weight: 5, defaultAssignee: "Chris", defaultSubtasks: ["Get Approved Floor Plan"], draftsAndHyperlinks: ["Hyperlink"] },
+                { id: "nv_14", phase: "Phase II: Listing Prep", mainTask: "Prepare listing", title: "Prepare listing", weight: 5, dropdownOptions: [{ title: "Create listing if we are self-managing", defaultAssignee: "Yanna" }, { title: "Realtor prepares listing", defaultAssignee: "Yanna" }] },
+                { id: "nv_15", phase: "Phase II: Listing Prep", mainTask: "Prepare listing", title: "Final review to confirm remarks/photos prior to listing", weight: 5, defaultAssignee: "Luke" },
+                { id: "nv_16", phase: "Phase III: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Pull The Data From (Zillow - realtor.com - etc.)", weight: 2, defaultAssignee: "Moe" },
+                { id: "nv_17", phase: "Phase III: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "nv_18", phase: "Phase III: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah" },
+                { id: "nv_19", phase: "Phase III: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
+                { id: "nv_20", phase: "Phase III: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
+                { id: "nv_21", phase: "Phase IV: Marketing Execution", mainTask: "Agent Outreach", title: "Blast and direct to listing agent", weight: 2, defaultAssignee: "Sarah" },
+                { id: "nv_22", phase: "Phase V: Listing Mgmt", mainTask: "Showing Coordination", title: "MLS Phone number setup", weight: 2, defaultAssignee: "Remy", draftsAndHyperlinks: ["Draft"] },
+                { id: "nv_23", phase: "Phase V: Listing Mgmt", mainTask: "Showing Coordination", title: "Showing Time Setup", weight: 4, defaultAssignee: "Yanna", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "nv_24", phase: "Phase V: Listing Mgmt", mainTask: "Showing Coordination", title: "Showing Confirmation with Seller", weight: 4, defaultAssignee: "Monz", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "nv_25", phase: "Phase VI: Contract", mainTask: "Contract Negotiation", title: "Receive from Agent", weight: 5, defaultAssignee: "Brandy", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "nv_26", phase: "Phase VI: Contract", mainTask: "Contract Negotiation", title: "Docusign/Westsign", weight: 5, defaultAssignee: "Brandy", draftsAndHyperlinks: ["Draft", "Hyperlink"] }
+            ],
+            "Creative": [
+                { id: "cr_1", phase: "Phase I: Terms Structuring", mainTask: "Seller Negotiation", title: "Finalize SubTo/Seller Finance Terms", weight: 20, defaultAssignee: "Carlos" },
+                { id: "cr_2", phase: "Phase I: Terms Structuring", mainTask: "Documentation", title: "Draft Creative Purchase Agreement", weight: 10, defaultAssignee: "Sarah" },
+                { id: "cr_3", phase: "Phase II: Buyer Marketing", mainTask: "Marketing Prep", title: "Compile Terms & Comps for Dispo", weight: 15, defaultAssignee: "Yanna" },
+                { id: "cr_4", phase: "Phase II: Buyer Marketing", mainTask: "Buyer Outreach", title: "Market to Creative Finance Buyers list", weight: 25, defaultAssignee: "Carlos" },
+                { id: "cr_5", phase: "Phase III: Closing & TC", mainTask: "Transaction Coordination", title: "Coordinate with Subject-To Friendly Title Co.", weight: 20, defaultAssignee: "Sarah" },
+                { id: "cr_6", phase: "Phase III: Closing & TC", mainTask: "Final Handoff", title: "Transfer Insurance & Servicing Setup", weight: 10, defaultAssignee: "Moe" }
+            ]
+        }
+    };
+
     // --- GLOBAL STATE & VARIABLES ---
     let propertiesData = [];
     let activePropertyId = null;
@@ -777,8 +901,7 @@
     let firebaseAuth = null;
     let googleProvider = null;
     let appId = 'tchb-dispo-default';
-    let firebaseSavePropertyData = null;
-    let firebaseRemovePropertyData = null;
+    window.activeListeners = []; // Fix for Firebase Memory Leaks
     
     window.isChatOpen = false;
     window.isChatSearchOpen = false;
@@ -789,13 +912,22 @@
     window.selectedNotifs = new Set(); 
     window.activeUsersData = [];
 
-    // --- 1. UTILITY: GENERIC DISPLAY TOGGLE ---
+    // --- 1. UTILITY & SECURITY ---
     window.toggleDisplay = function(id, forceShow = null, flexClass = 'flex') {
         const el = document.getElementById(id);
         if(!el) return;
         const willShow = forceShow !== null ? forceShow : el.classList.contains('hidden');
         if (willShow) { el.classList.remove('hidden'); el.classList.add(flexClass); }
         else { el.classList.add('hidden'); el.classList.remove(flexClass); }
+    }
+
+    function escapeHtml(unsafe) {
+        return (unsafe || "").toString()
+             .replace(/&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;")
+             .replace(/"/g, "&quot;")
+             .replace(/'/g, "&#039;");
     }
 
     // --- 2. AUTHENTICATION LOGIC ---
@@ -805,14 +937,14 @@
             return;
         }
         try {
-            const result = await window.firebaseSignInWithPopup(firebaseAuth, googleProvider);
+            const result = await signInWithPopup(firebaseAuth, googleProvider);
             const user = result.user;
             if (user.email && user.email.endsWith('@totalchb.com')) {
                 document.getElementById('gateErrorMessage').classList.add('hidden');
                 grantAccess();
             } else {
                 showGateError("Access Denied. Only @totalchb.com emails are authorized.");
-                await window.firebaseSignOut(firebaseAuth);
+                await signOut(firebaseAuth);
             }
         } catch (error) {
             if (error.code === 'auth/unauthorized-domain') {
@@ -827,15 +959,17 @@
         if (firebaseAuth) {
             if (currentUser && db) {
                 try {
-                    const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-                    const ref = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'active_users', currentUser.uid);
-                    await firestoreModule.setDoc(ref, {
-                        sessions: { [localDeviceId]: firestoreModule.deleteField() }
-                    }, { merge: true });
+                    const ref = doc(db, 'artifacts', appId, 'public', 'data', 'active_users', currentUser.uid);
+                    await setDoc(ref, { sessions: { [localDeviceId]: deleteField() } }, { merge: true });
                 } catch(e) {}
             }
             if (window.presenceInterval) { clearInterval(window.presenceInterval); window.presenceInterval = null; }
-            await window.firebaseSignOut(firebaseAuth);
+            
+            // Clean up memory leaks
+            window.activeListeners.forEach(unsub => unsub && unsub());
+            window.activeListeners = [];
+
+            await signOut(firebaseAuth);
             window.location.reload(); 
         }
     }
@@ -888,172 +1022,14 @@
         }, 1200);
     }
 
-    // --- 3. MULTI-STRATEGY DATA MODELS & SOP BLUEPRINTS ---
-    const agentsList = ["Carlos", "Yanna", "Moe", "Sarah", "Monz", "Chris", "Remy", "Brandy", "Luke"];
-    
-    const agentColors = {
-        "carlos": { text: "text-yellow-500", border: "border-yellow-500/50", bg: "bg-yellow-500/10" },
-        "moe": { text: "text-blue-400", border: "border-blue-400/50", bg: "bg-blue-400/10" },
-        "yanna": { text: "text-purple-400", border: "border-purple-400/50", bg: "bg-purple-400/10" },
-        "sarah": { text: "text-pink-400", border: "border-pink-400/50", bg: "bg-pink-400/10" },
-        "sara": { text: "text-pink-400", border: "border-pink-400/50", bg: "bg-pink-400/10" },
-        "monz": { text: "text-red-400", border: "border-red-400/50", bg: "bg-red-400/10" },
-        "chris": { text: "text-green-400", border: "border-green-400/50", bg: "bg-green-400/10" },
-        "remy": { text: "text-black", border: "border-black/50", bg: "bg-black/10" },
-        "brandy": { text: "text-gray-400", border: "border-gray-400/50", bg: "bg-gray-400/10" },
-        "luke": { text: "text-teal-400", border: "border-teal-400/50", bg: "bg-teal-400/10" },
-        "completed": { text: "text-brand-emerald", border: "border-brand-emerald/50", bg: "bg-brand-emerald/10" }
-    };
-    
-    const strategyColors = {
-        "Wholesale": "bg-brand-emerald/20 text-brand-emerald border-brand-emerald/50",
-        "Fix & Flip": "bg-brand-cyan/20 text-brand-cyan border-brand-cyan/50",
-        "Novation": "bg-brand-gold/20 text-brand-gold border-brand-gold/50",
-        "Creative": "bg-brand-purple/20 text-brand-purple border-brand-purple/50"
-        
-    };
-
-    const PHASE_STYLES = {
-        "VII": { icon: "fa-trophy", color: "brand-amber", shadow: "rgba(245,158,11,0.4)", hoverShadow: "rgba(245,158,11,0.2)", txt: "gray-900" },
-        "VI": { icon: "fa-crown", color: "brand-blue", shadow: "rgba(59,130,246,0.4)", hoverShadow: "rgba(59,130,246,0.2)", txt: "white" },
-        "V": { icon: "fa-star", color: "brand-pink", shadow: "rgba(236,72,153,0.4)", hoverShadow: "rgba(236,72,153,0.2)", txt: "white" },
-        "IV": { icon: "fa-chart-pie", color: "brand-cyan", shadow: "rgba(6,182,212,0.4)", hoverShadow: "rgba(6,182,212,0.2)", txt: "gray-900" },
-        "III": { icon: "fa-rocket", color: "brand-emerald", shadow: "rgba(16,185,129,0.4)", hoverShadow: "rgba(16,185,129,0.2)", txt: "gray-900" },
-        "II": { icon: "fa-bullseye", color: "brand-purple", shadow: "rgba(79,70,229,0.4)", hoverShadow: "rgba(79,70,229,0.2)", txt: "white" },
-        "I": { icon: "fa-clipboard-check", color: "brand-crimson", shadow: "rgba(220,38,38,0.4)", hoverShadow: "rgba(220,38,38,0.2)", txt: "white" }
-};
-
-    const sopBlueprints = {
-    "Wholesale": [
-            { id: "ws_1", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "Manually UW The Deal", weight: 6, defaultAssignee: "Carlos", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "ws_2", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "AI UW Tool To Confirm Manual UW", weight: 2, defaultAssignee: "Carlos" },
-            { id: "ws_3", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Intake Call with Seller", weight: 4, defaultAssignee: "Monz" },
-            { id: "ws_4", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Confirming Access", weight: 1, defaultAssignee: "Monz" },
-            { id: "ws_5", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Getting Runner For Access", weight: 1, defaultAssignee: "Chris", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "ws_6", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Obtaining Marketing Assets", weight: 4, defaultAssignee: "Monz", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "ws_7", phase: "Phase I: Deal Intake", mainTask: "Search Entire CRM", title: "Search Entire CRM For Seller Number(s) (Disqualified or DND'd)", weight: 2, defaultAssignee: "Sarah" },
-            { id: "ws_8", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At least 3 Local Investors that bought $10K - $15K from purchase price", weight: 2, defaultAssignee: "Carlos" },
-            { id: "ws_9", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3 Local Investors - for ARV Comps", weight: 2, defaultAssignee: "Carlos" },
-            { id: "ws_10", phase: "Phase II: Marketing Prep", mainTask: "Pull Local Hyper Qualified Buyers", title: "At Least 3-5 Local investors w/ Active Leases in the area", weight: 2, defaultAssignee: "Carlos" },
-            { id: "ws_11", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Pull The Data From (Investorbase - etc)", weight: 2, defaultAssignee: "Moe" },
-            { id: "ws_12", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "ws_13", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Upload The Data To CRM", weight: 1, defaultAssignee: "Sarah" },
-            { id: "ws_14", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Create Text Blast Draft", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
-            { id: "ws_15", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
-            { id: "ws_16", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Pull The Data From (Zillow - realtor.com - etc.)", weight: 2, defaultAssignee: "Moe" },
-            { id: "ws_17", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah" },
-            { id: "ws_18", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
-            { id: "ws_19", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Create Text Blast Draft", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
-            { id: "ws_20", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 1, defaultAssignee: "Sarah" },
-            { id: "ws_21", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Join All Relevant FB Groups", weight: 4, defaultAssignee: "Moe" },
-            { id: "ws_22", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Create FB Post Draft", weight: 1, defaultAssignee: "Moe", draftsAndHyperlinks: ["Draft"] },
-            { id: "ws_23", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Get The FB Post Draft Approved", weight: 1, defaultAssignee: "Moe", draftsAndHyperlinks: ["Draft"] },
-            { id: "ws_24", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Description", weight: 2, defaultAssignee: "Yanna" },
-            { id: "ws_25", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Photos & Videos (if applicable)", weight: 2, defaultAssignee: "Yanna" },
-            { id: "ws_26", phase: "Phase II: Marketing Prep", mainTask: "Create InvestorLift Draft", title: "Comps", weight: 2, defaultAssignee: "Yanna" },
-            { id: "ws_27", phase: "Phase III: Marketing Execution", mainTask: "Call & Market To Buyers / Realtors", title: "Execute Calls & Marketing (Buyers / Realtors)", weight: 10, defaultAssignee: "Carlos" },
-            { id: "ws_28", phase: "Phase III: Marketing Execution", mainTask: "Investor Bulk/Individual Text Blast", title: "Execute SMS Deployment (Investors)", weight: 10, defaultAssignee: "Sarah" },
-            { id: "ws_29", phase: "Phase III: Marketing Execution", mainTask: "Realtor Bulk/Individual Text Blast", title: "Execute SMS Deployment (Realtors)", weight: 10, defaultAssignee: "Sarah" },
-            { id: "ws_30", phase: "Phase III: Marketing Execution", mainTask: "Post On InvestorLift", title: "Calling Inquiries / Interest On Subject Deal", weight: 5, defaultAssignee: "Yanna" },
-            { id: "ws_31", phase: "Phase III: Marketing Execution", mainTask: "Post On InvestorLift", title: "Calling ALL Artemis Mode Buyers", weight: 5, defaultAssignee: "Yanna" },
-            { id: "ws_32", phase: "Phase III: Marketing Execution", mainTask: "Post On Facebook", title: "Reach Out To Investors That Expressed Interest In Other Deals", weight: 10, defaultAssignee: "Moe", defaultSubtasks: ["Boost the Post (If Needed)"] }
-    ],
-    "Fix & Flip": [
-            { id: "ff_1", phase: "Phase I: Deal Prep", mainTask: "Deal Analysis", title: "Inspection", weight: 3, defaultAssignee: "Carlos" },
-            { id: "ff_2", phase: "Phase I: Deal Prep", mainTask: "Deal Analysis", title: "Create Full ARV Comps", weight: 1, defaultAssignee: "Carlos" },
-            { id: "ff_3", phase: "Phase I: Deal Prep", mainTask: "Deal Analysis", title: "Create SOW", weight: 5, defaultAssignee: "Brandy" },
-            { id: "ff_4", phase: "Phase I: Deal Prep", mainTask: "Lender Selection", title: "Shopping deal to Private and Hard Money Lenders", weight: 3, defaultAssignee: "Brandy" },
-            { id: "ff_5", phase: "Phase I: Deal Prep", mainTask: "Lender Selection", title: "Confirms Lender", weight: 2, defaultAssignee: "Brandy" },
-            { id: "ff_6", phase: "Phase I: Deal Prep", mainTask: "Lender Selection", title: "Deal submitted to Lender", weight: 1, defaultAssignee: "Monz" },
-            { id: "ff_7", phase: "Phase I: Deal Prep", mainTask: "Contractor Selection", title: "Dropdown Choice (Select One)", weight: 3, dropdownOptions: [{ title: "Local Contractor", defaultAssignee: "Brandy" }, { title: "Non-Local Contractor", defaultAssignee: "Chris" }] },
-            { id: "ff_8", phase: "Phase I: Deal Prep", mainTask: "Deal Submission", title: "TC Submits deal to Title - Await Closing", weight: 2, defaultAssignee: "Monz" },
-            { id: "ff_9", phase: "Phase II: Remodelling", mainTask: "Utilities/HOA", title: "Turn on all utilities and setup auto-pay where available", weight: 10, defaultAssignee: "Chris" },
-            { id: "ff_10", phase: "Phase II: Remodelling", mainTask: "Utilities/HOA", title: "Get HOA auto-pay info if applicable", weight: 10, defaultAssignee: "Chris" },
-            { id: "ff_11", phase: "Phase II: Remodelling", mainTask: "Contractor Selection", title: "Dropdown Choice (Select One)", weight: 10, dropdownOptions: [{ title: "Local Contractor", defaultAssignee: "Brandy" }, { title: "Non-Local Contractor", defaultAssignee: "Chris" }] },
-            { id: "ff_12", phase: "Phase II: Remodelling", mainTask: "Determine Specialized needs", title: "Determine Specialized needs", weight: 5, defaultAssignee: "Brandy" },
-            { id: "ff_13", phase: "Phase II: Remodelling", mainTask: "Determine Specialized needs", title: "Gets quotes - Minimum 2-3", weight: 5, defaultAssignee: "Chris" },
-            { id: "ff_14", phase: "Phase III: Listing Prep", mainTask: "Select Listing Source", title: "Dropdown Choice (Select One)", weight: 2, dropdownOptions: [{ title: "If property is in South or Central Florida (Beaches or Stellar) Jodi is listing agent", defaultAssignee: "Chris" }, { title: "If property is in North Carolina - Reach out to Allison-ENRG Realty to determine if we list", defaultAssignee: "Monz" }, { title: "Contact Chris Dahl to determine if he has a referral", defaultAssignee: "Brandy" }, { title: "Go onto Facebook Realtor Referral group Brandy sent and post referral needed", defaultAssignee: "Yanna" }, { title: "Source a local listing agent", defaultAssignee: "Yanna" }], draftsAndHyperlinks: ["Hyperlink"] },
-            { id: "ff_15", phase: "Phase III: Listing Prep", mainTask: "Prepare property for Listing", title: "Have property professionally cleaned", weight: 3, defaultAssignee: "Chris" },
-            { id: "ff_16", phase: "Phase III: Listing Prep", mainTask: "Prepare property for Listing", title: "Get listing pics", weight: 2, defaultAssignee: "Chris", defaultSubtasks: ["Get Approved Floor Plan"], draftsAndHyperlinks: ["Hyperlink"] },
-            { id: "ff_17", phase: "Phase III: Listing Prep", mainTask: "Prepare listing", title: "Dropdown Choice (Select One)", weight: 2, dropdownOptions: [{ title: "Create listing if we are self-managing", defaultAssignee: "Yanna" }, { title: "Realtor prepares listing", defaultAssignee: "Yanna" }] },
-            { id: "ff_18", phase: "Phase III: Listing Prep", mainTask: "Prepare listing", title: "Final review to confirm remarks/photos prior to listing", weight: 1, defaultAssignee: "Luke" },
-            { id: "ff_19", phase: "Phase IV: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Pull The Data From (Zillow - realtor.com - etc.)", weight: 2, defaultAssignee: "Moe" },
-            { id: "ff_20", phase: "Phase IV: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "ff_21", phase: "Phase IV: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah" },
-            { id: "ff_22", phase: "Phase IV: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
-            { id: "ff_23", phase: "Phase IV: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
-            { id: "ff_24", phase: "Phase V: Marketing Execution", mainTask: "Agent Outreach", title: "Blast and direct to listing agent", weight: 2, defaultAssignee: "Sarah" },
-            { id: "ff_25", phase: "Phase VI: Listing Mgmt", mainTask: "Showing Coordination", title: "MLS Phone number setup", weight: 2, defaultAssignee: "Remy", draftsAndHyperlinks: ["Draft"] },
-            { id: "ff_26", phase: "Phase VI: Listing Mgmt", mainTask: "Showing Coordination", title: "Showing Time Setup", weight: 4, defaultAssignee: "Yanna", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "ff_27", phase: "Phase VI: Listing Mgmt", mainTask: "Showing Coordination", title: "Showing Confirmation with Seller", weight: 4, defaultAssignee: "Monz", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "ff_28", phase: "Phase VII: Contract", mainTask: "Contract Negotiation", title: "Receive from Agent", weight: 5, defaultAssignee: "Brandy", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "ff_29", phase: "Phase VII: Contract", mainTask: "Contract Negotiation", title: "Docusign/Westsign", weight: 5, defaultAssignee: "Brandy", draftsAndHyperlinks: ["Draft", "Hyperlink"] }
-    ],
-    "Novation": [
-            { id: "nv_1", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "Manually UW The Deal", weight: 6, defaultAssignee: "Carlos", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "nv_2", phase: "Phase I: Deal Intake", mainTask: "Underwriting", title: "AI UW Tool To Confirm Manual UW", weight: 2, defaultAssignee: "Carlos" },
-            { id: "nv_3", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Intake Call with Seller", weight: 4, defaultAssignee: "Monz" },
-            { id: "nv_4", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Confirming Access", weight: 1, defaultAssignee: "Monz" },
-            { id: "nv_5", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Getting Runner For Access", weight: 1, defaultAssignee: "Chris", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "nv_6", phase: "Phase I: Deal Intake", mainTask: "TC Prep", title: "Obtaining Marketing Assets", weight: 4, defaultAssignee: "Monz", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "nv_7", phase: "Phase I: Deal Intake", mainTask: "Search Entire CRM", title: "Search Entire CRM For Seller Number(s) (Disqualified or DND'd)", weight: 2, defaultAssignee: "Sarah" },
-            { id: "nv_8", phase: "Phase II: Listing Prep", mainTask: "Select Listing Source", title: "Dropdown Choice (Select One)", weight: 20, dropdownOptions: [{ title: "If property is in South or Central Florida (Beaches or Stellar) Jodi is listing agent", defaultAssignee: "Chris" }, { title: "If property is in North Carolina - Reach out to Allison-ENRG Realty to determine if we list", defaultAssignee: "Monz" }, { title: "Contact Chris Dahl to determine if he has a referral", defaultAssignee: "Brandy" }, { title: "Go onto Facebook Realtor Referral group Brandy sent and post referral needed", defaultAssignee: "Yanna" }, { title: "Source a local listing agent", defaultAssignee: "Yanna" }] },
-            { id: "nv_9", phase: "Phase II: Listing Prep", mainTask: "Prepare property for Listing", title: "Based on seller photos we determine next steps", weight: 4, defaultAssignee: "Brandy", draftsAndHyperlinks: ["Hyperlink"] },
-            { id: "nv_10", phase: "Phase II: Listing Prep", mainTask: "", title: "Inspection - Full or Runner pics to see what we are working with", weight: 3, defaultAssignee: "Chris", draftsAndHyperlinks: ["Hyperlink"] },
-            { id: "nv_11", phase: "Phase II: Listing Prep", mainTask: "", title: "Send contractors for quotes on items we know need changing", weight: 4, defaultAssignee: "Chris" },
-            { id: "nv_12", phase: "Phase II: Listing Prep", mainTask: "", title: "Have property either cleaned by seller or professionally cleaned", weight: 4, defaultAssignee: "Chris" },
-            { id: "nv_13", phase: "Phase II: Listing Prep", mainTask: "Prepare property for Listing", title: "Get listing pics", weight: 5, defaultAssignee: "Chris", defaultSubtasks: ["Get Approved Floor Plan"], draftsAndHyperlinks: ["Hyperlink"] },
-            { id: "nv_14", phase: "Phase II: Listing Prep", mainTask: "Prepare listing", title: "Dropdown Choice (Select One)", weight: 5, dropdownOptions: [{ title: "Create listing if we are self-managing", defaultAssignee: "Yanna" }, { title: "Realtor prepares listing", defaultAssignee: "Yanna" }] },
-            { id: "nv_15", phase: "Phase II: Listing Prep", mainTask: "Prepare listing", title: "Final review to confirm remarks/photos prior to listing", weight: 5, defaultAssignee: "Luke" },
-            { id: "nv_16", phase: "Phase III: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Pull The Data From (Zillow - realtor.com - etc.)", weight: 2, defaultAssignee: "Moe" },
-            { id: "nv_17", phase: "Phase III: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "nv_18", phase: "Phase III: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah" },
-            { id: "nv_19", phase: "Phase III: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Create Text Blast Draft", weight: 2, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
-            { id: "nv_20", phase: "Phase III: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 2, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
-            { id: "nv_21", phase: "Phase IV: Marketing Execution", mainTask: "Agent Outreach", title: "Blast and direct to listing agent", weight: 2, defaultAssignee: "Sarah" },
-            { id: "nv_22", phase: "Phase V: Listing Mgmt", mainTask: "Showing Coordination", title: "MLS Phone number setup", weight: 2, defaultAssignee: "Remy", draftsAndHyperlinks: ["Draft"] },
-            { id: "nv_23", phase: "Phase V: Listing Mgmt", mainTask: "Showing Coordination", title: "Showing Time Setup", weight: 4, defaultAssignee: "Yanna", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "nv_24", phase: "Phase V: Listing Mgmt", mainTask: "Showing Coordination", title: "Showing Confirmation with Seller", weight: 4, defaultAssignee: "Monz", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "nv_25", phase: "Phase VI: Contract", mainTask: "Contract Negotiation", title: "Receive from Agent", weight: 5, defaultAssignee: "Brandy", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
-            { id: "nv_26", phase: "Phase VI: Contract", mainTask: "Contract Negotiation", title: "Docusign/Westsign", weight: 5, defaultAssignee: "Brandy", draftsAndHyperlinks: ["Draft", "Hyperlink"] }
-    ],
-    "Creative": [
-            { id: "cr_1", phase: "Phase I: Terms Structuring", mainTask: "Seller Negotiation", title: "Finalize SubTo/Seller Finance Terms", weight: 20, defaultAssignee: "Carlos" },
-            { id: "cr_2", phase: "Phase I: Terms Structuring", mainTask: "Documentation", title: "Draft Creative Purchase Agreement", weight: 10, defaultAssignee: "Sarah" },
-            { id: "cr_3", phase: "Phase II: Buyer Marketing", mainTask: "Marketing Prep", title: "Compile Terms & Comps for Dispo", weight: 15, defaultAssignee: "Yanna" },
-            { id: "cr_4", phase: "Phase II: Buyer Marketing", mainTask: "Buyer Outreach", title: "Market to Creative Finance Buyers list", weight: 25, defaultAssignee: "Carlos" },
-            { id: "cr_5", phase: "Phase III: Closing & TC", mainTask: "Transaction Coordination", title: "Coordinate with Subject-To Friendly Title Co.", weight: 20, defaultAssignee: "Sarah" },
-            { id: "cr_6", phase: "Phase III: Closing & TC", mainTask: "Final Handoff", title: "Transfer Insurance & Servicing Setup", weight: 10, defaultAssignee: "Moe" }
-    ]
-};
-
-    window.toggleNewAssetStrategyDropdown = function(e) {
-        if(e) e.stopPropagation();
-        const list = document.getElementById('newAssetStrategyList');
-        const icon = document.getElementById('newAssetStrategyIcon');
-        if(list.classList.contains('hidden')) {
-            list.classList.remove('hidden'); list.classList.add('flex');
-            icon.classList.add('rotate-180');
-        } else {
-            list.classList.add('hidden'); list.classList.remove('flex');
-            icon.classList.remove('rotate-180');
-        }
-    }
-
-    window.selectNewAssetStrategy = function(val) {
-        document.getElementById('newAssetStrategyInput').value = val;
-        document.getElementById('newAssetStrategyLabel').innerText = val;
-        window.toggleNewAssetStrategyDropdown();
-        window.handleStrategyChange();
-    }
-
+    // --- 3. HELPER FUNCTIONS ---
     function getAgentColorClass(name, type = 'text') {
         const nameLower = (name || "").toLowerCase();
-        return (agentColors[nameLower] || agentColors["completed"])[type];
+        return (AppConfig.agentColors[nameLower] || AppConfig.agentColors["completed"])[type];
     }
 
     function getStrategyColorClass(strategy) {
-        return strategyColors[strategy] || "bg-gray-800 text-gray-300 border-gray-600";
+        return AppConfig.strategyColors[strategy] || "bg-gray-800 text-gray-300 border-gray-600";
     }
 
     function getPhaseUI(phaseName) {
@@ -1067,31 +1043,20 @@
         else if (phaseName.includes("Phase II")) key = "II";
         else if (phaseName.includes("Phase I")) key = "I";
 
-        // Fallback for an unknown phase
         if (key === "DEFAULT") {
             return { 
-                roman: "-", 
-                icon: "fa-layer-group", 
-                navWrapper: "border-gray-600/30", 
-                navIcon: "bg-gray-600/20 border-gray-600 text-gray-400", 
-                timelineHeader: "bg-gray-700 border-[#05070f] text-white", 
-                timelineDot: "bg-gray-700 border-[#05070f] text-white", 
-                timelineCard: "border-gray-700/30 group-hover:shadow-[0_0_25px_rgba(255,255,255,0.05)]", 
-                trackerHeaderIcon: "text-gray-400" 
+                roman: "-", icon: "fa-layer-group", navWrapper: "border-gray-600/30", navIcon: "bg-gray-600/20 border-gray-600 text-gray-400", 
+                timelineHeader: "bg-gray-700 border-[#05070f] text-white", timelineDot: "bg-gray-700 border-[#05070f] text-white", 
+                timelineCard: "border-gray-700/30 group-hover:shadow-[0_0_25px_rgba(255,255,255,0.05)]", trackerHeaderIcon: "text-gray-400" 
             };
         }
 
-        // The rest of your function returning styles for I, II, III, IV, V, VI, VII goes here...
-        
-        const s = PHASE_STYLES[key];
+        const s = AppConfig.PHASE_STYLES[key];
         return {
-            roman: key, icon: s.icon,
-            navWrapper: `border-${s.color}/30`,
-            navIcon: `bg-${s.color}/20 border-${s.color} text-${s.color}`,
+            roman: key, icon: s.icon, navWrapper: `border-${s.color}/30`, navIcon: `bg-${s.color}/20 border-${s.color} text-${s.color}`,
             timelineHeader: `bg-${s.color} border-[#05070f] shadow-[0_0_15px_${s.shadow}] text-${s.txt}`,
             timelineDot: `bg-${s.color} border-[#05070f] text-${s.txt}`,
-            timelineCard: `border-${s.color}/30 group-hover:shadow-[0_0_25px_${s.hoverShadow}]`,
-            trackerHeaderIcon: `text-${s.color}`
+            timelineCard: `border-${s.color}/30 group-hover:shadow-[0_0_25px_${s.hoverShadow}]`, trackerHeaderIcon: `text-${s.color}`
         };
     }
 
@@ -1105,15 +1070,6 @@
             r = Math.round(79 + pct * (16 - 79)); g = Math.round(70 + pct * (185 - 70)); b = Math.round(229 + pct * (129 - 229));
         }
         return `rgb(${r}, ${g}, ${b})`;
-    }
-
-    function escapeHtml(unsafe) {
-        return (unsafe || "").toString()
-             .replace(/&/g, "&amp;")
-             .replace(/</g, "&lt;")
-             .replace(/>/g, "&gt;")
-             .replace(/"/g, "&quot;")
-             .replace(/'/g, "&#039;");
     }
 
     function getItemFromKey(prop, itemKey) {
@@ -1177,6 +1133,15 @@
         }
     }
 
+    function updateTrackerStats(prop) {
+        const stats = getPropStats(prop);
+        const pt = document.getElementById('tracker-percent-text');
+        const pb = document.getElementById('tracker-progress-bar');
+        if(pt) pt.innerText = `${stats.percent}%`;
+        if(pb) pb.style.width = `${stats.percent}%`;
+        updateChatBadge(prop);
+    }
+
     // --- 4. UI CONTROLS ---
     window.toggleActiveUsers = function(e) {
         if(e) e.stopPropagation();
@@ -1203,7 +1168,6 @@
         }
     }
 
-    // New Dashboard Filters Custom Dropdowns
     window.toggleFilterDropdown = function(type, e) {
         if(e) e.stopPropagation();
         const list = document.getElementById(`filter${type}List`);
@@ -1245,7 +1209,6 @@
         renderDashboard();
     }
 
-    // New Task Agent Select Dropdown
     window.toggleAgentDropdown = function(taskId, e) {
         if(e) e.stopPropagation();
         const list = document.getElementById(`agentList_${taskId}`);
@@ -1280,13 +1243,11 @@
     }
 
     document.addEventListener('click', (e) => {
-        // Active Users Dropdown
         const activeUsersDropdown = document.getElementById('activeUsersDropdown');
         if (activeUsersDropdown && !activeUsersDropdown.classList.contains('hidden') && !e.target.closest('#activeUsersDropdown') && !e.target.closest('[onclick*="toggleActiveUsers"]')) {
             activeUsersDropdown.classList.add('hidden');
         }
 
-        // Notification Dropdowns
         const notifListDropdown = document.getElementById('notificationsListDropdown');
         if (notifListDropdown && !notifListDropdown.classList.contains('hidden') && !e.target.closest('#notificationsListDropdown') && !e.target.closest('#mainLogoBtn')) {
             notifListDropdown.classList.add('hidden');
@@ -1296,14 +1257,12 @@
             notifSettingsDropdown.classList.add('hidden');
         }
 
-        // Global Tracker Asset Dropdown
         const assetDrop = document.getElementById('globalAssetDropdownList');
         if(assetDrop && !assetDrop.classList.contains('hidden') && !e.target.closest('#globalAssetSelectorWrapper')) {
             window.toggleDisplay('globalAssetDropdownList', false);
             document.getElementById('globalAssetDropdownIcon')?.classList.remove('rotate-180');
         }
         
-        // Filter Dropdowns
         ['Strategy', 'Sort'].forEach(type => {
             const list = document.getElementById(`filter${type}List`);
             if(list && !list.classList.contains('hidden') && !e.target.closest(`#filter${type}Wrapper`)) {
@@ -1314,14 +1273,12 @@
             }
         });
 
-        // New Asset Strategy Dropdown
         const stratDrop = document.getElementById('newAssetStrategyList');
         if(stratDrop && !stratDrop.classList.contains('hidden') && !e.target.closest('#newAssetStrategyWrapper')) {
             stratDrop.classList.add('hidden'); stratDrop.classList.remove('flex');
             document.getElementById('newAssetStrategyIcon')?.classList.remove('rotate-180');
         }
 
-        // Agent Assignee Dropdowns
         if (!e.target.closest('.agent-selector-wrapper')) {
             document.querySelectorAll('.agent-dropdown-list').forEach(el => {
                 if (!el.classList.contains('hidden')) {
@@ -1333,7 +1290,6 @@
             });
         }
 
-        // Close Chat Box on outside click
         if (window.isChatOpen && !e.target.closest('#chatWindow') && !e.target.closest('#chatFabBtn') && !e.target.closest('#nav-mobile-chat') && !e.target.closest('[onclick*="toggleChat"]') && !e.target.closest('[onclick*="openPropertyChatOnly"]') && !e.target.closest('[onclick*="toggleChatHub"]')) {
             window.toggleChat();
         }
@@ -1373,7 +1329,7 @@
                     <div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-gray-800/40 border border-gray-700/30 mb-1 last:mb-0 hover:bg-gray-800/60 transition-colors">
                         <div class="flex items-center gap-2">
                             <div class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></div>
-                            <span class="text-[10px] font-bold ${colorClass} capitalize tracking-wide truncate max-w-[90px]">${name}</span>
+                            <span class="text-[10px] font-bold ${colorClass} capitalize tracking-wide truncate max-w-[90px]">${escapeHtml(name)}</span>
                         </div>
                         <div class="flex items-center gap-2 shrink-0">
                             <i class="fa-solid fa-mobile-screen text-[10px] ${mobileColor}" title="Mobile"></i>
@@ -1415,78 +1371,15 @@
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 150);
     }
 
-    // --- 5. UI RENDERING & INTERACTIVITY ---
-    window.switchTab = function(tab) {
-        window.toggleDisplay('tab-dashboard', false);
-        window.toggleDisplay('tab-tracker', false);
-        window.toggleDisplay('tab-sop', false);
-        
-        const defaultNavClasses = "px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap";
-        const mobNavs = ['nav-mobile-dashboard', 'nav-mobile-tracker', 'nav-mobile-sop'];
-        
-        document.getElementById('nav-dashboard').className = defaultNavClasses;
-        document.getElementById('nav-tracker').className = defaultNavClasses;
-        document.getElementById('nav-sop').className = defaultNavClasses;
-        
-        mobNavs.forEach(id => {
-            const el = document.getElementById(id);
-            if(el) { 
-                el.classList.remove('text-brand-emerald'); 
-                el.classList.add('text-gray-500', 'hover:text-gray-300'); 
-            }
-        });
-
-        const activeNavClasses = "bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md border-transparent";
-        
-        if (tab === 'dashboard') {
-            window.toggleDisplay('tab-dashboard', true, 'block');
-            document.getElementById('nav-dashboard').classList.add(...activeNavClasses.split(' '));
-            document.getElementById('nav-dashboard').classList.remove('text-gray-300');
-            const mob = document.getElementById('nav-mobile-dashboard');
-            if (mob) { mob.classList.remove('text-gray-500', 'hover:text-gray-300'); mob.classList.add('text-brand-emerald'); }
-            
-            activePropertyId = null;
-            window.sectionToggleState = {}; window.sectionCompletionState = {};
-            if(window.isChatOpen) window.toggleChat();
-            renderDashboard(); updateGlobalAssetSelector();
-        } else if (tab === 'tracker') {
-            window.toggleDisplay('tab-tracker', true);
-            document.getElementById('nav-tracker').classList.add(...activeNavClasses.split(' '));
-            document.getElementById('nav-tracker').classList.remove('text-gray-300');
-            const mob = document.getElementById('nav-mobile-tracker');
-            if (mob) { mob.classList.remove('text-gray-500', 'hover:text-gray-300'); mob.classList.add('text-brand-emerald'); }
-            
-            renderTrackerView(); updateGlobalAssetSelector();
-        } else if (tab === 'sop') {
-            window.toggleDisplay('tab-sop', true, 'block');
-            document.getElementById('nav-sop').classList.add(...activeNavClasses.split(' '));
-            document.getElementById('nav-sop').classList.remove('text-gray-300');
-            const mob = document.getElementById('nav-mobile-sop');
-            if (mob) { mob.classList.remove('text-gray-500', 'hover:text-gray-300'); mob.classList.add('text-brand-emerald'); }
-            
-            if(window.isChatOpen) window.toggleChat();
-            window.renderSOPTimeline('Wholesale');
-        }
-    }
-
-    // Modal Dynamic CSV Upload Logic
-    window.handleStrategyChange = function() {
-        const strat = document.getElementById('newAssetStrategyInput').value;
-        const csvBox = document.getElementById('csvUploadWrapper');
-        if (strat === 'Fix & Flip') window.toggleDisplay('csvUploadWrapper', true, 'block');
-        else {
-            window.toggleDisplay('csvUploadWrapper', false);
-            window.pendingCSVContent = null;
-            document.getElementById('csvFileNameDisplay').innerText = "Click to attach a CSV file (Task, Cost, Notes)";
-        }
-    }
-
+    // --- 5. DATA, SYNC & FIREBASE LOGIC ---
     window.handleCSVUpload = function(e) {
         const file = e.target.files[0];
         if (!file) return;
-        document.getElementById('csvFileNameDisplay').innerHTML = `<span class="text-brand-cyan">${file.name}</span> loaded successfully!`;
+        document.getElementById('csvFileNameDisplay').innerHTML = `<span class="text-brand-cyan">${escapeHtml(file.name)}</span> loaded successfully!`;
         const reader = new FileReader();
-        reader.onload = function(evt) { window.pendingCSVContent = evt.target.result; };
+        reader.onload = function(evt) { 
+            window.pendingCSVContent = evt.target.result; 
+        };
         reader.readAsText(file);
     }
 
@@ -1504,14 +1397,20 @@
     }
 
     function generateTaskInstances(strategy, csvContent) {
-        const blueprint = sopBlueprints[strategy] || sopBlueprints["Wholesale"];
+        const blueprint = AppConfig.sopBlueprints[strategy] || AppConfig.sopBlueprints["Wholesale"];
         let tasks = blueprint.map(task => {
             const subtasks = task.defaultSubtasks ? task.defaultSubtasks.map((stTitle, i) => ({
                 id: 'sub_' + Date.now() + i + Math.random().toString(36).substr(2, 5),
                 title: stTitle,
                 completed: false,
-                isDefault: true
+                isDefault: true,
+                requiresDraft: false,
+                requiresLink: false
             })) : [];
+
+            // Fix functional mapping bug for Drafts & Hyperlinks
+            const requiresDraft = task.draftsAndHyperlinks && task.draftsAndHyperlinks.includes("Draft");
+            const requiresLink = task.draftsAndHyperlinks && task.draftsAndHyperlinks.includes("Hyperlink");
 
             return {
                 id: task.id, phase: task.phase, mainTask: task.mainTask, title: task.title,
@@ -1519,21 +1418,23 @@
                 subtasks: subtasks, templateText: "", templateLastEditedBy: null, templateLastEditedAt: null,
                 isDropdown: task.dropdownOptions ? true : false,
                 dropdownOptions: task.dropdownOptions || null,
-                draftsAndHyperlinks: task.draftsAndHyperlinks || []
+                selectedOption: null,
+                requiresDraft: requiresDraft,
+                requiresLink: requiresLink
             };
         });
 
+        // Fix SOW CSV Mapping bug
         if (strategy === "Fix & Flip" && csvContent) {
             const sowItems = parseSOWCSV(csvContent);
             if (sowItems.length > 0) {
                 const subtasks = sowItems.map((item, i) => ({
-                    id: 'sub_sow_' + Date.now() + i, title: item, completed: false, isDefault: true
+                    id: 'sub_sow_' + Date.now() + i, title: item, completed: false, isDefault: true,
+                    requiresLink: false, requiresDraft: false
                 }));
-                
-                // Attach the imported SOW items directly to ff_3
                 const sowTask = tasks.find(t => t.id === "ff_3");
                 if (sowTask) {
-                    sowTask.subtasks = [...sowTask.subtasks, ...subtasks];
+                    sowTask.subtasks = [...(sowTask.subtasks || []), ...subtasks];
                     sowTask.isSOW = true;
                 }
             }
@@ -1555,7 +1456,7 @@
             dateLastEdited: Date.now(), comments: [], readBy: {}, tasks: newTasks
         };
         
-        if (!currentUser) { propertiesData.unshift(newProp); }
+        if (!currentUser) { propertiesData.unshift(newProp); } // Local testing memory
         await window.savePropertyData(newProp);
         
         window.toggleDisplay('newAssetModal', false);
@@ -1640,6 +1541,90 @@
         return parts.join(' - ') + ' Ago';
     }
 
+    // --- 6. UI RENDERING & INTERACTIVITY ---
+    window.switchTab = function(tab) {
+        window.toggleDisplay('tab-dashboard', false);
+        window.toggleDisplay('tab-tracker', false);
+        window.toggleDisplay('tab-sop', false);
+        
+        const defaultNavClasses = "px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap";
+        const mobNavs = ['nav-mobile-dashboard', 'nav-mobile-tracker', 'nav-mobile-sop'];
+        
+        document.getElementById('nav-dashboard').className = defaultNavClasses;
+        document.getElementById('nav-tracker').className = defaultNavClasses;
+        document.getElementById('nav-sop').className = defaultNavClasses;
+        
+        mobNavs.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) { 
+                el.classList.remove('text-brand-emerald'); 
+                el.classList.add('text-gray-500', 'hover:text-gray-300'); 
+            }
+        });
+
+        const activeNavClasses = "bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md border-transparent";
+        
+        if (tab === 'dashboard') {
+            window.toggleDisplay('tab-dashboard', true, 'block');
+            document.getElementById('nav-dashboard').classList.add(...activeNavClasses.split(' '));
+            document.getElementById('nav-dashboard').classList.remove('text-gray-300');
+            const mob = document.getElementById('nav-mobile-dashboard');
+            if (mob) { mob.classList.remove('text-gray-500', 'hover:text-gray-300'); mob.classList.add('text-brand-emerald'); }
+            
+            activePropertyId = null;
+            window.sectionToggleState = {}; window.sectionCompletionState = {};
+            if(window.isChatOpen) window.toggleChat();
+            renderDashboard(); updateGlobalAssetSelector();
+        } else if (tab === 'tracker') {
+            window.toggleDisplay('tab-tracker', true);
+            document.getElementById('nav-tracker').classList.add(...activeNavClasses.split(' '));
+            document.getElementById('nav-tracker').classList.remove('text-gray-300');
+            const mob = document.getElementById('nav-mobile-tracker');
+            if (mob) { mob.classList.remove('text-gray-500', 'hover:text-gray-300'); mob.classList.add('text-brand-emerald'); }
+            
+            renderTrackerView(); updateGlobalAssetSelector();
+        } else if (tab === 'sop') {
+            window.toggleDisplay('tab-sop', true, 'block');
+            document.getElementById('nav-sop').classList.add(...activeNavClasses.split(' '));
+            document.getElementById('nav-sop').classList.remove('text-gray-300');
+            const mob = document.getElementById('nav-mobile-sop');
+            if (mob) { mob.classList.remove('text-gray-500', 'hover:text-gray-300'); mob.classList.add('text-brand-emerald'); }
+            
+            if(window.isChatOpen) window.toggleChat();
+            window.renderSOPTimeline('Wholesale');
+        }
+    }
+
+    window.toggleNewAssetStrategyDropdown = function(e) {
+        if(e) e.stopPropagation();
+        const list = document.getElementById('newAssetStrategyList');
+        const icon = document.getElementById('newAssetStrategyIcon');
+        if(list.classList.contains('hidden')) {
+            list.classList.remove('hidden'); list.classList.add('flex');
+            icon.classList.add('rotate-180');
+        } else {
+            list.classList.add('hidden'); list.classList.remove('flex');
+            icon.classList.remove('rotate-180');
+        }
+    }
+
+    window.selectNewAssetStrategy = function(val) {
+        document.getElementById('newAssetStrategyInput').value = val;
+        document.getElementById('newAssetStrategyLabel').innerText = val;
+        window.toggleNewAssetStrategyDropdown();
+        window.handleStrategyChange();
+    }
+
+    window.handleStrategyChange = function() {
+        const strat = document.getElementById('newAssetStrategyInput').value;
+        if (strat === 'Fix & Flip') window.toggleDisplay('csvUploadWrapper', true, 'block');
+        else {
+            window.toggleDisplay('csvUploadWrapper', false);
+            window.pendingCSVContent = null;
+            document.getElementById('csvFileNameDisplay').innerText = "Click to attach a CSV file (Task, Cost, Notes)";
+        }
+    }
+
     window.toggleAssetDropdown = function(e) {
         if(e) e.stopPropagation();
         const drop = document.getElementById('globalAssetDropdownList');
@@ -1665,7 +1650,7 @@
             const isSelected = p.id === activePropertyId;
             if(isSelected) activePropName = p.address;
             htmlStr += `<div onclick="window.handleGlobalAssetSelection('${p.id}')" class="px-4 py-3 text-sm font-bold ${isSelected ? 'text-brand-purple bg-brand-purple/10' : 'text-white hover:bg-gray-800'} cursor-pointer transition-colors flex items-center justify-between group">
-                <span class="truncate">${p.address}</span>
+                <span class="truncate">${escapeHtml(p.address)}</span>
                 ${isSelected ? '<div class="w-2 h-2 rounded-full bg-brand-purple shrink-0 ml-3"></div>' : '<div class="w-2 h-2 rounded-full bg-transparent group-hover:bg-gray-600 transition-colors shrink-0 ml-3"></div>'}
             </div>`;
         });
@@ -1725,17 +1710,17 @@
                 tr.onclick = () => window.openTracker(prop.id);
                 
                 tr.innerHTML = `
-                    <td class="p-4 font-bold text-white group-hover:text-brand-emerald transition-colors text-center">${prop.address}</td>
+                    <td class="p-4 font-bold text-white group-hover:text-brand-emerald transition-colors text-center">${escapeHtml(prop.address)}</td>
                     <td class="p-4 text-center"><span class="${strategyColor} px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider">${strategy}</span></td>
                     <td class="p-4 text-center">${formatEST(prop.dateStarted)}</td>
                     <td class="p-4 text-brand-emerald text-xs font-mono text-center align-middle">${timeSince(prop.dateLastEdited, true)}</td>
                     <td class="p-4 text-center">
-                        <span class="${agentBgColor} ${agentTxtColor} px-2.5 py-1 rounded text-xs font-extrabold border ${agentBorderColor}">${stats.nextAgent}</span>
+                        <span class="${agentBgColor} ${agentTxtColor} px-2.5 py-1 rounded text-xs font-extrabold border ${agentBorderColor}">${escapeHtml(stats.nextAgent)}</span>
                     </td>
                     <td class="p-4 text-center text-xs font-semibold text-gray-200 transition-colors hover:text-brand-emerald cursor-help"
-                        data-tooltip-text="${tooltipEscapedDetail}" onmouseenter="window.showDashboardTooltip(event)" onmouseleave="window.hideDashboardTooltip()"
+                        data-tooltip-text="${escapeHtml(tooltipEscapedDetail)}" onmouseenter="window.showDashboardTooltip(event)" onmouseleave="window.hideDashboardTooltip()"
                         onclick="event.stopPropagation(); window.openTracker('${prop.id}', '${stats.nextTaskId}', '${stats.nextSectionKey}')">
-                        <div class="truncate max-w-[150px] mx-auto border-b border-dashed border-gray-600 pb-0.5 inline-block">${stats.nextStep}</div>
+                        <div class="truncate max-w-[150px] mx-auto border-b border-dashed border-gray-600 pb-0.5 inline-block">${escapeHtml(stats.nextStep)}</div>
                     </td>
                     <td class="p-4 text-center">
                         <div class="flex items-center justify-center gap-2">
@@ -1817,12 +1802,9 @@
         }
     }
 
-    // --- SUPPORT STYLE CHAT & GLOBAL HUB LOGIC ---
     window.toggleChat = async function(focusCommentId = null) {
         const fab = document.getElementById('chatFabBtn');
-        if (fab) {
-            fab.classList.remove('animate-jelly-pop'); void fab.offsetWidth; fab.classList.add('animate-jelly-pop');
-        }
+        if (fab) { fab.classList.remove('animate-jelly-pop'); void fab.offsetWidth; fab.classList.add('animate-jelly-pop'); }
 
         window.isChatOpen = focusCommentId ? true : !window.isChatOpen;
         const mobChatNav = document.getElementById('nav-mobile-chat');
@@ -1832,28 +1814,20 @@
             if (mobChatNav) { mobChatNav.classList.remove('text-brand-crimson'); mobChatNav.classList.add('text-brand-gold'); }
             
             if (activePropertyId) {
-                window.toggleDisplay('chatHubView', false);
-                window.toggleDisplay('chatPropertyView', true);
-
+                window.toggleDisplay('chatHubView', false); window.toggleDisplay('chatPropertyView', true);
                 const prop = propertiesData.find(p => p.id === activePropertyId);
                 if (prop) {
                     const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
-                    prop.readBy = prop.readBy || {};
-                    const lastReadTime = prop.readBy[myPrefix] || 0;
-                    
+                    prop.readBy = prop.readBy || {}; const lastReadTime = prop.readBy[myPrefix] || 0;
                     prop.readBy[myPrefix] = Date.now();
                     await window.savePropertyData(prop, true); 
-                    updateChatBadge(prop);
-                    renderChatMessages(prop, lastReadTime, focusCommentId);
+                    updateChatBadge(prop); renderChatMessages(prop, lastReadTime, focusCommentId);
                     document.getElementById('chatWindowAddress').innerText = prop.address;
                 }
                 setTimeout(() => { if(!focusCommentId && !window.isChatSearchOpen) document.getElementById('chatInput').focus(); }, 100);
             } else {
-                window.toggleDisplay('chatHubView', true);
-                window.toggleDisplay('chatPropertyView', false);
-                window.renderChatHub();
+                window.toggleDisplay('chatHubView', true); window.toggleDisplay('chatPropertyView', false); window.renderChatHub();
             }
-
         } else {
             window.toggleDisplay('chatWindow', false);
             if(window.isChatSearchOpen) window.toggleChatSearch();
@@ -1862,19 +1836,15 @@
     }
     
     window.openPropertyChatOnly = function(propId) {
-        activePropertyId = propId;
-        updateGlobalAssetSelector();
-        window.isChatOpen = false;
-        window.toggleChat();
+        activePropertyId = propId; updateGlobalAssetSelector();
+        window.isChatOpen = false; window.toggleChat();
     }
 
     window.toggleChatHub = function(forceHubOnly = false) {
         if (forceHubOnly) activePropertyId = null;
         if (!window.isChatOpen) { window.toggleChat(); }
         else if (forceHubOnly) {
-            window.toggleDisplay('chatHubView', true);
-            window.toggleDisplay('chatPropertyView', false);
-            window.renderChatHub();
+            window.toggleDisplay('chatHubView', true); window.toggleDisplay('chatPropertyView', false); window.renderChatHub();
         } else { window.toggleChat(); }
     }
 
@@ -1888,25 +1858,17 @@
             const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
             const lastRead = (p.readBy || {})[myPrefix] || 0;
             const unreadCount = comments.filter(c => c.timestamp > lastRead && c.author.toLowerCase() !== myPrefix).length;
-            
             return { id: p.id, address: p.address, lastComment: lastCmt, unreadCount: unreadCount, timestamp: lastCmt ? lastCmt.timestamp : p.dateStarted };
         }).sort((a, b) => b.timestamp - a.timestamp);
 
-        if (hubItems.length === 0) {
-            list.innerHTML = `<div class="text-center text-xs text-gray-500 mt-10 italic">No active discussions. Deploy a new asset to begin tracking!</div>`;
-            return;
-        }
+        if (hubItems.length === 0) { list.innerHTML = `<div class="text-center text-xs text-gray-500 mt-10 italic">No active discussions. Deploy a new asset to begin tracking!</div>`; return; }
 
         list.innerHTML = hubItems.map(item => {
             let badgeHtml = item.unreadCount > 0 ? `<span class="bg-brand-crimson text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md animate-pulse">${item.unreadCount} New</span>` : '';
             let snippet = item.lastComment ? `<span class="font-bold text-gray-400 capitalize">${escapeHtml(item.lastComment.author)}:</span> ${escapeHtml(item.lastComment.text)}` : `<span class="italic text-gray-600">No messages yet</span>`;
             
-            return `
-            <div onclick="window.openPropertyChatOnly('${item.id}')" class="p-3 bg-gray-900/50 hover:bg-gray-800/80 rounded-xl border border-gray-800/80 cursor-pointer transition-colors group shadow-sm">
-                <div class="flex justify-between items-start mb-1">
-                    <h4 class="text-xs font-bold text-white group-hover:text-brand-purple transition-colors truncate pr-2 flex items-center gap-2"><i class="fa-solid fa-house-chimney text-[10px] text-gray-600"></i> ${escapeHtml(item.address)}</h4>
-                    <div class="shrink-0 flex items-center gap-2">${badgeHtml}</div>
-                </div>
+            return `<div onclick="window.openPropertyChatOnly('${item.id}')" class="p-3 bg-gray-900/50 hover:bg-gray-800/80 rounded-xl border border-gray-800/80 cursor-pointer transition-colors group shadow-sm">
+                <div class="flex justify-between items-start mb-1"><h4 class="text-xs font-bold text-white group-hover:text-brand-purple transition-colors truncate pr-2 flex items-center gap-2"><i class="fa-solid fa-house-chimney text-[10px] text-gray-600"></i> ${escapeHtml(item.address)}</h4><div class="shrink-0 flex items-center gap-2">${badgeHtml}</div></div>
                 <p class="text-[10px] text-gray-300 line-clamp-1 mb-1 mt-1">${snippet}</p>
                 <div class="text-[9px] text-gray-500 font-mono mt-1.5 border-t border-gray-800/50 pt-1.5 inline-block w-full">${timeSince(item.lastComment ? item.lastComment.timestamp : item.timestamp)}</div>
             </div>`;
@@ -1916,14 +1878,8 @@
     window.toggleChatSearch = function() {
         window.isChatSearchOpen = !window.isChatSearchOpen;
         const searchInput = document.getElementById('chatSearchInput');
-        if(window.isChatSearchOpen) {
-            window.toggleDisplay('chatSearchContainer', true);
-            searchInput.focus();
-        } else {
-            window.toggleDisplay('chatSearchContainer', false);
-            searchInput.value = '';
-            if (activePropertyId) window.renderChatMessages(propertiesData.find(p => p.id === activePropertyId));
-        }
+        if(window.isChatSearchOpen) { window.toggleDisplay('chatSearchContainer', true); searchInput.focus(); }
+        else { window.toggleDisplay('chatSearchContainer', false); searchInput.value = ''; if (activePropertyId) window.renderChatMessages(propertiesData.find(p => p.id === activePropertyId)); }
     }
 
     window.jumpToChatMessage = function(commentId) {
@@ -1939,14 +1895,8 @@
         if (!activePropertyId) return;
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop || !prop.comments) return;
-        
         const comment = prop.comments.find(c => c.id === commentId);
-        if (comment) {
-            comment.pinned = !comment.pinned;
-            await window.savePropertyData(prop, true);
-            const pinsModal = document.getElementById('chatPinsModal');
-            if (pinsModal && !pinsModal.classList.contains('hidden')) window.renderChatPins(prop);
-        }
+        if (comment) { comment.pinned = !comment.pinned; await window.savePropertyData(prop, true); const pinsModal = document.getElementById('chatPinsModal'); if (pinsModal && !pinsModal.classList.contains('hidden')) window.renderChatPins(prop); }
     }
 
     window.toggleChatPins = function() {
@@ -1959,18 +1909,11 @@
         const list = document.getElementById('chatPinsList');
         if (!prop || !list) return;
         const pinnedComments = (prop.comments || []).filter(c => c.pinned);
-        
-        if (pinnedComments.length === 0) {
-            list.innerHTML = `<div class="text-xs text-gray-500 italic text-center mt-6">No pinned messages yet.</div>`;
-            return;
-        }
+        if (pinnedComments.length === 0) { list.innerHTML = `<div class="text-xs text-gray-500 italic text-center mt-6">No pinned messages yet.</div>`; return; }
 
         list.innerHTML = pinnedComments.map(c => `
             <div onclick="window.jumpToChatMessage('${c.id}')" class="bg-gray-900/50 p-2.5 rounded-lg border border-gray-700 cursor-pointer hover:bg-gray-800/80 transition-colors">
-                <div class="flex justify-between items-center mb-1 border-b border-gray-800 pb-1">
-                    <span class="text-[9px] font-bold text-gray-400 capitalize">${escapeHtml(c.author)}</span>
-                    <span class="text-[9px] text-gray-500">${formatEST(c.timestamp)}</span>
-                </div>
+                <div class="flex justify-between items-center mb-1 border-b border-gray-800 pb-1"><span class="text-[9px] font-bold text-gray-400 capitalize">${escapeHtml(c.author)}</span><span class="text-[9px] text-gray-500">${formatEST(c.timestamp)}</span></div>
                 <p class="text-xs text-gray-300 line-clamp-3 whitespace-pre-wrap">${escapeHtml(c.text)}</p>
             </div>`).join('');
     }
@@ -1996,13 +1939,13 @@
                 let hasItem = false; let itemContent = '';
                 if (item.link) {
                     hasItem = true;
-                    itemContent += `<a href="${item.link.startsWith('http') ? item.link : 'https://'+item.link}" target="_blank" class="text-brand-cyan hover:underline text-xs break-all block mb-1"><i class="fa-solid fa-link"></i> ${item.link}</a>`;
+                    itemContent += `<a href="${item.link.startsWith('http') ? item.link : 'https://'+item.link}" target="_blank" class="text-brand-cyan hover:underline text-xs break-all block mb-1"><i class="fa-solid fa-link"></i> ${escapeHtml(item.link)}</a>`;
                 }
                 if (item.template) {
                     const urls = item.template.match(/(https?:\/\/[^\s]+)/g);
                     if (urls) {
                         hasItem = true;
-                        urls.forEach(url => { itemContent += `<a href="${url}" target="_blank" class="text-brand-emerald hover:underline text-xs break-all block mb-1"><i class="fa-solid fa-arrow-up-right-from-square"></i> ${url}</a>`; });
+                        urls.forEach(url => { itemContent += `<a href="${url}" target="_blank" class="text-brand-emerald hover:underline text-xs break-all block mb-1"><i class="fa-solid fa-arrow-up-right-from-square"></i> ${escapeHtml(url)}</a>`; });
                     }
                     if (item.template.length > 0) {
                         hasItem = true;
@@ -2010,7 +1953,7 @@
                     }
                 }
                 if (hasItem) {
-                    htmlStr += `<div class="bg-gray-900/50 p-2.5 rounded-lg border border-gray-700 shadow-sm"><div class="flex flex-col mb-2 border-b border-gray-800 pb-1.5"><span class="text-[8px] font-bold text-brand-emerald/70 uppercase tracking-widest mb-0.5">${item.phase}</span><h5 class="text-[10px] font-bold text-gray-300">${item.title}</h5></div>${itemContent}</div>`;
+                    htmlStr += `<div class="bg-gray-900/50 p-2.5 rounded-lg border border-gray-700 shadow-sm"><div class="flex flex-col mb-2 border-b border-gray-800 pb-1.5"><span class="text-[8px] font-bold text-brand-emerald/70 uppercase tracking-widest mb-0.5">${escapeHtml(item.phase)}</span><h5 class="text-[10px] font-bold text-gray-300">${escapeHtml(item.title)}</h5></div>${itemContent}</div>`;
                 }
             });
             list.innerHTML = htmlStr || `<div class="text-xs text-gray-500 italic text-center mt-6">No links or templates found for this asset.</div>`;
@@ -2022,7 +1965,6 @@
         const input = document.getElementById('chatInput');
         const text = input.value.trim();
         if (!text) return;
-
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
 
@@ -2050,10 +1992,7 @@
 
         const comments = (prop.comments || []).filter(c => searchTerm === '' || c.text.toLowerCase().includes(searchTerm) || c.author.toLowerCase().includes(searchTerm));
 
-        if (comments.length === 0) {
-            container.innerHTML = `<div class="text-center text-xs text-gray-500 mt-10 italic">${isSearching ? 'No matching messages.' : 'No messages found.'}</div>`;
-            return;
-        }
+        if (comments.length === 0) { container.innerHTML = `<div class="text-center text-xs text-gray-500 mt-10 italic">${isSearching ? 'No matching messages.' : 'No messages found.'}</div>`; return; }
 
         let firstUnreadId = null;
         if (!focusCommentId && lastReadTime > 0 && !isSearching) {
@@ -2068,7 +2007,7 @@
             const isHighlight = focusCommentId === c.id;
             
             const readers = Object.entries(prop.readBy || {}).filter(([u, t]) => t >= c.timestamp && u !== authorLower).map(x => x[0]);
-            let readReceiptHtml = readers.length > 0 ? `<div class="text-[9px] text-gray-500 ${isMe ? 'text-right justify-end' : 'text-left justify-start'} mt-1 flex items-center gap-1 pointer-events-none"><i class="fa-solid fa-check-double text-brand-cyan/70"></i> Read by: ${readers.join(', ')}</div>` : '';
+            let readReceiptHtml = readers.length > 0 ? `<div class="text-[9px] text-gray-500 ${isMe ? 'text-right justify-end' : 'text-left justify-start'} mt-1 flex items-center gap-1 pointer-events-none"><i class="fa-solid fa-check-double text-brand-cyan/70"></i> Read by: ${escapeHtml(readers.join(', '))}</div>` : '';
             const pinActionHtml = `<button onclick="event.stopPropagation(); window.togglePinComment('${c.id}')" class="mx-2 text-gray-500 hover:text-brand-gold ${c.pinned ? 'text-brand-gold opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity cursor-pointer z-10 relative pointer-events-auto" title="${c.pinned ? 'Unpin' : 'Pin'} Message"><i class="fa-solid fa-thumbtack text-[9px]"></i></button>`;
 
             let wrapperClass = `group flex flex-col ${isMe ? 'items-end' : 'items-start'} mb-1 ${isHighlight ? 'highlight-comment' : ''}`;
@@ -2096,6 +2035,18 @@
         }, 100);
     }
 
+    window.selectTaskOption = async function(taskIndex, optionIndex) {
+        if(optionIndex === "") return;
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if(!prop) return;
+        const opt = prop.tasks[taskIndex].dropdownOptions[optionIndex];
+        prop.tasks[taskIndex].title = opt.title;
+        prop.tasks[taskIndex].assignee = opt.defaultAssignee;
+        prop.tasks[taskIndex].selectedOption = optionIndex;
+        await window.savePropertyData(prop);
+        renderTrackerView(); // Complete re-render needed when title/assignee fully mutate from dropdown
+    }
+
     function renderTrackerView() {
         const emptyView = document.getElementById('tracker-empty');
         const contentView = document.getElementById('tracker-content');
@@ -2119,12 +2070,9 @@
         document.getElementById('tracker-last-edited').innerText = `Updated: ${formatEST(prop.dateLastEdited)}`;
         document.getElementById('chatWindowAddress').innerText = prop.address;
         
-        const stats = getPropStats(prop);
-        document.getElementById('tracker-percent-text').innerText = `${stats.percent}%`;
-        document.getElementById('tracker-progress-bar').style.width = `${stats.percent}%`;
+        updateTrackerStats(prop);
 
         let focusedId = document.activeElement ? document.activeElement.id : null;
-        updateChatBadge(prop);
         if (window.isChatOpen) renderChatMessages(prop);
 
         const structure = {};
@@ -2177,9 +2125,10 @@
         for (const [phaseName, mainTasksMap] of Object.entries(structure)) {
             const ui = getPhaseUI(phaseName);
             const sectionDiv = document.createElement('div');
-            sectionDiv.className = `glass-card rounded-xl border ${ui.timelineCard} overflow-hidden mb-6 transition-all`;
+            // Fix 7: Removed overflow-hidden to allow dropdowns to pop out
+            sectionDiv.className = `glass-card rounded-xl border ${ui.timelineCard} mb-6 transition-all`;
 
-            sectionDiv.innerHTML = `<div class="bg-gray-900/60 p-4 border-b border-gray-800 flex items-center justify-between"><h3 class="font-bold text-white uppercase text-sm tracking-wider flex items-center gap-2"><i class="fa-solid ${ui.icon} ${ui.trackerHeaderIcon}"></i> ${phaseName}</h3></div>`;
+            sectionDiv.innerHTML = `<div class="bg-gray-900/60 p-4 border-b border-gray-800 flex items-center justify-between"><h3 class="font-bold text-white uppercase text-sm tracking-wider flex items-center gap-2"><i class="fa-solid ${ui.icon} ${ui.trackerHeaderIcon}"></i> ${escapeHtml(phaseName)}</h3></div>`;
             const listDiv = document.createElement('div'); listDiv.className = "flex flex-col";
 
             for (const [mainTaskName, tasks] of Object.entries(mainTasksMap)) {
@@ -2203,7 +2152,7 @@
                 
                 mainTaskContainer.innerHTML = `
                     <div class="group bg-gray-800/40 hover:bg-brand-emerald/10 px-4 py-3 flex items-center justify-between cursor-pointer transition-colors duration-300 select-none" onclick="window.toggleUIState('${sectionKey}', 'tasks_${sectionKey}')">
-                        <h4 class="text-xs font-black text-gray-300 group-hover:text-brand-emerald uppercase tracking-widest flex items-center gap-2 transition-colors duration-300"><i id="icon_${sectionKey}" class="fa-solid fa-caret-${isOpen ? 'down' : 'right'} text-gray-600 group-hover:text-brand-emerald transition-transform duration-300 w-3 text-center"></i> ${mainTaskName}</h4>
+                        <h4 class="text-xs font-black text-gray-300 group-hover:text-brand-emerald uppercase tracking-widest flex items-center gap-2 transition-colors duration-300"><i id="icon_${sectionKey}" class="fa-solid fa-caret-${isOpen ? 'down' : 'right'} text-gray-600 group-hover:text-brand-emerald transition-transform duration-300 w-3 text-center"></i> ${escapeHtml(mainTaskName)}</h4>
                         <div class="flex items-center gap-3"><span class="text-xs font-black text-gray-400">${sectionPercent}%</span><span class="${allCompleted ? 'bg-brand-emerald/10 text-brand-emerald border-brand-emerald/30' : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30'} px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider">${allCompleted ? 'COMPLETE' : 'PENDING'}</span></div>
                     </div>
                 `;
@@ -2221,15 +2170,15 @@
                     const agentBg = getAgentColorClass(t.assignee, 'bg');
                     const weightColor = t.completed ? 'text-brand-emerald bg-brand-emerald/10 border-brand-emerald/30' : 'text-brand-crimson bg-gray-900 border-gray-700';
 
-                    const agentListHtml = agentsList.map(a => `<div onclick="window.handleAgentSelection(${t.originalIndex}, '${a}')" class="px-4 py-2 text-[10px] sm:text-xs font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors border-b border-gray-800/50 group flex justify-between items-center">
-                        <span>${a}</span>
+                    const agentListHtml = AppConfig.agentsList.map(a => `<div onclick="window.handleAgentSelection(${t.originalIndex}, '${a}')" class="px-4 py-2 text-[10px] sm:text-xs font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors border-b border-gray-800/50 group flex justify-between items-center">
+                        <span>${escapeHtml(a)}</span>
                         ${t.assignee === a ? '<div class="w-1.5 h-1.5 rounded-full bg-brand-emerald shrink-0"></div>' : ''}
                     </div>`).join('');
 
                     const assigneeHtml = `
                     <div class="relative z-10 w-full sm:w-auto agent-selector-wrapper" id="agentSelectorWrapper_${t.originalIndex}">
                         <button onclick="window.toggleAgentDropdown(${t.originalIndex}, event)" class="${agentBg} border ${agentBorder} ${agentColor} text-[10px] sm:text-xs font-bold rounded px-2 py-1 flex justify-center items-center cursor-pointer transition-all min-w-[70px]">
-                            <span id="agentLabel_${t.originalIndex}" class="text-center">${t.assignee}</span>
+                            <span id="agentLabel_${t.originalIndex}" class="text-center">${escapeHtml(t.assignee)}</span>
                         </button>
                         <div id="agentList_${t.originalIndex}" class="agent-dropdown-list absolute right-0 top-full mt-1 w-32 bg-[#0f1423] border border-gray-600 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] hidden flex-col z-50 overflow-hidden text-left py-1">
                             ${agentListHtml}
@@ -2286,17 +2235,35 @@
                             </div>
                         </div>`;
 
+                    // Handle Dropdown UI if task requires option selection
+                    let taskChoiceHtml = '';
+                    let isLockedSelect = t.isDropdown && (t.selectedOption === null || t.selectedOption === undefined);
+                    
+                    if (isLockedSelect) {
+                        let optionsHtml = t.dropdownOptions.map((opt, i) => `<option value="${i}">${escapeHtml(opt.title)} (Assign to: ${escapeHtml(opt.defaultAssignee)})</option>`).join('');
+                        taskChoiceHtml = `
+                            <div class="mt-2 bg-brand-purple/10 border border-brand-purple/30 rounded-lg p-3">
+                                <label class="block text-xs font-bold text-brand-purple uppercase tracking-wider mb-2"><i class="fa-solid fa-code-branch"></i> Select Path for this step</label>
+                                <select onchange="window.selectTaskOption(${t.originalIndex}, this.value)" class="w-full bg-gray-900 border border-gray-700 text-white text-xs rounded p-2 focus:border-brand-purple focus:outline-none cursor-pointer">
+                                    <option value="">-- Make a Selection --</option>
+                                    ${optionsHtml}
+                                </select>
+                            </div>
+                        `;
+                    }
+
                     row.innerHTML = `
                         <div class="flex items-start gap-3 w-full pl-2 sm:pl-3 relative">
-                            <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="window.toggleTask(${t.originalIndex}, this.checked)" class="w-5 h-5 mt-0.5 rounded accent-brand-purple bg-gray-900 border-gray-600 focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer shrink-0">
+                            <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="window.toggleTask(${t.originalIndex}, this.checked)" class="w-5 h-5 mt-0.5 rounded accent-brand-purple bg-gray-900 border-gray-600 focus:ring-brand-purple focus:ring-offset-0 focus:ring-1 cursor-pointer shrink-0" ${isLockedSelect ? 'disabled title="Select an option first"' : ''}>
                             <div class="min-w-0 flex-1 flex flex-col gap-1.5">
                                 <div class="flex justify-between items-start gap-2">
-                                    <p class="text-sm font-bold ${t.completed ? 'text-gray-500 line-through' : 'text-gray-100'} leading-tight break-words whitespace-pre-wrap mt-0.5">${t.title}</p>
+                                    <p class="text-sm font-bold ${t.completed ? 'text-gray-500 line-through' : 'text-gray-100'} leading-tight break-words whitespace-pre-wrap mt-0.5">${escapeHtml(t.title)}</p>
                                     <div class="flex items-center gap-2 shrink-0">
                                         ${assigneeHtml}
                                         <span class="${weightColor} text-[10px] sm:text-xs font-black px-1.5 sm:px-2 py-1 rounded w-10 sm:w-12 text-center transition-colors">+${t.weight}%</span>
                                     </div>
                                 </div>
+                                ${taskChoiceHtml}
                                 <div class="flex items-center flex-wrap gap-x-2 sm:gap-x-3 gap-y-2 mt-0.5"><button onclick="window.toggleUIState('addSubtaskUI_${t.originalIndex}', 'addSubtaskUI_${t.originalIndex}'); setTimeout(()=>document.getElementById('newSubtaskInput_${t.originalIndex}').focus(),50);" class="text-[10px] uppercase tracking-wider font-bold text-brand-purple/70 hover:text-brand-purple flex items-center gap-1 transition-colors cursor-pointer"><i class="fa-solid fa-plus"></i> Add Subtask</button>${tFeat.linkActionHtml}${tFeat.templateActionHtml}</div>
                             </div>
                         </div>
@@ -2313,7 +2280,6 @@
         if (focusedId) { const el = document.getElementById(focusedId); if(el) el.focus(); }
     }
 
-    // Dynamic SOP Reference Rendering
     window.renderSOPTimeline = function(strategyName) {
         document.querySelectorAll('.sop-pill').forEach(btn => {
             btn.className = "px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap sop-pill";
@@ -2322,7 +2288,7 @@
         if(activeBtn) activeBtn.className = "px-2 sm:px-5 py-2 text-[10px] sm:text-sm font-bold rounded-lg cursor-pointer transition-all bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md sop-pill flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap";
 
         const container = document.getElementById('sopTimelineContainer');
-        const tasks = sopBlueprints[strategyName] || [];
+        const tasks = AppConfig.sopBlueprints[strategyName] || [];
         const structure = {};
         
         tasks.forEach(t => {
@@ -2345,7 +2311,7 @@
             navHtml += `
                 <div onclick="document.getElementById('${phaseId}').scrollIntoView({behavior: 'smooth'})" class="cursor-pointer flex items-center gap-3 bg-gray-900/60 hover:bg-gray-800/90 p-4 rounded-xl border ${ui.navWrapper} transition-all hover:-translate-y-1 shadow-sm">
                     <span class="w-8 h-8 rounded-lg ${ui.navIcon} flex items-center justify-center font-extrabold text-sm shadow">${ui.roman}</span>
-                    <div><span class="text-gray-400 text-[9px] uppercase font-bold tracking-wider block">${shortPhase}</span><span class="text-xs font-bold text-white block">${phaseDesc}</span></div>
+                    <div><span class="text-gray-400 text-[9px] uppercase font-bold tracking-wider block">${escapeHtml(shortPhase)}</span><span class="text-xs font-bold text-white block">${escapeHtml(phaseDesc)}</span></div>
                 </div>`;
             pIndex++;
         }
@@ -2358,19 +2324,19 @@
             const phaseId = `phase-${pIndex}`; const ui = getPhaseUI(phaseName);
             const phaseTotalWeight = Object.values(mainTasksMap).flat().reduce((sum, t) => sum + t.weight, 0);
 
-            timelineHtml += `<div id="${phaseId}" class="relative -ml-[31px] sm:-ml-[47px] mb-8 ${pIndex > 1 ? 'pt-8' : ''} scroll-mt-10 transition-all"><div class="inline-flex items-center gap-3"><span class="${ui.timelineHeader} font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4"><i class="fa-solid ${ui.icon}"></i> ${phaseName.toUpperCase()} (${phaseTotalWeight}%)</span></div></div>`;
+            timelineHtml += `<div id="${phaseId}" class="relative -ml-[31px] sm:-ml-[47px] mb-8 ${pIndex > 1 ? 'pt-8' : ''} scroll-mt-10 transition-all"><div class="inline-flex items-center gap-3"><span class="${ui.timelineHeader} font-extrabold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 border-4"><i class="fa-solid ${ui.icon}"></i> ${escapeHtml(phaseName).toUpperCase()} (${phaseTotalWeight}%)</span></div></div>`;
 
             for (const [mainTaskName, innerTasks] of Object.entries(mainTasksMap)) {
                 let itemsHtml = innerTasks.map(t => {
                     const agentColorClass = getAgentColorClass(t.defaultAssignee, 'text');
                     const agentBgClass = getAgentColorClass(t.defaultAssignee, 'bg');
                     let subHtml = "";
-                    if(t.defaultSubtasks && t.defaultSubtasks.length > 0) subHtml = t.defaultSubtasks.map(st => `<div class="mt-2 pl-6 flex items-center gap-2 text-gray-400 border-l-2 border-gray-700 ml-2"><i class="fa-solid fa-level-up-alt rotate-90 text-gray-500 text-[10px]"></i> <span class="text-xs font-medium italic">Subtask: ${st}</span></div>`).join('');
+                    if(t.defaultSubtasks && t.defaultSubtasks.length > 0) subHtml = t.defaultSubtasks.map(st => `<div class="mt-2 pl-6 flex items-center gap-2 text-gray-400 border-l-2 border-gray-700 ml-2"><i class="fa-solid fa-level-up-alt rotate-90 text-gray-500 text-[10px]"></i> <span class="text-xs font-medium italic">Subtask: ${escapeHtml(st)}</span></div>`).join('');
                     
-                    return `<li class="flex flex-col bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><div class="flex justify-between items-center gap-4"><span class="flex items-start gap-2 flex-1"><i class="fa-solid fa-angle-right text-gray-500 mt-0.5"></i> ${t.title}</span><span class="text-xs ${agentColorClass} ${agentBgClass} px-2 py-0.5 rounded font-bold shrink-0">${t.weight}% (${t.defaultAssignee})</span></div>${subHtml}</li>`;
+                    return `<li class="flex flex-col bg-gray-900/50 p-2.5 rounded border border-gray-800/80"><div class="flex justify-between items-center gap-4"><span class="flex items-start gap-2 flex-1"><i class="fa-solid fa-angle-right text-gray-500 mt-0.5"></i> ${escapeHtml(t.title)}</span><span class="text-xs ${agentColorClass} ${agentBgClass} px-2 py-0.5 rounded font-bold shrink-0">${t.weight}% (${escapeHtml(t.defaultAssignee)})</span></div>${subHtml}</li>`;
                 }).join('');
 
-                timelineHtml += `<div class="relative group"><div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full ${ui.timelineDot} border-4 flex items-center justify-center font-black text-xs shadow-lg group-hover:scale-110 transition-transform">${cardCounter}</div><div class="glass-card rounded-xl p-4 sm:p-6 ${ui.timelineCard} hover:-translate-y-1 transition-all"><div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4"><h3 class="text-lg font-bold text-white">${mainTaskName}</h3></div><ul class="space-y-3 text-sm text-gray-300">${itemsHtml}</ul></div></div>`;
+                timelineHtml += `<div class="relative group"><div class="absolute -left-[38px] sm:-left-[54px] top-0 w-8 h-8 rounded-full ${ui.timelineDot} border-4 flex items-center justify-center font-black text-xs shadow-lg group-hover:scale-110 transition-transform">${cardCounter}</div><div class="glass-card rounded-xl p-4 sm:p-6 ${ui.timelineCard} hover:-translate-y-1 transition-all"><div class="flex items-center gap-2.5 border-b border-gray-800 pb-4 mb-4"><h3 class="text-lg font-bold text-white">${escapeHtml(mainTaskName)}</h3></div><ul class="space-y-3 text-sm text-gray-300">${itemsHtml}</ul></div></div>`;
                 cardCounter++;
             }
             pIndex++;
@@ -2378,7 +2344,6 @@
         timelineHtml += `</div>`; container.innerHTML = navHtml + timelineHtml;
     }
 
-    // Generalized Feature Toggles (Tasks & Subtasks)
     window.toggleUIState = function(key, elId, displayClass = 'block') {
         const ui = document.getElementById(elId);
         if (!window.sectionToggleState) window.sectionToggleState = {};
@@ -2446,7 +2411,7 @@
     }
 
     window.promptRemoveSubtask = function(taskIndex, subIndex) {
-        pendingSOWRemove = { taskIndex, subIndex };
+        window.pendingSOWRemove = { taskIndex, subIndex };
         document.getElementById('removeSOWConfirmInput').value = '';
         document.getElementById('removeSOWBtn').disabled = true;
         document.getElementById('removeSOWBtn').className = "px-5 py-2 text-sm font-bold bg-gray-700 text-gray-500 rounded-lg shadow-lg cursor-not-allowed transition-all";
@@ -2465,10 +2430,10 @@
     }
 
     window.executeRemoveSOWSubtask = async function() {
-        if (!pendingSOWRemove) return;
+        if (!window.pendingSOWRemove) return;
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
-        const { taskIndex, subIndex } = pendingSOWRemove;
+        const { taskIndex, subIndex } = window.pendingSOWRemove;
         
         prop.tasks[taskIndex].subtasks.splice(subIndex, 1);
         if (prop.tasks[taskIndex].subtasks.length > 0) {
@@ -2481,14 +2446,30 @@
         } else prop.tasks[taskIndex].completed = false;
 
         await window.savePropertyData(prop);
-        window.toggleDisplay('removeSOWModal', false); pendingSOWRemove = null;
+        window.toggleDisplay('removeSOWModal', false); window.pendingSOWRemove = null;
     }
 
     window.toggleTask = async function(taskIndex, isCompleted) {
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
         prop.tasks[taskIndex].completed = isCompleted;
-        await window.savePropertyData(prop);
+        
+        // Optimistic target UI update to prevent whole-screen flashes
+        const taskRow = document.getElementById(`task_${prop.tasks[taskIndex].id}`);
+        if (taskRow) {
+            const titleEl = taskRow.querySelector('p');
+            const weightBadge = taskRow.querySelector('.w-10.sm\\:w-12, .w-12');
+            if (isCompleted) {
+                taskRow.classList.add('opacity-60'); titleEl.classList.remove('text-gray-100'); titleEl.classList.add('text-gray-500', 'line-through');
+                if(weightBadge) weightBadge.className = 'text-brand-emerald bg-brand-emerald/10 border-brand-emerald/30 text-[10px] sm:text-xs font-black px-1.5 sm:px-2 py-1 rounded w-10 sm:w-12 text-center transition-colors';
+            } else {
+                taskRow.classList.remove('opacity-60'); titleEl.classList.add('text-gray-100'); titleEl.classList.remove('text-gray-500', 'line-through');
+                if(weightBadge) weightBadge.className = 'text-brand-crimson bg-gray-900 border-gray-700 text-[10px] sm:text-xs font-black px-1.5 sm:px-2 py-1 rounded w-10 sm:w-12 text-center transition-colors';
+            }
+        }
+
+        await window.savePropertyData(prop, true); // save silently
+        updateTrackerStats(prop);
     }
 
     window.changeAssignee = async function(taskIndex, newAssignee) {
@@ -2496,6 +2477,7 @@
         if (!prop) return;
         prop.tasks[taskIndex].assignee = newAssignee;
         await window.savePropertyData(prop);
+        renderTrackerView(); // Redraw UI block needed for assigning correctly
     }
 
     window.confirmAddSubtask = async function(taskIndex) {
@@ -2533,7 +2515,6 @@
         await window.savePropertyData(prop);
     }
 
-    // MULTI-SELECT NOTIFICATIONS ACTIONS
     window.toggleNotificationSelection = function(id, e) {
         if (e) e.stopPropagation();
         if (window.selectedNotifs.has(id)) window.selectedNotifs.delete(id);
@@ -2550,31 +2531,28 @@
 
     window.deleteNotification = async function(id, e) {
         if (e) e.stopPropagation();
-        const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-        const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
-        firestoreModule.deleteDoc(ref).catch(err=>console.error(err));
+        const ref = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+        deleteDoc(ref).catch(err=>console.error(err));
         window.selectedNotifs.delete(id);
     }
 
     window.deleteSelectedNotifications = async function() {
-        const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
         window.selectedNotifs.forEach(id => {
-            const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
-            firestoreModule.deleteDoc(ref).catch(err=>console.error(err));
+            const ref = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+            deleteDoc(ref).catch(err=>console.error(err));
         });
         window.selectedNotifs.clear();
     }
 
     window.markSelectedNotificationsRead = async function() {
-        const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
         window.selectedNotifs.forEach(id => {
-            const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
-            firestoreModule.updateDoc(ref, { read: true }).catch(err=>console.error(err));
+            const ref = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+            updateDoc(ref, { read: true }).catch(err=>console.error(err));
         });
         window.selectedNotifs.clear();
     }
 
-    // --- 6. CLOUD FIREBASE SYNC ENGINE (DYNAMIC IMPORT) ---
+    // --- 7. CLOUD FIREBASE SYNC ENGINE ---
     async function initFirebase() {
         try {
             const firebaseConfig = {
@@ -2588,28 +2566,21 @@
             };
             
             appId = typeof __app_id !== 'undefined' ? __app_id : 'tchb-dispo-ops';
-
-            const appModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
-            const authModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
-            const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+            const app = initializeApp(firebaseConfig);
+            firebaseAuth = getAuth(app);
+            db = getFirestore(app);
             
-            let messagingModule = null;
-            try { messagingModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js"); } catch (err) { }
+            // Enable Local Offline Persistence safely
+            try { await enableIndexedDbPersistence(db); } catch (err) {}
 
-            const app = appModule.initializeApp(firebaseConfig);
-            firebaseAuth = authModule.getAuth(app);
-            db = firestoreModule.getFirestore(app);
-
-            googleProvider = new authModule.GoogleAuthProvider();
+            googleProvider = new GoogleAuthProvider();
             googleProvider.setCustomParameters({ hd: 'totalchb.com' });
-            window.firebaseSignInWithPopup = authModule.signInWithPopup;
-            window.firebaseSignOut = authModule.signOut;
 
             let messaging = null;
-            if (messagingModule) {
+            if (getMessaging) {
                 try {
-                    messaging = messagingModule.getMessaging(app);
-                    messagingModule.onMessage(messaging, (payload) => window.showAppToast(payload.notification.title, payload.notification.body));
+                    messaging = getMessaging(app);
+                    onMessage(messaging, (payload) => window.showAppToast(payload.notification.title, payload.notification.body));
                 } catch (err) {}
             }
             
@@ -2624,13 +2595,13 @@
             }
 
             window.requestPushToken = async function() {
-                if(!messaging || !messagingModule) return null;
+                if(!messaging || !getToken) return null;
                 try {
                     const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
                     await registration.update();
                     const permission = await Notification.requestPermission();
                     if (permission === 'granted') {
-                        return await messagingModule.getToken(messaging, { vapidKey: "BAOBgrEDGG_WLKRjNEXU_L2_kHZrWTVFGUxN5gm7Udkkh9p0l2Tc8sTZhErN_dZmpxD-EzjEnNfhYX7R3XHrRhw", serviceWorkerRegistration: registration });
+                        return await getToken(messaging, { vapidKey: "BAOBgrEDGG_WLKRjNEXU_L2_kHZrWTVFGUxN5gm7Udkkh9p0l2Tc8sTZhErN_dZmpxD-EzjEnNfhYX7R3XHrRhw", serviceWorkerRegistration: registration });
                     }
                 } catch(e) {}
                 return null;
@@ -2641,8 +2612,8 @@
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authorizing...';
                 const token = await window.requestPushToken();
                 if (token && currentUser && db) {
-                    const docRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
-                    await firestoreModule.setDoc(docRef, { fcmTokens: firestoreModule.arrayUnion(token) }, { merge: true });
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
+                    await setDoc(docRef, { fcmTokens: arrayUnion(token) }, { merge: true });
                     btn.innerHTML = '<i class="fa-solid fa-check"></i> Device Linked Successfully!';
                     btn.className = "flex-1 bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
                 } else {
@@ -2655,8 +2626,8 @@
                 if (!currentUser || !db) return;
                 const btn = document.getElementById('enablePushBtn');
                 try {
-                    const docRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
-                    await firestoreModule.setDoc(docRef, { fcmTokens: [] }, { merge: true });
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
+                    await setDoc(docRef, { fcmTokens: [] }, { merge: true });
                     btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Wiped! Click to Link Current.';
                     btn.className = "flex-1 bg-brand-gold/20 text-brand-gold border border-brand-gold/50 text-xs font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition-all";
                 } catch(e) {}
@@ -2676,16 +2647,15 @@
                 } else if (dispoAgents.includes(mail) || tcAgents.includes(mail)) {
                     return { comments: true, new_assets: true, completions_phase: true, completions_task: true, completions_subtask: true, drafts_links: true, task_turns: true, daily_brief: true, reminders: true, reminder_interval: '4' };
                 }
-                
                 return { comments: true, new_assets: true, completions_phase: true, completions_task: true, completions_subtask: false, drafts_links: true, task_turns: false, daily_brief: false, reminders: false, reminder_interval: '4' };
             }
 
             window.resetNotificationPreferences = async function() {
                 if (!currentUser || !db) return;
                 try {
-                    const docRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
                     const defaults = getDefaultPrefs(currentUser.email);
-                    await firestoreModule.setDoc(docRef, { email: currentUser.email, ...defaults, updatedAt: Date.now() }, { merge: true });
+                    await setDoc(docRef, { email: currentUser.email, ...defaults, updatedAt: Date.now() }, { merge: true });
                     window.loadNotificationPreferences();
                     const toast = document.getElementById('appToast');
                     if (toast) window.showAppToast("Settings Reset", "Notification preferences have been restored to their defaults.");
@@ -2694,12 +2664,12 @@
 
             window.listenToProperties = function() {
                 if (!currentUser) return;
-                const propsRef = firestoreModule.collection(db, 'artifacts', appId, 'public', 'data', 'properties');
+                const propsRef = collection(db, 'artifacts', appId, 'public', 'data', 'properties');
                 
-                firestoreModule.onSnapshot(propsRef, (snapshot) => {
+                const unsub = onSnapshot(propsRef, (snapshot) => {
                     propertiesData = [];
-                    snapshot.forEach(doc => {
-                        let data = doc.data();
+                    snapshot.forEach(docSnap => {
+                        let data = docSnap.data();
                         if (data.tasks) {
                             data.tasks = data.tasks.filter(t => t.id !== 'p3_7'); 
                             let p3_6 = data.tasks.find(t => t.id === 'p3_6');
@@ -2719,18 +2689,19 @@
                         if (window.isChatOpen && !activePropertyId) window.renderChatHub();
                     }
                 }, (error) => { if (isGatewayUnlocked) renderDashboard(); });
+                window.activeListeners.push(unsub);
             };
 
             window.listenToNotifications = function() {
                 if (!currentUser || !db) return;
-                const notifRef = firestoreModule.collection(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications');
+                const notifRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications');
                 let isInitialLoad = true;
 
-                firestoreModule.onSnapshot(notifRef, (snapshot) => {
+                const unsub = onSnapshot(notifRef, (snapshot) => {
                     let newNotifs = [];
                     snapshot.docChanges().forEach(change => { if (change.type === 'added') newNotifs.push(change.doc.data()); });
                     window.notificationHistory = [];
-                    snapshot.forEach(doc => window.notificationHistory.push({ ...doc.data(), id: doc.id }));
+                    snapshot.forEach(docSnap => window.notificationHistory.push({ ...docSnap.data(), id: docSnap.id }));
                     window.notificationHistory.sort((a,b) => b.createdAt - a.createdAt); 
                     updateNotificationsBadge(); renderNotificationList();
 
@@ -2740,6 +2711,7 @@
                     }
                     isInitialLoad = false;
                 });
+                window.activeListeners.push(unsub);
             }
 
             window.renderNotificationList = function() {
@@ -2793,20 +2765,17 @@
 
             window.markAllNotificationsRead = async function() {
                 const unread = window.notificationHistory.filter(n => !n.read);
-                const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
                 unread.forEach(n => {
-                    const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', n.id);
-                    firestoreModule.updateDoc(ref, { read: true }).catch(e=>console.error(e));
+                    const ref = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', n.id);
+                    updateDoc(ref, { read: true }).catch(e=>console.error(e));
                 });
             }
 
             window.handleNotificationClick = async function(id, extraDataStr, e) {
                 if (e) e.stopPropagation();
-                const firestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-                const ref = firestoreModule.doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
-                firestoreModule.updateDoc(ref, { read: true }).catch(e=>{});
+                const ref = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'notifications', id);
+                updateDoc(ref, { read: true }).catch(e=>{});
                 window.toggleNotificationList();
-
                 try {
                     const data = JSON.parse(decodeURIComponent(extraDataStr));
                     if (data.propId) {
@@ -2816,31 +2785,33 @@
                 } catch(e) {}
             }
 
-            firebaseSavePropertyData = async function(prop, quiet = false) {
+            window.savePropertyData = async function(prop, quiet = false) {
                 if (currentUser && db) {
                     if(!quiet) { prop.dateLastEdited = Date.now(); prop.lastEditedBy = currentUser.uid; prop.lastEditedByName = currentUser.email.split('@')[0]; }
-                    const propRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'properties', prop.id);
-                    await firestoreModule.setDoc(propRef, prop);
+                    const propRef = doc(db, 'artifacts', appId, 'public', 'data', 'properties', prop.id);
+                    await setDoc(propRef, prop);
+                } else {
+                    console.error("Database unavailable. Action blocked to prevent data desync.");
                 }
             };
 
-            firebaseRemovePropertyData = async function(id) {
+            window.removePropertyData = async function(id) {
                 if (currentUser && db) {
-                    const propRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'properties', id);
-                    await firestoreModule.deleteDoc(propRef);
+                    const propRef = doc(db, 'artifacts', appId, 'public', 'data', 'properties', id);
+                    await deleteDoc(propRef);
                 }
             };
 
             window.loadNotificationPreferences = async function() {
                 if (!currentUser || !db) return;
                 try {
-                    const docRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
-                    const snap = await firestoreModule.getDoc(docRef);
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
+                    const snap = await getDoc(docRef);
                     const defaults = getDefaultPrefs(currentUser.email);
                     let data = defaults;
 
                     if(snap.exists()) data = { ...defaults, ...snap.data() }; 
-                    else await firestoreModule.setDoc(docRef, { email: currentUser.email, ...defaults, updatedAt: Date.now() });
+                    else await setDoc(docRef, { email: currentUser.email, ...defaults, updatedAt: Date.now() });
 
                     document.getElementById('pref_comments').checked = data.comments;
                     document.getElementById('pref_new_assets').checked = data.new_assets;
@@ -2862,8 +2833,8 @@
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
                 
                 try {
-                    const docRef = firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
-                    await firestoreModule.setDoc(docRef, {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'user_preferences', currentUser.uid);
+                    await setDoc(docRef, {
                         email: currentUser.email, 
                         comments: document.getElementById('pref_comments').checked, 
                         new_assets: document.getElementById('pref_new_assets').checked,
@@ -2885,7 +2856,7 @@
                 }
             }
 
-            authModule.onAuthStateChanged(firebaseAuth, async (user) => {
+            onAuthStateChanged(firebaseAuth, async (user) => {
                 if (user) {
                     if (user.email && user.email.endsWith('@totalchb.com')) {
                         currentUser = user; grantAccess(); 
@@ -2895,26 +2866,27 @@
                             const updatePresence = () => {
                                 if (currentUser && db) {
                                     const deviceType = ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ? 'Mobile' : 'Desktop';
-                                    firestoreModule.setDoc(
-                                        firestoreModule.doc(db, 'artifacts', appId, 'public', 'data', 'active_users', currentUser.uid),
+                                    setDoc(
+                                        doc(db, 'artifacts', appId, 'public', 'data', 'active_users', currentUser.uid),
                                         { email: currentUser.email, sessions: { [localDeviceId]: { lastActive: Date.now(), type: deviceType } } }, { merge: true }
                                     ).catch(e => {});
                                 }
                             };
                             updatePresence(); window.presenceInterval = setInterval(updatePresence, 60000); 
 
-                            const activeUsersRef = firestoreModule.collection(db, 'artifacts', appId, 'public', 'data', 'active_users');
-                            firestoreModule.onSnapshot(activeUsersRef, (snapshot) => {
+                            const activeUsersRef = collection(db, 'artifacts', appId, 'public', 'data', 'active_users');
+                            const unsub = onSnapshot(activeUsersRef, (snapshot) => {
                                 window.activeUsersData = []; const now = Date.now();
-                                snapshot.forEach(doc => {
-                                    const data = doc.data(); let isOnline = false;
+                                snapshot.forEach(docSnap => {
+                                    const data = docSnap.data(); let isOnline = false;
                                     if(data.sessions) Object.values(data.sessions).forEach(sess => { if (now - sess.lastActive < 300000) isOnline = true; });
                                     if (isOnline) window.activeUsersData.push(data);
                                 });
                                 if(window.renderActiveUsersList) window.renderActiveUsersList();
                             });
+                            window.activeListeners.push(unsub);
                         }
-                    } else { await authModule.signOut(firebaseAuth); currentUser = null; }
+                    } else { await signOut(firebaseAuth); currentUser = null; }
                 } else {
                     if (window.presenceInterval) { clearInterval(window.presenceInterval); window.presenceInterval = null; }
                     currentUser = null;
@@ -2924,37 +2896,10 @@
         } catch (e) {
             const errorMsg = document.getElementById('gateErrorMessage');
             if (errorMsg) { errorMsg.innerHTML = "System Error: " + e.message + "<br/><br/>Try refreshing the page or checking your internet connection."; window.toggleDisplay('gateErrorMessage', true, 'block'); }
-            initLocalApp();
         }
     }
 
-    function initLocalApp() {
-        const stored = localStorage.getItem('tchb_dispo_app_data_v9');
-        if (stored) propertiesData = JSON.parse(stored);
-        if (isGatewayUnlocked) { renderDashboard(); updateGlobalAssetSelector(); updateChatBadge(); }
-    }
-
-    window.savePropertyData = async function(prop, quiet = false) {
-        if (firebaseSavePropertyData) await firebaseSavePropertyData(prop, quiet);
-        else {
-            if(!quiet) { prop.dateLastEdited = Date.now(); prop.lastEditedBy = "local"; prop.lastEditedByName = "LocalUser"; }
-            localStorage.setItem('tchb_dispo_app_data_v9', JSON.stringify(propertiesData));
-            if(!quiet) renderDashboard();
-            if (activePropertyId && !quiet) renderTrackerView();
-            updateChatBadge();
-        }
-    }
-
-    window.removePropertyData = async function(id) {
-        if (firebaseRemovePropertyData) await firebaseRemovePropertyData(id);
-        else {
-            propertiesData = propertiesData.filter(p => p.id !== id);
-            localStorage.setItem('tchb_dispo_app_data_v9', JSON.stringify(propertiesData));
-            renderDashboard(); updateChatBadge();
-        }
-    }
-
-    // --- 7. CURSOR & CANVAS ANIMATION LOGIC ---
+    // --- 8. CURSOR & CANVAS ANIMATION LOGIC ---
     const canvas = document.getElementById('gridCanvas');
     const ctx = canvas.getContext('2d');
     let gridSize = 55; let sparks = []; let lastSpanSpawn = 0; let lastInteractionTime = Date.now(); 
@@ -2963,7 +2908,15 @@
     let customMouseX = window.innerWidth / 2; let customMouseY = window.innerHeight / 2;
     let ringX = customMouseX; let ringY = customMouseY;
 
-    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    function resizeCanvas() { 
+        // Implement High-DPI Canvas scaling Fix
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = window.innerWidth * dpr; 
+        canvas.height = window.innerHeight * dpr; 
+        ctx.scale(dpr, dpr);
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${window.innerHeight}px`;
+    }
     window.addEventListener('resize', resizeCanvas);
 
     function createSpark(x = null, y = null, isClick = false) {
@@ -2974,10 +2927,10 @@
             dirX = isHorizontal ? (Math.random() > 0.5 ? 1 : -1) : 0; dirY = isHorizontal ? 0 : (Math.random() > 0.5 ? 1 : -1);
         } else {
             if (isHorizontal) {
-                startX = Math.random() < 0.5 ? 0 : canvas.width; startY = Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize;
+                startX = Math.random() < 0.5 ? 0 : window.innerWidth; startY = Math.floor(Math.random() * (window.innerHeight / gridSize)) * gridSize;
                 dirX = startX === 0 ? 1 : -1; dirY = 0;
             } else {
-                startX = Math.floor(Math.random() * (canvas.width / gridSize)) * gridSize; startY = Math.random() < 0.5 ? 0 : canvas.height;
+                startX = Math.floor(Math.random() * (window.innerWidth / gridSize)) * gridSize; startY = Math.random() < 0.5 ? 0 : window.innerHeight;
                 dirX = 0; dirY = startY === 0 ? 1 : -1;
             }
         }
@@ -3032,10 +2985,10 @@
     }
 
     function animateGrid(timestamp) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
         ctx.strokeStyle = 'rgba(79, 70, 229, 0.07)'; ctx.lineWidth = 1; ctx.beginPath();
-        for (let x = 0; x < canvas.width; x += gridSize) { ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); }
-        for (let y = 0; y < canvas.height; y += gridSize) { ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); }
+        for (let x = 0; x < window.innerWidth; x += gridSize) { ctx.moveTo(x, 0); ctx.lineTo(x, window.innerHeight); }
+        for (let y = 0; y < window.innerHeight; y += gridSize) { ctx.moveTo(0, y); ctx.lineTo(window.innerWidth, y); }
         ctx.stroke();
 
         ringX += (customMouseX - ringX) * 0.15; ringY += (customMouseY - ringY) * 0.15;
