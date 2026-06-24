@@ -183,9 +183,9 @@
                           </button>
                           <div id="newAssetStrategyList" class="absolute left-0 top-full mt-2 w-full bg-[#0f1423] border border-brand-emerald/40 rounded-xl shadow-[0_10px_40px_rgba(16,185,129,0.2)] hidden flex-col overflow-hidden z-50">
                               <div onclick="window.selectNewAssetStrategy('Wholesale')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 hover:text-brand-emerald cursor-pointer transition-colors border-b border-gray-800/50">Wholesale</div>
+                              <div onclick="window.selectNewAssetStrategy('Novation')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 hover:text-brand-emerald cursor-pointer transition-colors border-b border-gray-800/50">Novation</div>
                               <div onclick="window.selectNewAssetStrategy('Fix & Flip')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 hover:text-brand-emerald cursor-pointer transition-colors border-b border-gray-800/50">Fix & Flip</div>
-                              <div onclick="window.selectNewAssetStrategy('Creative')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 hover:text-brand-emerald cursor-pointer transition-colors border-b border-gray-800/50">Creative</div>
-                              <div onclick="window.selectNewAssetStrategy('Novation')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 hover:text-brand-emerald cursor-pointer transition-colors">Novation</div>
+                              <div onclick="window.selectNewAssetStrategy('Creative')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 hover:text-brand-emerald cursor-pointer transition-colors">Creative</div>
                           </div>
                       </div>
                   </div>
@@ -585,10 +585,10 @@
                         </button>
                         <div id="filterStrategyList" class="absolute left-0 top-full mt-2 w-full bg-[#0f1423] border border-brand-purple/30 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] hidden flex-col overflow-hidden z-50">
                             <div onclick="window.setFilterStrategy('All')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors border-b border-gray-800">All Strategies</div>
-                            <div onclick="window.setFilterStrategy('Wholesale')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors">Wholesale</div>
-                            <div onclick="window.setFilterStrategy('Fix & Flip')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors">Fix & Flip</div>
+                            <div onclick="window.setFilterStrategy('Wholesale')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors border-b border-gray-800">Wholesale</div>
+                            <div onclick="window.setFilterStrategy('Novation')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors border-b border-gray-800">Novation</div>
+                            <div onclick="window.setFilterStrategy('Fix & Flip')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors border-b border-gray-800">Fix & Flip</div>
                             <div onclick="window.setFilterStrategy('Creative')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors">Creative</div>
-                            <div onclick="window.setFilterStrategy('Novation')" class="px-4 py-3 text-sm font-bold text-white hover:bg-gray-800 cursor-pointer transition-colors">Novation</div>
                         </div>
                     </div>
                     
@@ -1410,8 +1410,8 @@
             })) : [];
 
             // Fix functional mapping bug for Drafts & Hyperlinks
-            const requiresDraft = task.draftsAndHyperlinks && task.draftsAndHyperlinks.includes("Draft");
-            const requiresLink = task.draftsAndHyperlinks && task.draftsAndHyperlinks.includes("Hyperlink");
+            const requiresDraft = !!(task.draftsAndHyperlinks && task.draftsAndHyperlinks.includes("Draft"));
+            const requiresLink = !!(task.draftsAndHyperlinks && task.draftsAndHyperlinks.includes("Hyperlink"));
 
             return {
                 id: task.id, phase: task.phase, mainTask: task.mainTask, title: task.title,
@@ -1457,9 +1457,14 @@
             dateLastEdited: Date.now(), comments: [], readBy: {}, tasks: newTasks
         };
         
-        if (!currentUser) { propertiesData.unshift(newProp); } // Local testing memory
+        // Optimistically add to local array before saving so UI immediately has access to it.
+        propertiesData.unshift(newProp); 
+        
         await window.savePropertyData(newProp);
         
+        input.value = ''; // Clean up input for next time
+        input.classList.remove('border-red-500');
+
         window.toggleDisplay('newAssetModal', false);
         if(document.getElementById('tab-tracker').classList.contains('hidden')) renderDashboard();
         else window.openTracker(newProp.id);
