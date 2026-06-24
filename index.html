@@ -802,8 +802,8 @@
                 { id: "ws_14", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Create Text Blast Draft", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
                 { id: "ws_15", phase: "Phase II: Marketing Prep", mainTask: "Investor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
                 { id: "ws_16", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Pull The Data From (Zillow - realtor.com - etc.)", weight: 2, defaultAssignee: "Moe" },
-                { id: "ws_17", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah" },
-                { id: "ws_18", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
+                { id: "ws_17", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Format The Data", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft", "Hyperlink"] },
+                { id: "ws_18", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Upload The Data to CRM", weight: 1, defaultAssignee: "Sarah" },
                 { id: "ws_19", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Create Text Blast Draft", weight: 1, defaultAssignee: "Sarah", draftsAndHyperlinks: ["Draft"] },
                 { id: "ws_20", phase: "Phase II: Marketing Prep", mainTask: "Realtor Data Scraping", title: "Get The Text Blast Draft Approved", weight: 1, defaultAssignee: "Sarah" },
                 { id: "ws_21", phase: "Phase II: Marketing Prep", mainTask: "Facebook Groups Hunt", title: "Join All Relevant FB Groups", weight: 4, defaultAssignee: "Moe" },
@@ -1222,16 +1222,26 @@
         });
         document.querySelectorAll('.agent-selector-wrapper').forEach(el => {
             if (el.id !== `agentSelectorWrapper_${taskId}`) {
-                el.classList.remove('z-[60]'); el.classList.add('z-10');
+                el.classList.remove('z-[60]', 'z-[9999]'); el.classList.add('z-10');
+                const row = el.closest('.p-4'); if(row) row.style.zIndex = '';
+                const section = el.closest('.glass-card'); if(section) section.style.zIndex = '';
             }
         });
 
         if(list.classList.contains('hidden')) {
             list.classList.remove('hidden'); list.classList.add('flex');
-            if(wrapper) { wrapper.classList.remove('z-10'); wrapper.classList.add('z-[60]'); }
+            if(wrapper) { 
+                wrapper.classList.remove('z-10'); wrapper.classList.add('z-[9999]'); 
+                const row = wrapper.closest('.p-4'); if(row) { row.style.position = 'relative'; row.style.zIndex = '999'; }
+                const section = wrapper.closest('.glass-card'); if(section) { section.style.position = 'relative'; section.style.zIndex = '99'; }
+            }
         } else {
             list.classList.add('hidden'); list.classList.remove('flex');
-            if(wrapper) { wrapper.classList.remove('z-[60]'); wrapper.classList.add('z-10'); }
+            if(wrapper) { 
+                wrapper.classList.remove('z-[60]', 'z-[9999]'); wrapper.classList.add('z-10'); 
+                const row = wrapper.closest('.p-4'); if(row) row.style.zIndex = '';
+                const section = wrapper.closest('.glass-card'); if(section) section.style.zIndex = '';
+            }
         }
     }
 
@@ -1287,7 +1297,9 @@
                 }
             });
             document.querySelectorAll('.agent-selector-wrapper').forEach(el => {
-                el.classList.remove('z-[60]'); el.classList.add('z-10');
+                el.classList.remove('z-[60]', 'z-[9999]'); el.classList.add('z-10');
+                const row = el.closest('.p-4'); if(row) row.style.zIndex = '';
+                const section = el.closest('.glass-card'); if(section) section.style.zIndex = '';
             });
         }
 
@@ -1448,6 +1460,10 @@
         const address = input.value;
         if (!address || address.trim() === '') { input.classList.add('border-red-500'); return; }
         
+        const btn = document.querySelector('#newAssetModal button.bg-brand-emerald');
+        const origText = btn ? btn.innerHTML : "Deploy Protocol";
+        if (btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Deploying...'; btn.disabled = true; }
+
         const strategy = document.getElementById('newAssetStrategyInput').value;
         const newTasks = generateTaskInstances(strategy, window.pendingCSVContent);
 
@@ -1464,10 +1480,10 @@
         
         input.value = ''; // Clean up input for next time
         input.classList.remove('border-red-500');
+        if (btn) { btn.innerHTML = origText; btn.disabled = false; }
 
         window.toggleDisplay('newAssetModal', false);
-        if(document.getElementById('tab-tracker').classList.contains('hidden')) renderDashboard();
-        else window.openTracker(newProp.id);
+        window.openTracker(newProp.id); // Automatically navigate and open
         updateGlobalAssetSelector();
     }
 
@@ -1547,508 +1563,20 @@
         return parts.join(' - ') + ' Ago';
     }
 
-    // --- 6. UI RENDERING & INTERACTIVITY ---
-    window.switchTab = function(tab) {
-        window.toggleDisplay('tab-dashboard', false);
-        window.toggleDisplay('tab-tracker', false);
-        window.toggleDisplay('tab-sop', false);
-        
-        const defaultNavClasses = "px-5 py-2 text-sm font-bold rounded-lg cursor-pointer transition-all text-gray-300 hover:text-white flex items-center gap-2 whitespace-nowrap";
-        const mobNavs = ['nav-mobile-dashboard', 'nav-mobile-tracker', 'nav-mobile-sop'];
-        
-        document.getElementById('nav-dashboard').className = defaultNavClasses;
-        document.getElementById('nav-tracker').className = defaultNavClasses;
-        document.getElementById('nav-sop').className = defaultNavClasses;
-        
-        mobNavs.forEach(id => {
-            const el = document.getElementById(id);
-            if(el) { 
-                el.classList.remove('text-brand-emerald'); 
-                el.classList.add('text-gray-500', 'hover:text-gray-300'); 
-            }
-        });
-
-        const activeNavClasses = "bg-gradient-to-r from-brand-crimson to-brand-purple text-white shadow-md border-transparent";
-        
-        if (tab === 'dashboard') {
-            window.toggleDisplay('tab-dashboard', true, 'block');
-            document.getElementById('nav-dashboard').classList.add(...activeNavClasses.split(' '));
-            document.getElementById('nav-dashboard').classList.remove('text-gray-300');
-            const mob = document.getElementById('nav-mobile-dashboard');
-            if (mob) { mob.classList.remove('text-gray-500', 'hover:text-gray-300'); mob.classList.add('text-brand-emerald'); }
-            
-            activePropertyId = null;
-            window.sectionToggleState = {}; window.sectionCompletionState = {};
-            if(window.isChatOpen) window.toggleChat();
-            renderDashboard(); updateGlobalAssetSelector();
-        } else if (tab === 'tracker') {
-            window.toggleDisplay('tab-tracker', true);
-            document.getElementById('nav-tracker').classList.add(...activeNavClasses.split(' '));
-            document.getElementById('nav-tracker').classList.remove('text-gray-300');
-            const mob = document.getElementById('nav-mobile-tracker');
-            if (mob) { mob.classList.remove('text-gray-500', 'hover:text-gray-300'); mob.classList.add('text-brand-emerald'); }
-            
-            renderTrackerView(); updateGlobalAssetSelector();
-        } else if (tab === 'sop') {
-            window.toggleDisplay('tab-sop', true, 'block');
-            document.getElementById('nav-sop').classList.add(...activeNavClasses.split(' '));
-            document.getElementById('nav-sop').classList.remove('text-gray-300');
-            const mob = document.getElementById('nav-mobile-sop');
-            if (mob) { mob.classList.remove('text-gray-500', 'hover:text-gray-300'); mob.classList.add('text-brand-emerald'); }
-            
-            if(window.isChatOpen) window.toggleChat();
-            window.renderSOPTimeline('Wholesale');
-        }
-    }
-
-    window.toggleNewAssetStrategyDropdown = function(e) {
-        if(e) e.stopPropagation();
-        const list = document.getElementById('newAssetStrategyList');
-        const icon = document.getElementById('newAssetStrategyIcon');
-        if(list.classList.contains('hidden')) {
-            list.classList.remove('hidden'); list.classList.add('flex');
-            icon.classList.add('rotate-180');
-        } else {
-            list.classList.add('hidden'); list.classList.remove('flex');
-            icon.classList.remove('rotate-180');
-        }
-    }
-
-    window.selectNewAssetStrategy = function(val) {
-        document.getElementById('newAssetStrategyInput').value = val;
-        document.getElementById('newAssetStrategyLabel').innerText = val;
-        window.toggleNewAssetStrategyDropdown();
-        window.handleStrategyChange();
-    }
-
-    window.handleStrategyChange = function() {
-        const strat = document.getElementById('newAssetStrategyInput').value;
-        if (strat === 'Fix & Flip') window.toggleDisplay('csvUploadWrapper', true, 'block');
-        else {
-            window.toggleDisplay('csvUploadWrapper', false);
-            window.pendingCSVContent = null;
-            document.getElementById('csvFileNameDisplay').innerText = "Click to attach a CSV file (Task, Cost, Notes)";
-        }
-    }
-
-    window.toggleAssetDropdown = function(e) {
-        if(e) e.stopPropagation();
-        const drop = document.getElementById('globalAssetDropdownList');
-        const icon = document.getElementById('globalAssetDropdownIcon');
-        if(drop.classList.contains('hidden')) {
-            window.toggleDisplay('globalAssetDropdownList', true);
-            icon.classList.add('rotate-180');
-        } else {
-            window.toggleDisplay('globalAssetDropdownList', false);
-            icon.classList.remove('rotate-180');
-        }
-    }
-
-    function updateGlobalAssetSelector() {
-        const list = document.getElementById('globalAssetDropdownList');
-        const label = document.getElementById('globalAssetSelectorLabel');
-        if(!list || !label) return;
-
-        let htmlStr = `<div onclick="window.handleGlobalAssetSelection('')" class="px-4 py-3 text-sm font-bold text-gray-400 hover:bg-gray-800 hover:text-white cursor-pointer transition-colors border-b border-gray-800">-- Select an Active Deal --</div>`;
-        let activePropName = '-- Select an Active Deal --';
-
-        propertiesData.forEach(p => {
-            const isSelected = p.id === activePropertyId;
-            if(isSelected) activePropName = p.address;
-            htmlStr += `<div onclick="window.handleGlobalAssetSelection('${p.id}')" class="px-4 py-3 text-sm font-bold ${isSelected ? 'text-brand-purple bg-brand-purple/10' : 'text-white hover:bg-gray-800'} cursor-pointer transition-colors flex items-center justify-between group">
-                <span class="truncate">${escapeHtml(p.address)}</span>
-                ${isSelected ? '<div class="w-2 h-2 rounded-full bg-brand-purple shrink-0 ml-3"></div>' : '<div class="w-2 h-2 rounded-full bg-transparent group-hover:bg-gray-600 transition-colors shrink-0 ml-3"></div>'}
-            </div>`;
-        });
-        list.innerHTML = htmlStr; label.innerText = activePropName;
-    }
-
-    window.handleGlobalAssetSelection = function(propId) {
-        window.toggleDisplay('globalAssetDropdownList', false);
-        document.getElementById('globalAssetDropdownIcon')?.classList.remove('rotate-180');
-
-        if (!propId || propId === '') {
-            activePropertyId = null;
-            window.sectionToggleState = {}; window.sectionCompletionState = {};
-            if(window.isChatOpen) window.toggleChat(); 
-            renderTrackerView();
-        } else {
-            window.openTracker(propId);
-        }
-    }
-
-    function renderDashboard() {
-        const tbody = document.getElementById('dashboard-tbody');
-        const emptyState = document.getElementById('empty-state');
-        if (!tbody || !emptyState) return;
-        
-        tbody.innerHTML = '';
-
-        let filteredProps = propertiesData.filter(p => {
-            if (window.currentDashboardStrategy === "All") return true;
-            return (p.exitStrategy || 'Wholesale') === window.currentDashboardStrategy;
-        });
-
-        filteredProps.sort((a, b) => {
-            if (window.currentDashboardSort === 'started_desc') return b.dateStarted - a.dateStarted;
-            if (window.currentDashboardSort === 'started_asc') return a.dateStarted - b.dateStarted;
-            if (window.currentDashboardSort === 'edited_desc') return b.dateLastEdited - a.dateLastEdited;
-            if (window.currentDashboardSort === 'edited_asc') return a.dateLastEdited - b.dateLastEdited;
-            return 0;
-        });
-
-        if (filteredProps.length === 0) {
-            window.toggleDisplay('empty-state', true, 'block');
-        } else {
-            window.toggleDisplay('empty-state', false);
-            filteredProps.forEach(prop => {
-                const stats = getPropStats(prop);
-                const agentTxtColor = getAgentColorClass(stats.nextAgent, 'text');
-                const agentBgColor = getAgentColorClass(stats.nextAgent, 'bg');
-                const agentBorderColor = getAgentColorClass(stats.nextAgent, 'border');
-                const progressColor = getProgressColorRGB(stats.percent);
-                const tooltipEscapedDetail = stats.nextTaskDetail.replace(/"/g, '&quot;');
-                const strategy = prop.exitStrategy || 'Wholesale';
-                const strategyColor = getStrategyColorClass(strategy);
-                
-                const tr = document.createElement('tr');
-                tr.className = "cursor-pointer group";
-                tr.onclick = () => window.openTracker(prop.id);
-                
-                tr.innerHTML = `
-                    <td class="p-4 font-bold text-white group-hover:text-brand-emerald transition-colors text-center">${escapeHtml(prop.address)}</td>
-                    <td class="p-4 text-center"><span class="${strategyColor} px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider">${strategy}</span></td>
-                    <td class="p-4 text-center">${formatEST(prop.dateStarted)}</td>
-                    <td class="p-4 text-brand-emerald text-xs font-mono text-center align-middle">${timeSince(prop.dateLastEdited, true)}</td>
-                    <td class="p-4 text-center">
-                        <span class="${agentBgColor} ${agentTxtColor} px-2.5 py-1 rounded text-xs font-extrabold border ${agentBorderColor}">${escapeHtml(stats.nextAgent)}</span>
-                    </td>
-                    <td class="p-4 text-center text-xs font-semibold text-gray-200 transition-colors hover:text-brand-emerald cursor-help"
-                        data-tooltip-text="${escapeHtml(tooltipEscapedDetail)}" onmouseenter="window.showDashboardTooltip(event)" onmouseleave="window.hideDashboardTooltip()"
-                        onclick="event.stopPropagation(); window.openTracker('${prop.id}', '${stats.nextTaskId}', '${stats.nextSectionKey}')">
-                        <div class="truncate max-w-[150px] mx-auto border-b border-dashed border-gray-600 pb-0.5 inline-block">${escapeHtml(stats.nextStep)}</div>
-                    </td>
-                    <td class="p-4 text-center">
-                        <div class="flex items-center justify-center gap-2">
-                            <span class="font-black text-lg drop-shadow" style="color: ${progressColor}">${stats.percent}%</span>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-    }
-
-    window.showDashboardTooltip = function(event) {
-        const td = event.currentTarget;
-        const text = td.getAttribute('data-tooltip-text');
-        if (!text || text === 'All workflow tasks finished' || text === 'null') return;
-        const tooltip = document.getElementById('dashboard-tooltip');
-        
-        if (window.hideTooltipTimer) clearTimeout(window.hideTooltipTimer);
-        document.getElementById('dashboard-tooltip-text').innerText = text;
-        window.toggleDisplay('dashboard-tooltip', true, 'block');
-        
-        const tableCard = document.querySelector('#tab-dashboard .glass-card');
-        if (!tableCard) return;
-
-        const cardRect = tableCard.getBoundingClientRect();
-        const tdRect = td.getBoundingClientRect();
-        
-        const topPos = tdRect.top + (tdRect.height / 2);
-        let leftPos = cardRect.right + 20;
-
-        tooltip.style.left = `${leftPos}px`; tooltip.style.right = 'auto'; 
-        tooltip.style.top = `${topPos}px`; tooltip.style.transform = `translateY(-50%)`;
-        
-        const tooltipWidth = tooltip.offsetWidth || 250;
-        if (leftPos + tooltipWidth > window.innerWidth) {
-            tooltip.style.left = 'auto'; tooltip.style.right = '15px';
-        }
-        setTimeout(() => tooltip.classList.remove('opacity-0'), 10);
-    }
-
-    window.hideDashboardTooltip = function() {
-        const tooltip = document.getElementById('dashboard-tooltip');
-        tooltip.classList.add('opacity-0');
-        window.hideTooltipTimer = setTimeout(() => window.toggleDisplay('dashboard-tooltip', false), 200);
-    }
-
-    window.openTracker = function(propId, scrollToTaskId = null, forceOpenSectionKey = null) {
-        let changed = activePropertyId !== propId;
-        if (changed) {
-            window.sectionToggleState = {}; window.sectionCompletionState = {};
-        }
-        
-        activePropertyId = propId;
-        if (forceOpenSectionKey && forceOpenSectionKey !== 'null') {
-            if (!window.sectionToggleState) window.sectionToggleState = {};
-            window.sectionToggleState[forceOpenSectionKey] = 'open';
-        }
-        
-        if(document.getElementById('tab-tracker').classList.contains('hidden')) {
-            window.switchTab('tracker');
-        } else {
-            renderTrackerView(); updateGlobalAssetSelector();
-        }
-        
-        if (window.isChatOpen && changed) {
-            window.isChatOpen = false; window.toggleChat(); 
-        }
-
-        if (scrollToTaskId && scrollToTaskId !== 'null') {
-            setTimeout(() => {
-                const el = document.getElementById('task_' + scrollToTaskId);
-                if (el) {
-                    el.scrollIntoView({behavior: 'smooth', block: 'center'});
-                    el.classList.add('bg-brand-emerald/20');
-                    setTimeout(() => el.classList.remove('bg-brand-emerald/20'), 1500);
-                }
-            }, 150);
-        }
-    }
-
-    window.toggleChat = async function(focusCommentId = null) {
-        const fab = document.getElementById('chatFabBtn');
-        if (fab) { fab.classList.remove('animate-jelly-pop'); void fab.offsetWidth; fab.classList.add('animate-jelly-pop'); }
-
-        window.isChatOpen = focusCommentId ? true : !window.isChatOpen;
-        const mobChatNav = document.getElementById('nav-mobile-chat');
-        
-        if (window.isChatOpen) {
-            window.toggleDisplay('chatWindow', true);
-            if (mobChatNav) { mobChatNav.classList.remove('text-brand-crimson'); mobChatNav.classList.add('text-brand-gold'); }
-            
-            if (activePropertyId) {
-                window.toggleDisplay('chatHubView', false); window.toggleDisplay('chatPropertyView', true);
-                const prop = propertiesData.find(p => p.id === activePropertyId);
-                if (prop) {
-                    const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
-                    prop.readBy = prop.readBy || {}; const lastReadTime = prop.readBy[myPrefix] || 0;
-                    prop.readBy[myPrefix] = Date.now();
-                    await window.savePropertyData(prop, true); 
-                    updateChatBadge(prop); renderChatMessages(prop, lastReadTime, focusCommentId);
-                    document.getElementById('chatWindowAddress').innerText = prop.address;
-                }
-                setTimeout(() => { if(!focusCommentId && !window.isChatSearchOpen) document.getElementById('chatInput').focus(); }, 100);
-            } else {
-                window.toggleDisplay('chatHubView', true); window.toggleDisplay('chatPropertyView', false); window.renderChatHub();
-            }
-        } else {
-            window.toggleDisplay('chatWindow', false);
-            if(window.isChatSearchOpen) window.toggleChatSearch();
-            if (mobChatNav) { mobChatNav.classList.remove('text-brand-gold'); mobChatNav.classList.add('text-brand-crimson'); }
-        }
-    }
-    
-    window.openPropertyChatOnly = function(propId) {
-        activePropertyId = propId; updateGlobalAssetSelector();
-        window.isChatOpen = false; window.toggleChat();
-    }
-
-    window.toggleChatHub = function(forceHubOnly = false) {
-        if (forceHubOnly) activePropertyId = null;
-        if (!window.isChatOpen) { window.toggleChat(); }
-        else if (forceHubOnly) {
-            window.toggleDisplay('chatHubView', true); window.toggleDisplay('chatPropertyView', false); window.renderChatHub();
-        } else { window.toggleChat(); }
-    }
-
-    window.renderChatHub = function() {
-        const list = document.getElementById('chatHubList');
-        if (!list) return;
-
-        let hubItems = propertiesData.map(p => {
-            const comments = p.comments || [];
-            const lastCmt = comments.length > 0 ? comments[comments.length - 1] : null;
-            const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
-            const lastRead = (p.readBy || {})[myPrefix] || 0;
-            const unreadCount = comments.filter(c => c.timestamp > lastRead && c.author.toLowerCase() !== myPrefix).length;
-            return { id: p.id, address: p.address, lastComment: lastCmt, unreadCount: unreadCount, timestamp: lastCmt ? lastCmt.timestamp : p.dateStarted };
-        }).sort((a, b) => b.timestamp - a.timestamp);
-
-        if (hubItems.length === 0) { list.innerHTML = `<div class="text-center text-xs text-gray-500 mt-10 italic">No active discussions. Deploy a new asset to begin tracking!</div>`; return; }
-
-        list.innerHTML = hubItems.map(item => {
-            let badgeHtml = item.unreadCount > 0 ? `<span class="bg-brand-crimson text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md animate-pulse">${item.unreadCount} New</span>` : '';
-            let snippet = item.lastComment ? `<span class="font-bold text-gray-400 capitalize">${escapeHtml(item.lastComment.author)}:</span> ${escapeHtml(item.lastComment.text)}` : `<span class="italic text-gray-600">No messages yet</span>`;
-            
-            return `<div onclick="window.openPropertyChatOnly('${item.id}')" class="p-3 bg-gray-900/50 hover:bg-gray-800/80 rounded-xl border border-gray-800/80 cursor-pointer transition-colors group shadow-sm">
-                <div class="flex justify-between items-start mb-1"><h4 class="text-xs font-bold text-white group-hover:text-brand-purple transition-colors truncate pr-2 flex items-center gap-2"><i class="fa-solid fa-house-chimney text-[10px] text-gray-600"></i> ${escapeHtml(item.address)}</h4><div class="shrink-0 flex items-center gap-2">${badgeHtml}</div></div>
-                <p class="text-[10px] text-gray-300 line-clamp-1 mb-1 mt-1">${snippet}</p>
-                <div class="text-[9px] text-gray-500 font-mono mt-1.5 border-t border-gray-800/50 pt-1.5 inline-block w-full">${timeSince(item.lastComment ? item.lastComment.timestamp : item.timestamp)}</div>
-            </div>`;
-        }).join('');
-    }
-
-    window.toggleChatSearch = function() {
-        window.isChatSearchOpen = !window.isChatSearchOpen;
-        const searchInput = document.getElementById('chatSearchInput');
-        if(window.isChatSearchOpen) { window.toggleDisplay('chatSearchContainer', true); searchInput.focus(); }
-        else { window.toggleDisplay('chatSearchContainer', false); searchInput.value = ''; if (activePropertyId) window.renderChatMessages(propertiesData.find(p => p.id === activePropertyId)); }
-    }
-
-    window.jumpToChatMessage = function(commentId) {
-        const searchInput = document.getElementById('chatSearchInput');
-        if (searchInput) searchInput.value = '';
-        if (window.isChatSearchOpen) window.toggleChatSearch();
-        const pinsModal = document.getElementById('chatPinsModal');
-        if (pinsModal && !pinsModal.classList.contains('hidden')) window.toggleChatPins();
-        if (activePropertyId) window.renderChatMessages(propertiesData.find(p => p.id === activePropertyId), 0, commentId);
-    }
-
-    window.togglePinComment = async function(commentId) {
-        if (!activePropertyId) return;
-        const prop = propertiesData.find(p => p.id === activePropertyId);
-        if (!prop || !prop.comments) return;
-        const comment = prop.comments.find(c => c.id === commentId);
-        if (comment) { comment.pinned = !comment.pinned; await window.savePropertyData(prop, true); const pinsModal = document.getElementById('chatPinsModal'); if (pinsModal && !pinsModal.classList.contains('hidden')) window.renderChatPins(prop); }
-    }
-
-    window.toggleChatPins = function() {
-        window.toggleDisplay('chatPinsModal');
-        const modal = document.getElementById('chatPinsModal');
-        if (!modal.classList.contains('hidden') && activePropertyId) window.renderChatPins(propertiesData.find(p => p.id === activePropertyId));
-    }
-
-    window.renderChatPins = function(prop) {
-        const list = document.getElementById('chatPinsList');
-        if (!prop || !list) return;
-        const pinnedComments = (prop.comments || []).filter(c => c.pinned);
-        if (pinnedComments.length === 0) { list.innerHTML = `<div class="text-xs text-gray-500 italic text-center mt-6">No pinned messages yet.</div>`; return; }
-
-        list.innerHTML = pinnedComments.map(c => `
-            <div onclick="window.jumpToChatMessage('${c.id}')" class="bg-gray-900/50 p-2.5 rounded-lg border border-gray-700 cursor-pointer hover:bg-gray-800/80 transition-colors">
-                <div class="flex justify-between items-center mb-1 border-b border-gray-800 pb-1"><span class="text-[9px] font-bold text-gray-400 capitalize">${escapeHtml(c.author)}</span><span class="text-[9px] text-gray-500">${formatEST(c.timestamp)}</span></div>
-                <p class="text-xs text-gray-300 line-clamp-3 whitespace-pre-wrap">${escapeHtml(c.text)}</p>
-            </div>`).join('');
-    }
-
-    window.toggleChatAttachments = function() {
-        window.toggleDisplay('chatAttachmentsModal');
-        const modal = document.getElementById('chatAttachmentsModal');
-        if (!modal.classList.contains('hidden') && activePropertyId) {
-            const prop = propertiesData.find(p => p.id === activePropertyId);
-            const list = document.getElementById('chatAttachmentsList');
-            if (!prop || !list) return;
-
-            let items = [];
-            prop.tasks.forEach(t => {
-                if(t.hyperlink || t.templateText) items.push({ phase: t.phase, title: t.title, link: t.hyperlink, template: t.templateText });
-                if(t.subtasks) t.subtasks.forEach(st => {
-                    if(st.hyperlink || st.templateText) items.push({ phase: t.phase, title: `${t.title} <i class="fa-solid fa-angle-right text-[8px] mx-1"></i> ${st.title}`, link: st.hyperlink, template: st.templateText });
-                });
-            });
-
-            let htmlStr = '';
-            items.forEach(item => {
-                let hasItem = false; let itemContent = '';
-                if (item.link) {
-                    hasItem = true;
-                    itemContent += `<a href="${item.link.startsWith('http') ? item.link : 'https://'+item.link}" target="_blank" class="text-brand-cyan hover:underline text-xs break-all block mb-1"><i class="fa-solid fa-link"></i> ${escapeHtml(item.link)}</a>`;
-                }
-                if (item.template) {
-                    const urls = item.template.match(/(https?:\/\/[^\s]+)/g);
-                    if (urls) {
-                        hasItem = true;
-                        urls.forEach(url => { itemContent += `<a href="${url}" target="_blank" class="text-brand-emerald hover:underline text-xs break-all block mb-1"><i class="fa-solid fa-arrow-up-right-from-square"></i> ${escapeHtml(url)}</a>`; });
-                    }
-                    if (item.template.length > 0) {
-                        hasItem = true;
-                        itemContent += `<div class="text-[10px] text-gray-400 mt-1.5 p-2 bg-gray-950/50 rounded border border-gray-800 line-clamp-4 whitespace-pre-wrap leading-relaxed"><span class="text-brand-purple font-bold block mb-0.5 uppercase tracking-wider text-[8px]">Draft Content</span>${escapeHtml(item.template)}</div>`;
-                    }
-                }
-                if (hasItem) {
-                    htmlStr += `<div class="bg-gray-900/50 p-2.5 rounded-lg border border-gray-700 shadow-sm"><div class="flex flex-col mb-2 border-b border-gray-800 pb-1.5"><span class="text-[8px] font-bold text-brand-emerald/70 uppercase tracking-widest mb-0.5">${escapeHtml(item.phase)}</span><h5 class="text-[10px] font-bold text-gray-300">${escapeHtml(item.title)}</h5></div>${itemContent}</div>`;
-                }
-            });
-            list.innerHTML = htmlStr || `<div class="text-xs text-gray-500 italic text-center mt-6">No links or templates found for this asset.</div>`;
-        }
-    }
-
-    window.sendChatMessage = async function() {
-        if (!activePropertyId) return;
-        const input = document.getElementById('chatInput');
-        const text = input.value.trim();
-        if (!text) return;
-        const prop = propertiesData.find(p => p.id === activePropertyId);
-        if (!prop) return;
-
-        const authorName = currentUser && currentUser.email ? currentUser.email.split('@')[0] : "Agent";
-        const myPrefix = authorName.toLowerCase();
-
-        if (!prop.comments) prop.comments = [];
-        prop.comments.push({ id: 'cmt_' + Date.now() + Math.random().toString(36).substr(2, 5), text: text, author: authorName, timestamp: Date.now(), pinned: false });
-        prop.readBy = prop.readBy || {}; prop.readBy[myPrefix] = Date.now();
-        input.value = ''; await window.savePropertyData(prop); 
-    }
-
-    window.renderChatMessages = function(prop, lastReadTime = 0, focusCommentId = null) {
-        const container = document.getElementById('chatMessages');
-        if (!container || !prop) return;
-        
-        const myPrefix = currentUser && currentUser.email ? currentUser.email.split('@')[0].toLowerCase() : "agent";
-        
-        if (window.isChatOpen && !window.isChatSearchOpen) { prop.readBy = prop.readBy || {}; prop.readBy[myPrefix] = Date.now(); }
-        updateChatBadge(prop);
-
-        const searchInput = document.getElementById('chatSearchInput');
-        const searchTerm = searchInput && window.isChatSearchOpen ? searchInput.value.toLowerCase() : '';
-        const isSearching = window.isChatSearchOpen && searchTerm !== '';
-
-        const comments = (prop.comments || []).filter(c => searchTerm === '' || c.text.toLowerCase().includes(searchTerm) || c.author.toLowerCase().includes(searchTerm));
-
-        if (comments.length === 0) { container.innerHTML = `<div class="text-center text-xs text-gray-500 mt-10 italic">${isSearching ? 'No matching messages.' : 'No messages found.'}</div>`; return; }
-
-        let firstUnreadId = null;
-        if (!focusCommentId && lastReadTime > 0 && !isSearching) {
-            const firstUnread = comments.find(c => c.timestamp > lastReadTime && c.author.toLowerCase() !== myPrefix);
-            if(firstUnread) firstUnreadId = firstUnread.id;
-        }
-
-        container.innerHTML = comments.map(c => {
-            const authorLower = c.author.toLowerCase();
-            const authorColorClass = getAgentColorClass(authorLower, 'text');
-            const isMe = myPrefix === authorLower;
-            const isHighlight = focusCommentId === c.id;
-            
-            const readers = Object.entries(prop.readBy || {}).filter(([u, t]) => t >= c.timestamp && u !== authorLower).map(x => x[0]);
-            let readReceiptHtml = readers.length > 0 ? `<div class="text-[9px] text-gray-500 ${isMe ? 'text-right justify-end' : 'text-left justify-start'} mt-1 flex items-center gap-1 pointer-events-none"><i class="fa-solid fa-check-double text-brand-cyan/70"></i> Read by: ${escapeHtml(readers.join(', '))}</div>` : '';
-            const pinActionHtml = `<button onclick="event.stopPropagation(); window.togglePinComment('${c.id}')" class="mx-2 text-gray-500 hover:text-brand-gold ${c.pinned ? 'text-brand-gold opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity cursor-pointer z-10 relative pointer-events-auto" title="${c.pinned ? 'Unpin' : 'Pin'} Message"><i class="fa-solid fa-thumbtack text-[9px]"></i></button>`;
-
-            let wrapperClass = `group flex flex-col ${isMe ? 'items-end' : 'items-start'} mb-1 ${isHighlight ? 'highlight-comment' : ''}`;
-            let jumpOnClick = isSearching ? `onclick="window.jumpToChatMessage('${c.id}')"` : '';
-            if (isSearching) wrapperClass += ' cursor-pointer hover:bg-gray-800/40 p-2 rounded-lg transition-colors';
-
-            return `
-            <div id="chat_msg_${c.id}" class="${wrapperClass}" ${jumpOnClick}>
-                <div class="flex items-center w-full ${isMe ? 'justify-end' : 'justify-start'} mb-1">
-                    ${isMe ? pinActionHtml : ''}
-                    <span class="text-[9px] font-bold ${authorColorClass} px-1">${escapeHtml(c.author)} • ${formatEST(c.timestamp)}</span>
-                    ${!isMe ? pinActionHtml : ''}
-                </div>
-                <div class="${isMe ? 'bg-brand-emerald/10 border-brand-emerald/30' : 'bg-gray-800/60 border-gray-700/50'} border rounded-xl px-3 py-2 max-w-[90%] shadow-sm ${isSearching ? 'pointer-events-none' : ''}">
-                    <p class="text-xs text-gray-200 whitespace-pre-wrap">${escapeHtml(c.text)}</p>
-                </div>
-                ${readReceiptHtml}
-            </div>`;
-        }).join('');
-        
-        setTimeout(() => {
-            if (focusCommentId) document.getElementById('chat_msg_' + focusCommentId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            else if (firstUnreadId && !isSearching) document.getElementById('chat_msg_' + firstUnreadId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            else if (!isSearching) container.scrollTop = container.scrollHeight;
-        }, 100);
-    }
-
     window.selectTaskOption = async function(taskIndex, optionIndex) {
-        if(optionIndex === "") return;
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if(!prop) return;
-        const opt = prop.tasks[taskIndex].dropdownOptions[optionIndex];
-        prop.tasks[taskIndex].title = opt.title;
-        prop.tasks[taskIndex].assignee = opt.defaultAssignee;
-        prop.tasks[taskIndex].selectedOption = optionIndex;
+        
+        if(optionIndex === "") {
+            prop.tasks[taskIndex].selectedOption = null;
+            prop.tasks[taskIndex].completed = false; // Reset completion state if unselected
+        } else {
+            const opt = prop.tasks[taskIndex].dropdownOptions[optionIndex];
+            prop.tasks[taskIndex].title = opt.title;
+            prop.tasks[taskIndex].assignee = opt.defaultAssignee;
+            prop.tasks[taskIndex].selectedOption = optionIndex;
+        }
+
         await window.savePropertyData(prop);
         renderTrackerView(); // Complete re-render needed when title/assignee fully mutate from dropdown
     }
@@ -2243,10 +1771,10 @@
 
                     // Handle Dropdown UI if task requires option selection
                     let taskChoiceHtml = '';
-                    let isLockedSelect = t.isDropdown && (t.selectedOption === null || t.selectedOption === undefined);
+                    let isLockedSelect = t.isDropdown && (t.selectedOption === null || t.selectedOption === undefined || t.selectedOption === "");
                     
-                    if (isLockedSelect) {
-                        let optionsHtml = t.dropdownOptions.map((opt, i) => `<option value="${i}">${escapeHtml(opt.title)} (Assign to: ${escapeHtml(opt.defaultAssignee)})</option>`).join('');
+                    if (t.isDropdown) {
+                        let optionsHtml = t.dropdownOptions.map((opt, i) => `<option value="${i}" ${t.selectedOption == i ? 'selected' : ''}>${escapeHtml(opt.title)} (Assign to: ${escapeHtml(opt.defaultAssignee)})</option>`).join('');
                         taskChoiceHtml = `
                             <div class="mt-2 bg-brand-purple/10 border border-brand-purple/30 rounded-lg p-3">
                                 <label class="block text-xs font-bold text-brand-purple uppercase tracking-wider mb-2"><i class="fa-solid fa-code-branch"></i> Select Path for this step</label>
