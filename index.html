@@ -1234,9 +1234,9 @@
         });
         document.querySelectorAll('.agent-selector-wrapper').forEach(el => {
             if (el.id !== `agentSelectorWrapper_${taskId}`) {
-                el.classList.remove('z-[60]', 'z-[9999]'); el.classList.add('z-10');
-                const row = el.closest('.p-4'); if(row) row.style.zIndex = '';
-                const section = el.closest('.glass-card'); if(section) section.style.zIndex = '';
+                el.classList.remove('z-[9999]'); el.classList.add('z-10');
+                const row = el.closest('.p-4'); if(row) { row.style.zIndex = ''; row.classList.remove('z-[9999]'); }
+                const section = el.closest('.glass-card'); if(section) { section.style.zIndex = ''; section.classList.remove('z-[99]'); }
             }
         });
 
@@ -1244,18 +1244,18 @@
             list.classList.remove('hidden'); list.classList.add('flex');
             if(wrapper) { 
                 wrapper.classList.remove('z-10'); wrapper.classList.add('z-[9999]'); 
-                const row = wrapper.closest('.p-4'); if(row) { row.style.position = 'relative'; row.style.zIndex = '999'; }
-                const section = wrapper.closest('.glass-card'); if(section) { section.style.position = 'relative'; section.style.zIndex = '99'; }
+                const row = wrapper.closest('.p-4'); if(row) { row.style.position = 'relative'; row.style.zIndex = '9999'; row.classList.add('z-[9999]'); }
+                const section = wrapper.closest('.glass-card'); if(section) { section.style.position = 'relative'; section.style.zIndex = '99'; section.classList.add('z-[99]'); }
             }
         } else {
             list.classList.add('hidden'); list.classList.remove('flex');
             if(wrapper) { 
-                wrapper.classList.remove('z-[60]', 'z-[9999]'); wrapper.classList.add('z-10'); 
-                const row = wrapper.closest('.p-4'); if(row) row.style.zIndex = '';
-                const section = wrapper.closest('.glass-card'); if(section) section.style.zIndex = '';
+                wrapper.classList.remove('z-[9999]'); wrapper.classList.add('z-10'); 
+                const row = wrapper.closest('.p-4'); if(row) { row.style.zIndex = ''; row.classList.remove('z-[9999]'); }
+                const section = wrapper.closest('.glass-card'); if(section) { section.style.zIndex = ''; section.classList.remove('z-[99]'); }
             }
         }
-    }
+
 
     window.handleAgentSelection = function(taskIndex, assigneeName) {
         window.changeAssignee(taskIndex, assigneeName);
@@ -1309,9 +1309,9 @@
                 }
             });
             document.querySelectorAll('.agent-selector-wrapper').forEach(el => {
-                el.classList.remove('z-[60]', 'z-[9999]'); el.classList.add('z-10');
-                const row = el.closest('.p-4'); if(row) row.style.zIndex = '';
-                const section = el.closest('.glass-card'); if(section) section.style.zIndex = '';
+                el.classList.remove('z-[9999]'); el.classList.add('z-10');
+                const row = el.closest('.p-4'); if(row) { row.style.zIndex = ''; row.classList.remove('z-[9999]'); }
+                const section = el.closest('.glass-card'); if(section) { section.style.zIndex = ''; section.classList.remove('z-[99]'); }
             });
         }
 
@@ -1436,9 +1436,9 @@
             const requiresDraft = !!(task.draftsAndHyperlinks && task.draftsAndHyperlinks.includes("Draft"));
             const requiresLink = !!(task.draftsAndHyperlinks && task.draftsAndHyperlinks.includes("Hyperlink"));
 
-            return {
+             return {
                 id: task.id, phase: task.phase, mainTask: task.mainTask, title: task.title,
-                weight: task.weight, assignee: task.defaultAssignee, completed: false,
+                weight: task.weight, assignee: task.defaultAssignee || "Unassigned", completed: false,
                 subtasks: subtasks, templateText: "", templateLastEditedBy: null, templateLastEditedAt: null,
                 isDropdown: task.dropdownOptions ? true : false,
                 dropdownOptions: task.dropdownOptions || null,
@@ -1483,17 +1483,23 @@
             dateLastEdited: Date.now(), comments: [], readBy: {}, tasks: newTasks
         };
         
-        propertiesData.unshift(newProp); 
-        
-        await window.savePropertyData(newProp);
-        
-        input.value = ''; 
-        input.classList.remove('border-red-500');
-        if (btn) { btn.innerHTML = origText; btn.disabled = false; }
+        try {
+            propertiesData.unshift(newProp); 
+            await window.savePropertyData(newProp);
+            
+            input.value = ''; 
+            input.classList.remove('border-red-500');
 
-        window.toggleDisplay('newAssetModal', false);
-        window.openTracker(newProp.id); 
-        updateGlobalAssetSelector();
+            window.toggleDisplay('newAssetModal', false);
+            window.openTracker(newProp.id); 
+            updateGlobalAssetSelector();
+        } catch (error) {
+            console.error("Deploy failed:", error);
+            propertiesData.shift(); // Remove the optimistically added property
+            alert("Failed to deploy asset due to a connection error. Please try again.");
+        } finally {
+            if (btn) { btn.innerHTML = origText; btn.disabled = false; }
+        }
     }
 
     window.confirmDeleteProperty = async function() {
@@ -1588,6 +1594,17 @@
 
         await window.savePropertyData(prop);
         renderTrackerView(); 
+    }
+
+      window.editTaskOption = async function(taskIndex) {
+        const prop = propertiesData.find(p => p.id === activePropertyId);
+        if(!prop) return;
+        
+        prop.tasks[taskIndex].selectedOption = null;
+        prop.tasks[taskIndex].completed = false;
+        
+        await window.savePropertyData(prop);
+        renderTrackerView();
     }
 
     // --- 6. UI RENDERING & INTERACTIVITY ---
@@ -2273,19 +2290,33 @@
 
                     // Handle Dropdown UI if task requires option selection
                     let taskChoiceHtml = '';
+                    let editPathActionHtml = '';
                     let isLockedSelect = t.isDropdown && (t.selectedOption === null || t.selectedOption === undefined || t.selectedOption === "");
                     
                     if (t.isDropdown) {
-                        let optionsHtml = t.dropdownOptions.map((opt, i) => `<option value="${i}" ${t.selectedOption == i ? 'selected' : ''}>${escapeHtml(opt.title)} (Assign to: ${escapeHtml(opt.defaultAssignee)})</option>`).join('');
-                        taskChoiceHtml = `
-                            <div class="mt-2 bg-brand-purple/10 border border-brand-purple/30 rounded-lg p-3">
-                                <label class="block text-xs font-bold text-brand-purple uppercase tracking-wider mb-2"><i class="fa-solid fa-code-branch"></i> Select Path for this step</label>
-                                <select onchange="window.selectTaskOption(${t.originalIndex}, this.value)" class="w-full bg-gray-900 border border-gray-700 text-white text-xs rounded p-2 focus:border-brand-purple focus:outline-none cursor-pointer">
-                                    <option value="">-- Make a Selection --</option>
-                                    ${optionsHtml}
-                                </select>
-                            </div>
-                        `;
+                        if (!isLockedSelect) {
+                            const selectedOpt = t.dropdownOptions[t.selectedOption];
+                            taskChoiceHtml = `
+                                <div class="mt-2 bg-brand-purple/10 border border-brand-purple/30 rounded-lg p-3 flex justify-between items-center relative z-20">
+                                    <div>
+                                        <span class="block text-[10px] font-bold text-brand-purple uppercase tracking-wider mb-0.5"><i class="fa-solid fa-code-branch"></i> Selected Path</span>
+                                        <span class="text-xs text-white font-medium">${escapeHtml(selectedOpt.title)}</span>
+                                    </div>
+                                    <button onclick="window.editTaskOption(${t.originalIndex})" class="text-[10px] uppercase tracking-wider font-bold text-gray-400 hover:text-brand-purple transition-colors cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-pen"></i> Edit Path</button>
+                                </div>
+                            `;
+                        } else {
+                            let optionsHtml = t.dropdownOptions.map((opt, i) => `<option value="${i}" ${t.selectedOption == i ? 'selected' : ''}>${escapeHtml(opt.title)} (Assign to: ${escapeHtml(opt.defaultAssignee || 'Unassigned')})</option>`).join('');
+                            taskChoiceHtml = `
+                                <div class="mt-2 bg-brand-purple/10 border border-brand-purple/30 rounded-lg p-3 relative z-20">
+                                    <label class="block text-xs font-bold text-brand-purple uppercase tracking-wider mb-2"><i class="fa-solid fa-code-branch"></i> Select Path for this step</label>
+                                    <select onchange="window.selectTaskOption(${t.originalIndex}, this.value)" class="w-full bg-gray-900 border border-gray-700 text-white text-xs rounded p-2 focus:border-brand-purple focus:outline-none cursor-pointer">
+                                        <option value="">-- Make a Selection --</option>
+                                        ${optionsHtml}
+                                    </select>
+                                </div>
+                            `;
+                        }
                     }
 
                     row.innerHTML = `
