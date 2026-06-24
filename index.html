@@ -2326,30 +2326,22 @@
                     let editPathActionHtml = '';
                     let isLockedSelect = t.isDropdown && (t.selectedOption === null || t.selectedOption === undefined || t.selectedOption === "");
                     
-                    if (t.isDropdown) {
+                     if (t.isDropdown) {
                         if (!isLockedSelect) {
-                            const selectedOpt = t.dropdownOptions[t.selectedOption];
-                            taskChoiceHtml = `
-                                <div class="mt-2 bg-[#121629] border border-brand-purple/40 rounded-lg p-3 flex justify-between items-center relative z-20 transition-colors">
-                                    <div>
-                                        <span class="flex items-center gap-1.5 text-[10px] font-bold text-brand-purple uppercase tracking-wider mb-1"><i class="fa-solid fa-code-branch"></i> Selected Path</span>
-                                        <span class="text-xs text-white font-medium">${escapeHtml(selectedOpt.title)}</span>
-                                    </div>
-                                    <button onclick="window.editTaskOption(${t.originalIndex})" class="text-[10px] uppercase tracking-wider font-bold text-gray-400 hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 px-2 py-1"><i class="fa-solid fa-pen"></i> Edit Path</button>
-                                </div>
-                            `;
+                            taskChoiceHtml = '';
+                            editPathActionHtml = `<div class="w-px h-3 bg-gray-700 mx-2 hidden sm:block"></div><button onclick="window.editTaskOption(${t.originalIndex})" class="text-[10px] uppercase tracking-wider font-bold text-gray-400 hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-pen"></i> Edit Path</button>`;
                         } else {
-                            let optionsHtml = t.dropdownOptions.map((opt, i) => `<div onclick="window.selectTaskOption(${t.originalIndex}, ${i})" class="px-3 py-2.5 text-xs text-white hover:bg-blue-500 cursor-pointer transition-colors border-b border-gray-700/50 last:border-0 truncate">${escapeHtml(opt.title)} <span class="opacity-80 ml-1">(Assign to: ${escapeHtml(opt.defaultAssignee || 'Unassigned')})</span></div>`).join('');
+                            let optionsHtml = t.dropdownOptions.map((opt, i) => `<div onclick="window.selectTaskOption(${t.originalIndex}, ${i})" class="px-3 py-2.5 text-xs text-white hover:bg-blue-600 cursor-pointer transition-colors border-b border-gray-700/50 last:border-0 truncate">${escapeHtml(opt.title)} <span class="opacity-80 ml-1">(Assign to: ${escapeHtml(opt.defaultAssignee || 'Unassigned')})</span></div>`).join('');
                             taskChoiceHtml = `
                                 <div class="mt-2 bg-[#121629] border border-brand-purple/40 rounded-lg p-3 relative z-20">
                                     <label class="flex items-center gap-1.5 text-[10px] font-bold text-brand-purple uppercase tracking-wider mb-2"><i class="fa-solid fa-code-branch"></i> Select Path for this step</label>
                                     <div class="relative w-full" id="pathDropdownWrapper_${t.originalIndex}">
-                                        <button type="button" onclick="window.togglePathDropdown(${t.originalIndex}, event)" class="w-full bg-[#0b0f19] border border-gray-700 hover:border-brand-purple/60 rounded flex justify-between items-center px-3 py-2 transition-all cursor-pointer">
+                                        <button type="button" onclick="window.togglePathDropdown(${t.originalIndex}, event)" class="w-full bg-[#0b0f19] border border-brand-purple/50 hover:border-brand-purple rounded flex justify-between items-center px-3 py-2 transition-all cursor-pointer">
                                             <span id="pathLabel_${t.originalIndex}" class="text-xs text-gray-300 truncate">-- Make a Selection --</span>
                                             <i id="pathIcon_${t.originalIndex}" class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-300"></i>
                                         </button>
-                                        <div id="pathList_${t.originalIndex}" class="path-dropdown-list absolute left-0 top-full mt-1 w-full bg-[#0b0f19] border border-gray-600 rounded shadow-[0_10px_40px_rgba(0,0,0,0.8)] hidden flex-col z-[80] overflow-hidden">
-                                            <div onclick="window.selectTaskOption(${t.originalIndex}, '')" class="px-3 py-2.5 text-xs text-white hover:bg-blue-500 cursor-pointer transition-colors border-b border-gray-700/50">-- Make a Selection --</div>
+                                        <div id="pathList_${t.originalIndex}" class="path-dropdown-list absolute left-0 top-full mt-1 w-full bg-[#0b0f19] border border-brand-purple/50 rounded shadow-[0_10px_40px_rgba(0,0,0,0.8)] hidden flex-col z-[80] overflow-hidden">
+                                            <div onclick="window.selectTaskOption(${t.originalIndex}, '')" class="px-3 py-2.5 text-xs text-white hover:bg-blue-600 bg-[#0b0f19] cursor-pointer transition-colors border-b border-gray-700/50">-- Make a Selection --</div>
                                             ${optionsHtml}
                                         </div>
                                     </div>
