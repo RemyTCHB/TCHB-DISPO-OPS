@@ -744,23 +744,24 @@
                     </div>
                 </div>
 
-                <div class="relative z-10 flex flex-col sm:flex-row items-stretch gap-4 w-full lg:w-auto mt-4 lg:mt-0 shrink-0">
+                <div class="relative z-10 flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto mt-4 lg:mt-0 shrink-0">
                     
                     <div class="relative w-full sm:w-44 z-20" id="filterTrackerAgentWrapper">
-                        <button onclick="window.toggleFilterDropdown('TrackerAgent', event)" class="w-full h-full min-h-[68px] bg-gradient-to-r from-brand-emerald/5 to-brand-cyan/5 border border-brand-emerald/30 hover:border-brand-emerald/60 rounded-xl px-4 py-2 focus:outline-none flex justify-between items-center transition-all cursor-pointer shadow-sm group">
-                            <div class="flex flex-col items-start gap-1 w-full min-w-0 pr-2">
-                                <span class="text-[9px] uppercase tracking-wider text-gray-500 font-bold leading-none"><i class="fa-solid fa-filter mr-1"></i> Agent Filter</span>
-                                <span id="filterTrackerAgentLabel" class="text-xs font-bold text-gray-200 truncate w-full text-left group-hover:text-white transition-colors">All Agents</span>
+                        <button onclick="window.toggleFilterDropdown('TrackerAgent', event)" class="w-full h-[46px] bg-gradient-to-r from-brand-emerald/5 to-brand-cyan/5 border border-brand-emerald/30 hover:border-brand-emerald/60 rounded-xl px-4 focus:outline-none flex justify-between items-center transition-all cursor-pointer shadow-sm group">
+                            <div class="flex flex-col items-start gap-0.5 w-full min-w-0 pr-2">
+                                <span class="text-[8px] uppercase tracking-wider text-gray-500 font-bold leading-none"><i class="fa-solid fa-filter mr-1"></i> Agent Filter</span>
+                                <span id="filterTrackerAgentLabel" class="text-[11px] font-bold text-gray-200 truncate w-full text-left group-hover:text-white transition-colors">All Agents</span>
                             </div>
                             <i id="filterTrackerAgentIcon" class="fa-solid fa-chevron-down text-[10px] text-brand-emerald/60 transition-transform duration-300 shrink-0"></i>
                         </button>
-                        <div id="filterTrackerAgentList" class="absolute left-0 top-full mt-2 w-full sm:w-48 bg-[#0f1423] border border-brand-emerald/40 rounded-xl shadow-[0_10px_40px_rgba(16,185,129,0.2)] hidden flex-col z-50 max-h-64 overflow-y-auto custom-scrollbar">
+                        <div id="filterTrackerAgentList" class="absolute left-0 top-full mt-2 w-full sm:w-48 bg-[#0f1423] border border-brand-emerald/40 rounded-xl shadow-[0_10px_50px_rgba(0,0,0,0.8)] hidden flex-col z-[9999] max-h-64 overflow-y-auto custom-scrollbar">
                         </div>
                     </div>
 
-                    <button onclick="window.promptGlobalAddTask()" class="w-full sm:w-auto px-5 py-3 min-h-[68px] text-xs font-bold bg-brand-emerald/10 border border-brand-emerald/30 text-brand-emerald hover:bg-brand-emerald hover:text-gray-900 rounded-xl transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-sm">
-                        <i class="fa-solid fa-plus"></i> Inject Custom Task
+                    <button onclick="window.promptGlobalAddTask()" class="w-full sm:w-auto px-5 h-[46px] text-[11px] uppercase tracking-wider font-extrabold bg-gradient-to-r from-brand-emerald/10 to-brand-cyan/10 border border-brand-emerald/40 text-brand-emerald hover:bg-brand-emerald hover:text-gray-900 rounded-xl transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-[0_4px_15px_rgba(16,185,129,0.15)] hover:shadow-[0_4px_25px_rgba(16,185,129,0.3)] hover:-translate-y-0.5">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Inject Custom Task
                     </button>
+                    
                     <div class="w-full sm:w-64 bg-gray-900/80 p-4 rounded-xl border border-gray-800 shrink-0 min-h-[68px] flex flex-col justify-center">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Progress</span>
@@ -1267,7 +1268,7 @@
                 document.getElementById(`filter${t}List`)?.classList.add('hidden');
                 document.getElementById(`filter${t}List`)?.classList.remove('flex');
                 document.getElementById(`filter${t}Icon`)?.classList.remove('rotate-180');
-                document.getElementById(`filter${t}Wrapper`)?.classList.remove('z-[60]');
+                document.getElementById(`filter${t}Wrapper`)?.classList.remove('z-[9999]', 'z-[60]');
                 document.getElementById(`filter${t}Wrapper`)?.classList.add('z-20');
             }
         });
@@ -1275,11 +1276,11 @@
         if(list.classList.contains('hidden')) {
             list.classList.remove('hidden'); list.classList.add('flex');
             if(icon) icon.classList.add('rotate-180');
-            if(wrapper) { wrapper.classList.remove('z-20'); wrapper.classList.add('z-[60]'); }
+            if(wrapper) { wrapper.classList.remove('z-20'); wrapper.classList.add(type === 'TrackerAgent' ? 'z-[9999]' : 'z-[60]'); }
         } else {
             list.classList.add('hidden'); list.classList.remove('flex');
             if(icon) icon.classList.remove('rotate-180');
-            if(wrapper) { wrapper.classList.remove('z-[60]'); wrapper.classList.add('z-20'); }
+            if(wrapper) { wrapper.classList.remove('z-[9999]', 'z-[60]'); wrapper.classList.add('z-20'); }
         }
     }
 
@@ -1294,6 +1295,13 @@
     }
 
     window.setFilterTrackerAgent = function(val) {
+        window.currentTrackerAgentFilter = val;
+        document.getElementById('filterTrackerAgentLabel').innerText = val === 'All' ? 'All Agents' : val;
+        window.toggleFilterDropdown('TrackerAgent');
+        renderTrackerView();
+    }
+
+    window.setFilterStrategy = function(val) {
         window.currentTrackerAgentFilter = val;
         document.getElementById('filterTrackerAgentLabel').innerText = val === 'All' ? 'All Agents' : val;
         window.toggleFilterDropdown('TrackerAgent');
@@ -1407,7 +1415,7 @@
             if(list && !list.classList.contains('hidden') && !e.target.closest(`#filter${type}Wrapper`)) {
                 list.classList.add('hidden'); list.classList.remove('flex');
                 document.getElementById(`filter${type}Icon`)?.classList.remove('rotate-180');
-                document.getElementById(`filter${type}Wrapper`)?.classList.remove('z-[60]');
+                document.getElementById(`filter${type}Wrapper`)?.classList.remove('z-[9999]', 'z-[60]');
                 document.getElementById(`filter${type}Wrapper`)?.classList.add('z-20');
             }
         });
@@ -2291,11 +2299,10 @@
         let focusedId = document.activeElement ? document.activeElement.id : null;
         if (window.isChatOpen) renderChatMessages(prop);
 
-        window.populateTrackerAgentFilter(); // Ensure filter list is ready
+        if (window.populateTrackerAgentFilter) window.populateTrackerAgentFilter();
 
         const structure = {};
         prop.tasks.forEach((t, i) => {
-            // Apply Tracker Agent Filter
             if (window.currentTrackerAgentFilter && window.currentTrackerAgentFilter !== 'All' && t.assignee !== window.currentTrackerAgentFilter) return;
             
             if (!structure[t.phase]) structure[t.phase] = {};
@@ -2306,7 +2313,6 @@
         const container = document.getElementById('tracker-task-container');
         container.innerHTML = '';
         
-        // Render Empty State if Filter yields zero tasks
         if (Object.keys(structure).length === 0) {
             container.innerHTML = `<div class="p-10 flex flex-col items-center justify-center glass-card rounded-2xl border border-gray-800"><i class="fa-solid fa-ghost text-4xl text-gray-700 mb-3"></i><p class="text-gray-400 font-bold">No tasks found for ${escapeHtml(window.currentTrackerAgentFilter)}.</p></div>`;
             return;
