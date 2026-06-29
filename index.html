@@ -263,6 +263,26 @@
       </div>
   </div>
 
+  <!-- CONFIRM REMOVE CUSTOM TASK MODAL -->
+  <div id="removeCustomTaskModal" class="fixed inset-0 z-[120] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+      <div class="bg-gray-900 border border-brand-crimson/50 shadow-[0_0_30px_rgba(220,38,38,0.2)] rounded-2xl w-[95%] sm:w-full max-w-md p-6 transform transition-all relative">
+          <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+              <div class="absolute -right-20 -top-20 w-48 h-48 bg-brand-crimson/10 rounded-full blur-3xl"></div>
+          </div>
+          <div class="relative z-10">
+              <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                  <i class="fa-solid fa-triangle-exclamation text-brand-crimson"></i> Confirm Removal
+              </h3>
+              <p class="text-xs text-gray-400 mb-6">Are you sure you want to permanently delete this custom task? (Weights will automatically be returned).</p>
+              
+              <div class="flex justify-end gap-3 mt-4">
+                  <button onclick="window.toggleDisplay('removeCustomTaskModal', false); window.pendingCustomTaskRemove = null;" class="px-4 py-2 text-sm font-bold text-gray-400 hover:text-white transition-colors cursor-pointer">Cancel</button>
+                  <button onclick="window.executeDeleteCustomTask()" class="px-5 py-2 text-sm font-bold bg-brand-crimson hover:bg-red-500 text-white rounded-lg shadow-lg transition-all cursor-pointer">Delete Task</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
   <!-- GLOBAL ADD TASK MODAL -->
   <div id="addTaskModal" class="fixed inset-0 z-[120] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
       <div class="bg-gray-900 border border-brand-emerald/50 shadow-[0_0_30px_rgba(16,185,129,0.2)] rounded-2xl w-[95%] sm:w-full max-w-2xl p-6 transform transition-all relative flex flex-col max-h-[95vh]">
@@ -2418,7 +2438,7 @@
                                     <div class="flex items-center gap-2 shrink-0">
                                         ${assigneeHtml}
                                         <span class="${weightColor} text-[10px] sm:text-xs font-black px-1.5 sm:px-2 py-1 rounded w-10 sm:w-12 text-center transition-colors">+${t.weight}%</span>
-                                        ${t.isCustom ? `<button onclick="window.deleteCustomTask('${t.id}')" class="text-gray-500 hover:text-brand-crimson bg-gray-800 hover:bg-gray-700 w-6 h-6 rounded flex justify-center items-center transition-colors ml-1" title="Delete Custom Task"><i class="fa-solid fa-trash-can text-[10px]"></i></button>` : ''}
+                                        ${t.isCustom ? `<button onclick="window.promptDeleteCustomTask('${t.id}')" class="text-gray-500 hover:text-brand-crimson bg-gray-800 hover:bg-gray-700 w-6 h-6 rounded flex justify-center items-center transition-colors ml-1" title="Delete Custom Task"><i class="fa-solid fa-trash-can text-[10px]"></i></button>` : ''}
                                     </div>
                                 </div>
                                 ${taskChoiceHtml}
@@ -2629,16 +2649,17 @@
         const displayObj = options.find(o => o.value === selectedValue) || options[0];
         const displayLabel = displayObj ? displayObj.label : '-- Select --';
         
+        // Fix: Removed window.toggleTaskDropdown from here to prevent re-opening glitch when state renders
         let listHtml = options.map(o => `
-            <div onmousedown="event.preventDefault(); event.stopPropagation(); ${onSelectStr}'${o.value.replace(/'/g, "\\'")}'); window.toggleTaskDropdown('${id}')" 
-                 class="px-3 py-2.5 text-xs hover:bg-gray-800 cursor-pointer transition-colors border-b border-gray-800/50 ${o.value === selectedValue ? 'text-brand-emerald bg-gray-800/50 font-bold' : 'text-gray-300'} truncate" title="${escapeHtml(o.label)}">
+            <div onmousedown="event.preventDefault(); event.stopPropagation(); ${onSelectStr}'${o.value.replace(/'/g, "\\'")}');" 
+                 class="px-3 py-3 text-[11px] leading-relaxed hover:bg-gray-800 cursor-pointer transition-colors border-b border-gray-800/50 ${o.value === selectedValue ? 'text-brand-emerald bg-gray-800/50 font-bold' : 'text-gray-300'} truncate" title="${escapeHtml(o.label)}">
                 ${escapeHtml(o.label)}
             </div>`).join('');
             
         return `
             <div class="relative w-full task-custom-dropdown" id="dropdown_wrap_${id}">
                 <button type="button" ${disabled ? 'disabled' : ''} onclick="event.stopPropagation(); window.toggleTaskDropdown('${id}')" 
-                        class="w-full bg-gray-950 border border-gray-700 rounded-lg p-3 text-xs text-gray-300 focus:outline-none hover:border-brand-emerald transition-colors cursor-pointer flex justify-between items-center ${disabled ? 'opacity-50 cursor-not-allowed border-dashed' : ''}">
+                        class="w-full h-[42px] bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-xs text-gray-300 focus:outline-none hover:border-brand-emerald transition-colors cursor-pointer flex justify-between items-center ${disabled ? 'opacity-50 cursor-not-allowed border-dashed' : ''}">
                     <span class="truncate pr-2 pointer-events-none">${escapeHtml(displayLabel)}</span>
                     <i id="dropdown_icon_${id}" class="fa-solid fa-chevron-down text-[10px] text-gray-500 transition-transform pointer-events-none"></i>
                 </button>
@@ -2704,10 +2725,10 @@
             
             const dropHtml = renderCustomSelect(`deduct_task_${idx}`, 'Task', rowOptions, deduct.taskId, `window.updateDeductionTask(${idx}, `);
             deductionsHtml += `
-            <div class="flex items-start gap-3 mb-2 p-3 bg-gray-950/60 border border-gray-800 rounded-lg">
+            <div class="flex items-center gap-3 mb-3 p-3 bg-gray-950/60 border border-gray-800 rounded-lg">
                 <div class="flex-1 w-full min-w-0">${dropHtml}</div>
                 <div class="w-24 shrink-0">
-                    <input type="number" min="0" step="1" value="${deduct.weight}" onchange="window.updateDeductionWeight(${idx}, this.value)" class="w-full bg-gray-950 border border-brand-crimson/50 rounded-lg p-3 text-xs font-bold text-center text-brand-crimson focus:outline-none focus:border-brand-crimson transition-colors" placeholder="Weight %">
+                    <input type="number" min="0" step="1" value="${deduct.weight}" onchange="window.updateDeductionWeight(${idx}, this.value)" class="w-full h-[42px] bg-gray-950 border border-brand-crimson/50 rounded-lg px-2 text-xs font-bold text-center text-brand-crimson focus:outline-none focus:border-brand-crimson transition-colors" placeholder="Weight %">
                 </div>
                 <button onclick="window.removeDeductionRow(${idx})" class="w-10 h-[42px] shrink-0 bg-gray-800 hover:bg-red-500/20 text-gray-500 hover:text-brand-crimson rounded-lg flex items-center justify-center transition-colors border border-gray-700 cursor-pointer"><i class="fa-solid fa-trash text-xs"></i></button>
             </div>`;
@@ -2895,7 +2916,15 @@
         }
     };
 
-    window.deleteCustomTask = async function(taskId) {
+    window.promptDeleteCustomTask = function(taskId) {
+        window.pendingCustomTaskRemove = taskId;
+        window.toggleDisplay('removeCustomTaskModal', true);
+    };
+
+    window.executeDeleteCustomTask = async function() {
+        if (!window.pendingCustomTaskRemove) return;
+        const taskId = window.pendingCustomTaskRemove;
+        
         const prop = propertiesData.find(p => p.id === activePropertyId);
         if (!prop) return;
         const taskIndex = prop.tasks.findIndex(t => t.id === taskId);
@@ -2914,6 +2943,9 @@
 
         prop.tasks.splice(taskIndex, 1);
         await window.savePropertyData(prop);
+        
+        window.toggleDisplay('removeCustomTaskModal', false);
+        window.pendingCustomTaskRemove = null;
         renderTrackerView();
     };
     window.toggleTask = async function(taskIndex, isCompleted) {
