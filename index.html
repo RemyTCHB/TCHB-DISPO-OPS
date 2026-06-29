@@ -2649,10 +2649,10 @@
         const displayObj = options.find(o => o.value === selectedValue) || options[0];
         const displayLabel = displayObj ? displayObj.label : '-- Select --';
         
-        // Fix: Removed window.toggleTaskDropdown from here to prevent re-opening glitch when state renders
+        // Fix: Added shrink-0 to prevent dropdown items from squishing together
         let listHtml = options.map(o => `
             <div onmousedown="event.preventDefault(); event.stopPropagation(); ${onSelectStr}'${o.value.replace(/'/g, "\\'")}');" 
-                 class="px-3 py-3 text-[11px] leading-relaxed hover:bg-gray-800 cursor-pointer transition-colors border-b border-gray-800/50 ${o.value === selectedValue ? 'text-brand-emerald bg-gray-800/50 font-bold' : 'text-gray-300'} truncate" title="${escapeHtml(o.label)}">
+                 class="shrink-0 px-3 py-3 text-[11px] leading-relaxed hover:bg-gray-800 cursor-pointer transition-colors border-b border-gray-800/50 ${o.value === selectedValue ? 'text-brand-emerald bg-gray-800/50 font-bold' : 'text-gray-300'} truncate" title="${escapeHtml(o.label)}">
                 ${escapeHtml(o.label)}
             </div>`).join('');
             
@@ -2781,28 +2781,27 @@
                 <input type="text" value="${escapeHtml(state.title)}" oninput="window.updateTaskStateInput('title', this.value)" class="w-full bg-gray-950 border border-gray-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-brand-emerald transition-colors" placeholder="Enter task description...">
             </div>
             
-            <div class="grid grid-cols-2 gap-4 mb-4">
-                <div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 items-end">
+                <div class="col-span-1">
                     <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Assignee</label>
                     ${renderCustomSelect('assignee', 'Assignee', assignees, state.assignee, "window.updateTaskState('assignee', ")}
                 </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-brand-cyan mb-1">Task Weight % (Optional)</label>
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold uppercase text-brand-cyan mb-1">Weight % (Optional)</label>
                     <div class="flex items-center bg-gray-950 border border-brand-cyan/50 rounded-lg overflow-hidden h-[42px]">
                         <button onclick="window.updateTaskState('weight', Math.max(0, (parseInt(window.customTaskState.weight)||0) - 1))" class="px-3.5 py-3 text-brand-cyan hover:bg-brand-cyan/20 transition-colors border-r border-brand-cyan/30 cursor-pointer"><i class="fa-solid fa-minus text-[10px]"></i></button>
                         <input type="number" min="0" max="100" step="1" value="${state.weight}" onchange="window.updateTaskState('weight', this.value)" class="flex-1 bg-transparent w-full px-2 py-2 text-sm font-bold text-center text-brand-cyan focus:outline-none placeholder-gray-600" placeholder="0">
                         <button onclick="window.updateTaskState('weight', Math.min(100, (parseInt(window.customTaskState.weight)||0) + 1))" class="px-3.5 py-3 text-brand-cyan hover:bg-brand-cyan/20 transition-colors border-l border-brand-cyan/30 cursor-pointer"><i class="fa-solid fa-plus text-[10px]"></i></button>
                     </div>
                 </div>
-            </div>
-
-            <div class="flex justify-center items-center gap-6 mt-4 mb-2 p-3 bg-gray-900/50 rounded-lg border border-gray-800">
-                <label class="flex items-center justify-center gap-2 text-[11px] font-bold text-gray-300 cursor-pointer hover:text-white transition-colors">
-                    <input type="checkbox" class="w-4 h-4 rounded accent-brand-emerald bg-gray-900 border-gray-600 focus:ring-brand-emerald cursor-pointer" ${state.requireLink ? 'checked' : ''} onchange="window.updateTaskState('requireLink', this.checked)"> Require Link URL
-                </label>
-                <label class="flex items-center justify-center gap-2 text-[11px] font-bold text-gray-300 cursor-pointer hover:text-white transition-colors">
-                    <input type="checkbox" class="w-4 h-4 rounded accent-brand-cyan bg-gray-900 border-gray-600 focus:ring-brand-cyan cursor-pointer" ${state.requireDraft ? 'checked' : ''} onchange="window.updateTaskState('requireDraft', this.checked)"> Require Text Draft
-                </label>
+                <div class="col-span-1 flex flex-col justify-center gap-1.5 bg-gray-900/50 rounded-lg border border-gray-800 h-[42px] px-3">
+                    <label class="flex items-center gap-2 text-[10px] font-bold text-gray-300 cursor-pointer hover:text-white transition-colors leading-none">
+                        <input type="checkbox" class="w-3.5 h-3.5 rounded accent-brand-emerald bg-gray-900 border-gray-600 cursor-pointer" ${state.requireLink ? 'checked' : ''} onchange="window.updateTaskState('requireLink', this.checked)"> Require Link
+                    </label>
+                    <label class="flex items-center gap-2 text-[10px] font-bold text-gray-300 cursor-pointer hover:text-white transition-colors leading-none">
+                        <input type="checkbox" class="w-3.5 h-3.5 rounded accent-brand-cyan bg-gray-900 border-gray-600 cursor-pointer" ${state.requireDraft ? 'checked' : ''} onchange="window.updateTaskState('requireDraft', this.checked)"> Require Draft
+                    </label>
+                </div>
             </div>
 
             ${deductionsSection}
