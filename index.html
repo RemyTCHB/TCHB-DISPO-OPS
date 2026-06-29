@@ -2118,15 +2118,23 @@
                     if (item.template.length > 0) {
                         hasItem = true;
                         const draftId = 'draft_' + Math.random().toString(36).substr(2, 9);
+                        const cleanTemplate = item.template.trim();
+                        // Only show Read More if text is long enough or has multiple line breaks
+                        const needsToggle = cleanTemplate.length > 100 || (cleanTemplate.match(/\n/g) || []).length >= 2;
+                        
                         itemContent += `
-                            <div class="relative group/draft mt-1.5">
-                                <div id="${draftId}" class="hidden">${escapeHtml(item.template)}</div>
-                                <div class="text-[10px] text-gray-400 p-2 bg-gray-950/50 rounded border border-gray-800 max-h-48 overflow-y-auto whitespace-pre-wrap leading-relaxed custom-scrollbar">
-                                    <span class="text-brand-purple font-bold block mb-0.5 uppercase tracking-wider text-[8px]">Draft Content</span>${escapeHtml(item.template)}
+                            <div class="relative group/draft mt-1.5 bg-gray-950/50 rounded border border-gray-800 p-2.5">
+                                <div id="${draftId}" class="hidden">${escapeHtml(cleanTemplate)}</div>
+                                <span class="text-brand-purple font-bold block mb-1.5 uppercase tracking-wider text-[8px]">Draft Content</span>
+                                <div class="flex items-center justify-between gap-3">
+                                    <div class="flex-1 min-w-0 flex flex-col items-start">
+                                        <div id="content_${draftId}" class="text-[10px] text-gray-400 whitespace-pre-wrap leading-relaxed ${needsToggle ? 'line-clamp-2' : ''} transition-all duration-300 w-full break-words">${escapeHtml(cleanTemplate)}</div>
+                                        ${needsToggle ? `<button onclick="document.getElementById('content_${draftId}').classList.toggle('line-clamp-2'); this.innerText = this.innerText === 'Read More' ? 'Read Less' : 'Read More';" class="text-[9px] font-bold text-brand-cyan hover:text-cyan-400 mt-1.5 cursor-pointer">Read More</button>` : ''}
+                                    </div>
+                                    <button onclick="window.copyToClipboard(document.getElementById('${draftId}').innerText, this)" class="bg-brand-purple/20 border border-brand-purple/50 text-brand-purple hover:bg-brand-purple hover:text-white px-2.5 py-1.5 rounded text-[9px] font-bold transition-all opacity-100 sm:opacity-0 sm:group-hover/draft:opacity-100 flex items-center justify-center gap-1 shadow-md shrink-0 h-fit" title="Copy to clipboard">
+                                        <i class="fa-regular fa-copy"></i> Copy
+                                    </button>
                                 </div>
-                                <button onclick="window.copyToClipboard(document.getElementById('${draftId}').innerText, this)" class="absolute top-2 right-4 bg-brand-purple/20 border border-brand-purple/50 text-brand-purple hover:bg-brand-purple hover:text-white px-2 py-1 rounded text-[8px] font-bold transition-all opacity-0 group-hover/draft:opacity-100 flex items-center gap-1 shadow-md">
-                                    <i class="fa-regular fa-copy"></i> Copy
-                                </button>
                             </div>`;
                     }
                 }
